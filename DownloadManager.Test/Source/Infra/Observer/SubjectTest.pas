@@ -9,12 +9,14 @@ type
   [TestFixture]
   TSubjectTest = class
   public
+    //AddObserver tests
     [Test]
     procedure TestAddObserverPassingNullParameter;
 
     [Test]
     procedure TestAddObserverPassingMockParameter;
 
+    //RemoveObserver tests
     [Test]
     procedure TestRemoveObservereWithNullParameter;
 
@@ -27,6 +29,7 @@ type
     [Test]
     procedure TestRemoveObservereWithExistentParamater;
 
+    //NotifyObservers tests
     [Test]
     procedure TestNotifyObserversWithEmptyList();
 
@@ -35,11 +38,6 @@ type
 
     [Test]
     procedure TestNotifyObserversWithTwoRegistriesInTheList();
-
-    [Test]
-    [TestCase('TestA','1,2')]
-    [TestCase('TestB','3,4')]
-    procedure Test2(const AValue1 : Integer;const AValue2 : Integer);
   end;
 
 implementation
@@ -243,10 +241,6 @@ begin
     lSubject.Free;
   end;
   {$endregion}
-end;
-
-procedure TSubjectTest.Test2(const AValue1 : Integer;const AValue2 : Integer);
-begin
 end;
 
 initialization

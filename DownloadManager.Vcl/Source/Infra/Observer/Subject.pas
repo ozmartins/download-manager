@@ -40,7 +40,7 @@ begin
   fObservers := TList<IObserver>.Create();
 end;
 
-/// <summary>It frees the allocated memory during class construction.</summary>
+/// <summary>It frees the allocated memory by the class constructor.</summary>
 destructor TSubject.Destroy;
 begin
   fObservers.Free;
