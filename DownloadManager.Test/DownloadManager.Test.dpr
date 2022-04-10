@@ -20,7 +20,10 @@ uses
   MockObserver in 'Source\Infra\Observer\MockObserver.pas',
   ContentDispositionHelper in '..\DownloadManager.Vcl\Source\Domain\ContentDispositionHelper.pas',
   ContentDispositionHelperTest in 'Source\Domain\ContentDispositionHelperTest.pas',
-  Constants in '..\DownloadManager.Vcl\Source\Infra\Constants.pas';
+  Constants in '..\DownloadManager.Vcl\Source\Infra\Constants.pas',
+  FileHelper in '..\DownloadManager.Vcl\Source\Domain\FileHelper.pas',
+  FileHelperTest in 'Source\Domain\FileHelperTest.pas',
+  GuidGenerator in '..\DownloadManager.Vcl\Source\Infra\GuidGenerator.pas';
 
 {$IFNDEF TESTINSIGHT}
 var

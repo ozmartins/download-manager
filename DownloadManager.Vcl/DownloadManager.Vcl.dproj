@@ -106,6 +106,8 @@
         <DCCReference Include="Source\Infra\Observer\Subject.pas"/>
         <DCCReference Include="Source\Domain\ContentDispositionHelper.pas"/>
         <DCCReference Include="Source\Infra\Constants.pas"/>
+        <DCCReference Include="Source\Domain\FileHelper.pas"/>
+        <DCCReference Include="Source\Infra\GuidGenerator.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
