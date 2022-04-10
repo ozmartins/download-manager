@@ -1,4 +1,4 @@
-unit ContentDispositionHelper;
+unit ContentDisposition;
 
 interface
 
@@ -19,7 +19,7 @@ type
   /// Content-Disposition is an HTTP header field, which can indicate
   /// if the HTTP response content should be downloaded or displayed.
   /// </summary>
-  TContentDispositionHelper = class
+  TContentDisposition = class
   public
     class function ExtractType(AContentDisposition: String): TContentDispositionType;
     class function ExtractFileName(AContentDisposition: String): String;
@@ -34,7 +34,7 @@ uses System.SysUtils, Constants;
 /// <summary>Receives a parameter in the following format: 'attachment; filename="file.txt'". So, the function extracts the file name portion from this parameter</summary>
 /// <param name="AContentDisposition">Content-Disposition is one of the fields in the HTTP header. So get the Content-Disposition from an HTTP header and call this function to extract the file name (if it exists).</param>
 /// <returns>The file name present in the content-disposition parameter, or an empty string if the file name can't be extracted</returns>
-class function TContentDispositionHelper.ExtractFileName(AContentDisposition: String): String;
+class function TContentDisposition.ExtractFileName(AContentDisposition: String): String;
 var
   lContentDispositionElements: TArray<String>;
   lFileNameElements: TArray<String>;
@@ -63,7 +63,7 @@ end;
 /// <summary>Receives a parameter in the following format: 'attachment; filename="file.txt'". So, the function extracts the file name portion from this parameter</summary>
 /// <param name="AContentDisposition">Content-Disposition is one of the fields in the HTTP header. So get the Content-Disposition from an HTTP header and call this function to extract the file name (if it exists).</param>
 /// <returns>The file name present in the content-disposition parameter, or an empty string if the file name can't be extracted</returns>
-class function TContentDispositionHelper.ExtractType(AContentDisposition: String): TContentDispositionType;
+class function TContentDisposition.ExtractType(AContentDisposition: String): TContentDispositionType;
 var
   lContentDispositionElements: TArray<String>;
 begin

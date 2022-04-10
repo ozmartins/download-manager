@@ -1,4 +1,4 @@
-unit FileHelper;
+unit FileManager;
 
 interface
 
@@ -13,7 +13,7 @@ const
 
 type
   ///<summary>Offers some tools to help with file management.</summary>
-  TFileHelper = class
+  TFileManager = class
   public
     class procedure SaveFile(ASourceStream: TStream; ADestDirectory: String; ADestFile: String; AForceDirectory: Boolean = False; AOverwriteExistentFile: Boolean = False);
     class procedure RemoveFile(ADirectoryPath: String; AFileName: String);
@@ -22,7 +22,7 @@ type
 
 implementation
 
-{ TFileHelper }
+{ TFileManager }
 
 /// <summary>Create a file on disk based on stream object.</summary>
 /// <param name="ASourceStream">A stream object that has the source data</param>
@@ -31,7 +31,7 @@ implementation
 /// <remarks>
 /// If the parameter "ADestFolder" doesn't exist on the disk or the parameter "ADestFile" is empty, an exception is raised.
 /// </remarks>
-class function TFileHelper.BuildCompleteFileName(ADirectoryPath, AFileName: String): String;
+class function TFileManager.BuildCompleteFileName(ADirectoryPath, AFileName: String): String;
 begin
   if ADirectoryPath.IsEmpty() then
     raise Exception.Create(cDirectoryPathIsEmpty);
@@ -51,7 +51,7 @@ end;
 /// - AFileName is empty
 /// - AFileName doesn't exist
 /// </remarks>
-class procedure TFileHelper.RemoveFile(ADirectoryPath, AFileName: String);
+class procedure TFileManager.RemoveFile(ADirectoryPath, AFileName: String);
 var
   lCompleteFileName: String;
 begin
@@ -76,7 +76,7 @@ end;
 /// - ADestDirectory doesn't exist and AForceDirectory is false
 /// - ADestFile already exists and AOverwriteExistentFile is false
 /// </remarks>
-class procedure TFileHelper.SaveFile(ASourceStream: TStream; ADestDirectory: String; ADestFile: String; AForceDirectory: Boolean = False; AOverwriteExistentFile: Boolean = False);
+class procedure TFileManager.SaveFile(ASourceStream: TStream; ADestDirectory: String; ADestFile: String; AForceDirectory: Boolean = False; AOverwriteExistentFile: Boolean = False);
 var
   lFileStream: TFileStream;
   lCompleteFileName: String;

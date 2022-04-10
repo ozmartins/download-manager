@@ -7,7 +7,7 @@ uses
 
 type
   [TestFixture]
-  TFileHelperTest = class
+  TFileManagerTest = class
   private
     function GenerateUniqueName(): String;
   public
@@ -56,7 +56,7 @@ type
 
 implementation
 
-uses FileHelper, System.SysUtils, System.Classes, Constants, GuidGenerator;
+uses FileManager, System.SysUtils, System.Classes, Constants, GuidGenerator;
 
 const
   cDummyDirectory = 'j:\dummy';
@@ -64,11 +64,11 @@ const
   cUnitTestDirectory = 'UnitTest';
 
 
-procedure TFileHelperTest.BuildCompleteFileNameUsingAnEmptyDirectoryPath;
+procedure TFileManagerTest.BuildCompleteFileNameUsingAnEmptyDirectoryPath;
 begin
   {$region act/assert}
   try
-    TFileHelper.BuildCompleteFileName(cEmptyString, cDummyFile);
+    TFileManager.BuildCompleteFileName(cEmptyString, cDummyFile);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -77,11 +77,11 @@ begin
   {$endregion}
 end;
 
-procedure TFileHelperTest.BuildCompleteFileNameUsingAnEmptyFileName;
+procedure TFileManagerTest.BuildCompleteFileNameUsingAnEmptyFileName;
 begin
   {$region act/assert}
   try
-    TFileHelper.BuildCompleteFileName(cDummyDirectory, cEmptyString);
+    TFileManager.BuildCompleteFileName(cDummyDirectory, cEmptyString);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -90,12 +90,12 @@ begin
   {$endregion}
 end;
 
-procedure TFileHelperTest.BuildCompleteFileNameUsingNonEmptyParameter;
+procedure TFileManagerTest.BuildCompleteFileNameUsingNonEmptyParameter;
 var
   lCompleteFileName: String;
 begin
   {$region 'act'}
-  lCompleteFileName := TFileHelper.BuildCompleteFileName(cDummyDirectory, cDummyFile);
+  lCompleteFileName := TFileManager.BuildCompleteFileName(cDummyDirectory, cDummyFile);
   {$endregion}
 
   {$region 'assert'}
@@ -103,16 +103,16 @@ begin
   {$endregion}
 end;
 
-function TFileHelperTest.GenerateUniqueName: String;
+function TFileManagerTest.GenerateUniqueName: String;
 begin
   Result := TGuidGenerator.GenerateGuidAsStringWithoutSpecialChars();
 end;
 
-procedure TFileHelperTest.RemoveFileUsingAnEmptyDirectoryPath;
+procedure TFileManagerTest.RemoveFileUsingAnEmptyDirectoryPath;
 begin
   {$region act/assert}
   try
-    TFileHelper.RemoveFile(cEmptyString, cDummyFile);
+    TFileManager.RemoveFile(cEmptyString, cDummyFile);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -121,11 +121,11 @@ begin
   {$endregion}
 end;
 
-procedure TFileHelperTest.RemoveFileUsingAnEmptyFileName;
+procedure TFileManagerTest.RemoveFileUsingAnEmptyFileName;
 begin
   {$region act/assert}
   try
-    TFileHelper.SaveFile(nil, cDummyDirectory, cEmptyString);
+    TFileManager.SaveFile(nil, cDummyDirectory, cEmptyString);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -134,7 +134,7 @@ begin
   {$endregion}
 end;
 
-procedure TFileHelperTest.RemoveFileUsingAnExistentFile;
+procedure TFileManagerTest.RemoveFileUsingAnExistentFile;
 var
   lStringStream: TStringStream;
   lDirectoryPath: String;
@@ -143,13 +143,13 @@ begin
   try
     {$region arrange}
     lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash + GenerateUniqueName();
-    TFileHelper.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
-    Assert.IsTrue(FileExists(TFileHelper.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
+    TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
+    Assert.IsTrue(FileExists(TFileManager.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
     {$endregion}
 
     {$region act}
     try
-      TFileHelper.RemoveFile(lDirectoryPath, cDummyFile);
+      TFileManager.RemoveFile(lDirectoryPath, cDummyFile);
     except
       on e: Exception do
         Assert.Fail(e.Message);
@@ -157,7 +157,7 @@ begin
     {$endregion}
 
     {$region assert}
-    Assert.IsFalse(FileExists(TFileHelper.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
+    Assert.IsFalse(FileExists(TFileManager.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
     {$endregion}
   finally
     lStringStream.Free;
@@ -165,7 +165,7 @@ begin
   end;
 end;
 
-procedure TFileHelperTest.RemoveFileUsingANonExistentFile;
+procedure TFileManagerTest.RemoveFileUsingANonExistentFile;
 var
   lFileName: String;
   lDirectoryPath: String;
@@ -177,20 +177,20 @@ begin
 
   {$region act/assert}
   try
-    TFileHelper.RemoveFile(lDirectoryPath, cDummyFile);
+    TFileManager.RemoveFile(lDirectoryPath, cDummyFile);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
-      Assert.AreEqual(e.Message, Format(cFileDoesntExists, [TFileHelper.BuildCompleteFileName(lDirectoryPath, cDummyFile)]));
+      Assert.AreEqual(e.Message, Format(cFileDoesntExists, [TFileManager.BuildCompleteFileName(lDirectoryPath, cDummyFile)]));
   end;
   {$endregion}
 end;
 
-procedure TFileHelperTest.SaveFileUsingAnEmptyDirectoryPath();
+procedure TFileManagerTest.SaveFileUsingAnEmptyDirectoryPath();
 begin
   {$region act/assert}
   try
-    TFileHelper.SaveFile(nil, cEmptyString, cDummyFile);
+    TFileManager.SaveFile(nil, cEmptyString, cDummyFile);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -199,11 +199,11 @@ begin
   {$endregion}
 end;
 
-procedure TFileHelperTest.SaveFileUsingAnEmptyFileName();
+procedure TFileManagerTest.SaveFileUsingAnEmptyFileName();
 begin
   {$region act/assert}
   try
-    TFileHelper.SaveFile(nil, cDummyDirectory, cEmptyString);
+    TFileManager.SaveFile(nil, cDummyDirectory, cEmptyString);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -212,7 +212,7 @@ begin
   {$endregion}
 end;
 
-procedure TFileHelperTest.SaveFileUsingAnExistingFileNameWithouOvewritten;
+procedure TFileManagerTest.SaveFileUsingAnExistingFileNameWithouOvewritten;
 var
   lStringStream: TStringStream;
   lDirectoryPath: String;
@@ -221,26 +221,26 @@ begin
   try
     {$region arrange}
     lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash;
-    TFileHelper.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True);
+    TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True);
     {$endregion}
 
     {$region act/assert}
     try
-      TFileHelper.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True);
+      TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True);
       Assert.Fail(cNotThronwException);
     except
       on e: Exception do
-        Assert.AreEqual(e.Message, Format(cFileAlreadyExists, [TFileHelper.BuildCompleteFileName(lDirectoryPath, cDummyFile)]));
+        Assert.AreEqual(e.Message, Format(cFileAlreadyExists, [TFileManager.BuildCompleteFileName(lDirectoryPath, cDummyFile)]));
     end;
     {$endregion}
   finally
     lStringStream.Free;
-    TFileHelper.RemoveFile(lDirectoryPath, cDummyFile);
+    TFileManager.RemoveFile(lDirectoryPath, cDummyFile);
     RemoveDir(lDirectoryPath);
   end;
 end;
 
-procedure TFileHelperTest.SaveFileUsingAnExistingFileNameWithOvewritten;
+procedure TFileManagerTest.SaveFileUsingAnExistingFileNameWithOvewritten;
 var
   lStringStream: TStringStream;
   lDirectoryPath: String;
@@ -249,12 +249,12 @@ begin
   try
     {$region arrange}
     lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash;
-    TFileHelper.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
+    TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
     {$endregion}
 
     {$region act}
     try
-      TFileHelper.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
+      TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
     except
       on e: Exception do
         Assert.Fail(e.Message);
@@ -262,16 +262,16 @@ begin
     {$endregion}
 
     {$region assert}
-    Assert.IsTrue(FileExists(TFileHelper.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
+    Assert.IsTrue(FileExists(TFileManager.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
     {$endregion}
   finally
     lStringStream.Free;
-    TFileHelper.RemoveFile(lDirectoryPath, cDummyFile);
+    TFileManager.RemoveFile(lDirectoryPath, cDummyFile);
     RemoveDir(lDirectoryPath);
   end;
 end;
 
-procedure TFileHelperTest.SaveFileUsingANonExistentDirectoryPathButForcingDirectory;
+procedure TFileManagerTest.SaveFileUsingANonExistentDirectoryPathButForcingDirectory;
 var
   lStringStream: TStringStream;
   lDirectoryPath: String;
@@ -284,22 +284,22 @@ begin
 
     {$region act/assert}
     try
-      TFileHelper.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True);
+      TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True);
     except
       on e: Exception do
         Assert.Fail(e.Message);
     end;
 
-    Assert.IsTrue(FileExists(TFileHelper.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
+    Assert.IsTrue(FileExists(TFileManager.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
     {$endregion}
   finally
     lStringStream.Free;
-    TFileHelper.RemoveFile(lDirectoryPath, cDummyFile);
+    TFileManager.RemoveFile(lDirectoryPath, cDummyFile);
     RemoveDir(lDirectoryPath);
   end;
 end;
 
-procedure TFileHelperTest.SaveFileUsingANonExistentDirectoryPathWithoutForceDirectory;
+procedure TFileManagerTest.SaveFileUsingANonExistentDirectoryPathWithoutForceDirectory;
 var
   lDirectoryPath: String;
 begin
@@ -309,7 +309,7 @@ begin
 
   {$region act/assert}
   try
-    TFileHelper.SaveFile(nil, lDirectoryPath, 'file.txt');
+    TFileManager.SaveFile(nil, lDirectoryPath, 'file.txt');
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -319,6 +319,6 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TFileHelperTest);
+  TDUnitX.RegisterTestFixture(TFileManagerTest);
 
 end.

@@ -1,9 +1,9 @@
-unit ContentDispositionHelperTest;
+unit ContentDispositionTest;
 
 interface
 
 uses
-  DUnitX.TestFramework, System.SysUtils, Constants, ContentDispositionHelper;
+  DUnitX.TestFramework, System.SysUtils, Constants, ContentDisposition;
 
 const
   cExpectFileName = 'file.txt';
@@ -22,7 +22,7 @@ const
 
 type
   [TestFixture]
-  TContentDispositionHelperTest = class
+  TContentDispositionTest = class
   public
 
     [Test]
@@ -64,14 +64,14 @@ implementation
 uses TypInfo;
 
 
-{ TContentDispositionHelperTest }
+{ TContentDispositionTest }
 
-procedure TContentDispositionHelperTest.TestExtractFileName(AContentDisposition, AExpectedResult: String);
+procedure TContentDispositionTest.TestExtractFileName(AContentDisposition, AExpectedResult: String);
 var
   lFileName: String;
 begin
   {$region act}
-  lFileName := TContentDispositionHelper.ExtractFileName(AContentDisposition);
+  lFileName := TContentDisposition.ExtractFileName(AContentDisposition);
   {$endregion}
 
   {$region assert}
@@ -79,13 +79,13 @@ begin
   {$endregion}
 end;
 
-procedure TContentDispositionHelperTest.TestExtractType(AContentDisposition: String; AExpectedResult: String);
+procedure TContentDispositionTest.TestExtractType(AContentDisposition: String; AExpectedResult: String);
 var
   lType: TContentDispositionType;
   lEnumName: String;
 begin
   {$region act}
-  lType := TContentDispositionHelper.ExtractType(AContentDisposition);
+  lType := TContentDisposition.ExtractType(AContentDisposition);
   {$endregion}
 
   {$region assert}
@@ -96,11 +96,11 @@ begin
 
 end;
 
-procedure TContentDispositionHelperTest.TestExtractTypeWithEmptyContentDisposition;
+procedure TContentDispositionTest.TestExtractTypeWithEmptyContentDisposition;
 begin
   {$region act/assert}
   try
-    TContentDispositionHelper.ExtractType(EmptyStr);
+    TContentDisposition.ExtractType(EmptyStr);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -109,11 +109,11 @@ begin
   {$endregion}
 end;
 
-procedure TContentDispositionHelperTest.TestExtractTypeWithOtherContentDispositionAndEmptyFileName;
+procedure TContentDispositionTest.TestExtractTypeWithOtherContentDispositionAndEmptyFileName;
 begin
   {$region act/assert}
   try
-    TContentDispositionHelper.ExtractType(cOtherContentDispositionWithFileName);
+    TContentDisposition.ExtractType(cOtherContentDispositionWithFileName);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -122,11 +122,11 @@ begin
   {$endregion}
 end;
 
-procedure TContentDispositionHelperTest.TestExtractTypeWithOtherContentDispositionAndValidFileName;
+procedure TContentDispositionTest.TestExtractTypeWithOtherContentDispositionAndValidFileName;
 begin
   {$region act/assert}
   try
-    TContentDispositionHelper.ExtractType(cOtherContentDispositionWithFileName);
+    TContentDisposition.ExtractType(cOtherContentDispositionWithFileName);
     Assert.Fail();
   except
     on e: Exception do
@@ -135,11 +135,11 @@ begin
   {$endregion}
 end;
 
-procedure TContentDispositionHelperTest.TestExtractTypeWithOtherContentDispositionAndWithoutFileName;
+procedure TContentDispositionTest.TestExtractTypeWithOtherContentDispositionAndWithoutFileName;
 begin
   {$region act/assert}
   try
-    TContentDispositionHelper.ExtractType(cOtherContentDispositionWithFileName);
+    TContentDisposition.ExtractType(cOtherContentDispositionWithFileName);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -149,6 +149,6 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TContentDispositionHelperTest);
+  TDUnitX.RegisterTestFixture(TContentDisposition);
 
 end.
