@@ -87,17 +87,21 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Source\SampleTest.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Observer\Subject.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Observer\Observer.pas"/>
         <DCCReference Include="Source\Infra\Observer\SubjectTest.pas"/>
         <DCCReference Include="Source\Infra\Observer\MockObserver.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\ContentDispositionHelper.pas"/>
-        <DCCReference Include="Source\Domain\ContentDispositionHelperTest.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\ContentDisposition.pas"/>
+        <DCCReference Include="Source\Domain\ContentDispositionTest.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Constants.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\FileHelper.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\FileManager.pas"/>
         <DCCReference Include="Source\Domain\FileHelperTest.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\GuidGenerator.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\Downloader.pas"/>
+        <DCCReference Include="Source\Domain\DownloaderTest.pas"/>
+        <DCCReference Include="Source\Infra\MockNetHTTPRequest.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\SimpleNetHTTPRequest.pas"/>
+        <DCCReference Include="Source\Infra\MockHttpResponse.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

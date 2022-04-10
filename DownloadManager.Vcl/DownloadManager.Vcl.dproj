@@ -104,10 +104,13 @@
         </DelphiCompile>
         <DCCReference Include="Source\Infra\Observer\Observer.pas"/>
         <DCCReference Include="Source\Infra\Observer\Subject.pas"/>
-        <DCCReference Include="Source\Domain\ContentDispositionHelper.pas"/>
+        <DCCReference Include="Source\Domain\ContentDisposition.pas"/>
         <DCCReference Include="Source\Infra\Constants.pas"/>
-        <DCCReference Include="Source\Domain\FileHelper.pas"/>
+        <DCCReference Include="Source\Domain\FileManager.pas"/>
         <DCCReference Include="Source\Infra\GuidGenerator.pas"/>
+        <DCCReference Include="Source\Domain\Downloader.pas"/>
+        <DCCReference Include="Source\Infra\SimpleNetHTTPRequest.pas"/>
+        <DCCReference Include="Source\Infra\SimpleNetHTTPRequestProxy.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

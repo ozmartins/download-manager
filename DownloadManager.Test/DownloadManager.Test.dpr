@@ -13,17 +13,21 @@ uses
   DUnitX.Loggers.Xml.NUnit,
   {$ENDIF }
   DUnitX.TestFramework,
-  SampleTest in 'Source\SampleTest.pas',
   Subject in '..\DownloadManager.Vcl\Source\Infra\Observer\Subject.pas',
   Observer in '..\DownloadManager.Vcl\Source\Infra\Observer\Observer.pas',
   SubjectTest in 'Source\Infra\Observer\SubjectTest.pas',
   MockObserver in 'Source\Infra\Observer\MockObserver.pas',
-  ContentDispositionHelper in '..\DownloadManager.Vcl\Source\Domain\ContentDispositionHelper.pas',
-  ContentDispositionHelperTest in 'Source\Domain\ContentDispositionHelperTest.pas',
+  ContentDisposition in '..\DownloadManager.Vcl\Source\Domain\ContentDisposition.pas',
+  ContentDispositionTest in 'Source\Domain\ContentDispositionTest.pas',
   Constants in '..\DownloadManager.Vcl\Source\Infra\Constants.pas',
-  FileHelper in '..\DownloadManager.Vcl\Source\Domain\FileHelper.pas',
+  FileManager in '..\DownloadManager.Vcl\Source\Domain\FileManager.pas',
   FileHelperTest in 'Source\Domain\FileHelperTest.pas',
-  GuidGenerator in '..\DownloadManager.Vcl\Source\Infra\GuidGenerator.pas';
+  GuidGenerator in '..\DownloadManager.Vcl\Source\Infra\GuidGenerator.pas',
+  Downloader in '..\DownloadManager.Vcl\Source\Domain\Downloader.pas',
+  DownloaderTest in 'Source\Domain\DownloaderTest.pas',
+  MockNetHTTPRequest in 'Source\Infra\MockNetHTTPRequest.pas',
+  SimpleNetHTTPRequest in '..\DownloadManager.Vcl\Source\Infra\SimpleNetHTTPRequest.pas',
+  MockHttpResponse in 'Source\Infra\MockHttpResponse.pas';
 
 {$IFNDEF TESTINSIGHT}
 var
