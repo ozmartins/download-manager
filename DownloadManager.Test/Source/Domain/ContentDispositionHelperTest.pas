@@ -20,8 +20,6 @@ const
   cInLineContentDispositionWithoutFileName = 'inline';
   cOtherContentDispositionWithoutFileName = 'other';
 
-  cExceptionNotThronw = 'An expected exception was not thrown.';
-
 type
   [TestFixture]
   TContentDispositionHelperTest = class
@@ -63,7 +61,7 @@ type
 
 implementation
 
-uses Subject, TypInfo;
+uses TypInfo;
 
 
 { TContentDispositionHelperTest }
@@ -103,7 +101,7 @@ begin
   {$region act/assert}
   try
     TContentDispositionHelper.ExtractType(EmptyStr);
-    Assert.Fail(cExceptionNotThronw);
+    Assert.Fail(cNotThronwException);
   except
     on e: Exception do
       Assert.AreEqual(e.Message, cInvalidContentDispositionTypeMessage);
@@ -116,7 +114,7 @@ begin
   {$region act/assert}
   try
     TContentDispositionHelper.ExtractType(cOtherContentDispositionWithFileName);
-    Assert.Fail(cExceptionNotThronw);
+    Assert.Fail(cNotThronwException);
   except
     on e: Exception do
       Assert.AreEqual(e.Message, cInvalidContentDispositionTypeMessage);
@@ -142,7 +140,7 @@ begin
   {$region act/assert}
   try
     TContentDispositionHelper.ExtractType(cOtherContentDispositionWithFileName);
-    Assert.Fail(cExceptionNotThronw);
+    Assert.Fail(cNotThronwException);
   except
     on e: Exception do
       Assert.AreEqual(e.Message, cInvalidContentDispositionTypeMessage);
