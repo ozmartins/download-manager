@@ -7,7 +7,7 @@ Esta aplicação possui uma GUI que permite ao usuário realizar downloads a par
 A aplicação foi desenvolvida com Delphi e SQLite. Nenhum framework externo foi utilizado.
 
  - [Delphi](https://www.embarcadero.com/products/delphi)
- - [SQLite](https://sqlite.org/index.html
+ - [SQLite](https://sqlite.org/index.html)
 
 ## Executando a aplicação
 
