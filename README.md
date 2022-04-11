@@ -31,3 +31,4 @@ A aplicação teve seus métodos documentados dentro do próprio código fonte u
 - Melhor classe TlogDownloadRepository.
 - Usar ORM para persistência.
 - Usar framework de mock nos testes unitários.
+- Implementar um CLI (command-line interface)
