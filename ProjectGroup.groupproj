@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{588B75BD-B969-4ADA-8996-4A40C8B97C02}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="DownloadManager.Vcl\DownloadManager.Vcl.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="DownloadManager.Test\DownloadManager.Test.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="DownloadManager_Vcl">
+        <MSBuild Projects="DownloadManager.Vcl\DownloadManager.Vcl.dproj"/>
+    </Target>
+    <Target Name="DownloadManager_Vcl:Clean">
+        <MSBuild Projects="DownloadManager.Vcl\DownloadManager.Vcl.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DownloadManager_Vcl:Make">
+        <MSBuild Projects="DownloadManager.Vcl\DownloadManager.Vcl.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="DownloadManager_Test">
+        <MSBuild Projects="DownloadManager.Test\DownloadManager.Test.dproj"/>
+    </Target>
+    <Target Name="DownloadManager_Test:Clean">
+        <MSBuild Projects="DownloadManager.Test\DownloadManager.Test.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DownloadManager_Test:Make">
+        <MSBuild Projects="DownloadManager.Test\DownloadManager.Test.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="DownloadManager_Vcl;DownloadManager_Test"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="DownloadManager_Vcl:Clean;DownloadManager_Test:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="DownloadManager_Vcl:Make;DownloadManager_Test:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
