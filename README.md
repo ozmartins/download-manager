@@ -15,7 +15,7 @@ A aplicação foi desenvolvida com Delphi e SQLite. Nenhum framework externo foi
 
 - O executável da GUI pode ser encontrado dentro de “D:\downloads\DownloadManager\DownloadManager.Vcl\Win32\Debug”
 
-IMPORTANTE: O banco de dados precisar estar dentro do mesmo diretório do executável.
+IMPORTANTE: O banco de dados precisar estar dentro do mesmo diretório do executável. O nome do arquivo do banco deve ser igual ao nome do arquivo executável da GUI. Em eventuais implementações, uma opção de configuração será criada.
 
 ## Documentation
 
