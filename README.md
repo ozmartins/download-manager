@@ -32,3 +32,4 @@ A aplicação teve seus métodos documentados dentro do próprio código fonte u
 - Usar ORM para persistência.
 - Usar framework de mock nos testes unitários.
 - Implementar um CLI (command-line interface)
+- Ampliar documentação dos métodos
