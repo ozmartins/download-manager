@@ -1,7 +1,7 @@
 # Download Manager
 Esta aplicação possui uma GUI que permite ao usuário realizar downloads a partir de uma URL. A aplicação possui, ainda, uma opção que permite abortar o download e uma grade que mostra o histórico de downloads.
 
-![Screenshot_12](https://user-images.githubusercontent.com/50338986/162768192-c03e1c93-0f41-4b7e-8551-e73f858ac321.png)
+![Screenshot_12](https://user-images.githubusercontent.com/50338986/162770785-9add1b98-daed-4649-8b2f-8596b26ae773.png)
 
 ## Tecnologias
 A aplicação foi desenvolvida com Delphi e SQLite. Nenhum framework externo foi utilizado.
