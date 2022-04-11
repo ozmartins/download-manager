@@ -1,4 +1,4 @@
-unit FileHelperTest;
+unit FileManagerTest;
 
 interface
 
@@ -8,8 +8,6 @@ uses
 type
   [TestFixture]
   TFileManagerTest = class
-  private
-    function GenerateUniqueName(): String;
   public
     //Save file tests
     [Test]
@@ -103,11 +101,6 @@ begin
   {$endregion}
 end;
 
-function TFileManagerTest.GenerateUniqueName: String;
-begin
-  Result := TGuidGenerator.GenerateGuidAsStringWithoutSpecialChars();
-end;
-
 procedure TFileManagerTest.RemoveFileUsingAnEmptyDirectoryPath;
 begin
   {$region act/assert}
@@ -142,7 +135,7 @@ begin
   lStringStream := TStringStream.Create('Teste');
   try
     {$region arrange}
-    lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash + GenerateUniqueName();
+    lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash + TFileManager.GenerateUniqueName();
     TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
     Assert.IsTrue(FileExists(TFileManager.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
     {$endregion}
@@ -171,7 +164,7 @@ var
   lDirectoryPath: String;
 begin
   {$region arrange}
-  lFileName := GenerateUniqueName();
+  lFileName := TFileManager.GenerateUniqueName();
   lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash;
   {$endregion}
 
@@ -279,7 +272,7 @@ begin
   lStringStream := TStringStream.Create('Teste');
   try
     {$region arrange}
-    lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + GenerateUniqueName();
+    lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + TFileManager.GenerateUniqueName();
     {$endregion}
 
     {$region act/assert}
@@ -304,7 +297,7 @@ var
   lDirectoryPath: String;
 begin
   {$region arrange}
-  lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + GenerateUniqueName();
+  lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + TFileManager.GenerateUniqueName();
   {$endregion}
 
   {$region act/assert}

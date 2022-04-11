@@ -18,9 +18,13 @@ type
     class procedure SaveFile(ASourceStream: TStream; ADestDirectory: String; ADestFile: String; AForceDirectory: Boolean = False; AOverwriteExistentFile: Boolean = False);
     class procedure RemoveFile(ADirectoryPath: String; AFileName: String);
     class function BuildCompleteFileName(ADirectoryPath: String; AFileName: String): String;
+    class function GenerateUniqueName(): String;
   end;
 
 implementation
+
+uses
+  GuidGenerator;
 
 { TFileManager }
 
@@ -51,6 +55,11 @@ end;
 /// - AFileName is empty
 /// - AFileName doesn't exist
 /// </remarks>
+class function TFileManager.GenerateUniqueName: String;
+begin
+  Result := TGuidGenerator.GenerateGuidAsStringWithoutSpecialChars();
+end;
+
 class procedure TFileManager.RemoveFile(ADirectoryPath, AFileName: String);
 var
   lCompleteFileName: String;
