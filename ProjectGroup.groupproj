@@ -9,9 +9,6 @@
         <Projects Include="DownloadManager.Test\DownloadManager.Test.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="DownloadManager.Cli\DownloadManager.Cli.dproj">
-            <Dependencies/>
-        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -38,23 +35,14 @@
     <Target Name="DownloadManager_Test:Make">
         <MSBuild Projects="DownloadManager.Test\DownloadManager.Test.dproj" Targets="Make"/>
     </Target>
-    <Target Name="DownloadManager_Cli">
-        <MSBuild Projects="DownloadManager.Cli\DownloadManager.Cli.dproj"/>
-    </Target>
-    <Target Name="DownloadManager_Cli:Clean">
-        <MSBuild Projects="DownloadManager.Cli\DownloadManager.Cli.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="DownloadManager_Cli:Make">
-        <MSBuild Projects="DownloadManager.Cli\DownloadManager.Cli.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="DownloadManager_Vcl;DownloadManager_Test;DownloadManager_Cli"/>
+        <CallTarget Targets="DownloadManager_Vcl;DownloadManager_Test"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DownloadManager_Vcl:Clean;DownloadManager_Test:Clean;DownloadManager_Cli:Clean"/>
+        <CallTarget Targets="DownloadManager_Vcl:Clean;DownloadManager_Test:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DownloadManager_Vcl:Make;DownloadManager_Test:Make;DownloadManager_Cli:Make"/>
+        <CallTarget Targets="DownloadManager_Vcl:Make;DownloadManager_Test:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

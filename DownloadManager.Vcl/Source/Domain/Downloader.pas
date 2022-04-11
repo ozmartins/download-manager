@@ -23,9 +23,11 @@ type
     fHttpRequest: ISimpleNetHTTPRequest;
     fProgress: Double;
     fState: TDownloaderState;
+    fLastError: String;
 
     procedure OnReceiveData(const Sender: TObject; AContentLength, AReadCount: Int64; var AAbort: Boolean);
     procedure OnRequestCompleted(const Sender: TObject; const AResponse: IHTTPResponse);
+    procedure OnRequestError(const Sender: TObject; const AError: string);
 
     function Downloadable(AUrl: String): Boolean;
   public
@@ -33,17 +35,18 @@ type
     property Progress: Double read fProgress;
     property State: TDownloaderState read fState;
 
-    constructor Create(AHttpRequest: ISimpleNetHttpRequest);
+    constructor Create(AHttpRequest: ISimpleNetHTTPRequest);
     destructor Destroy(); override;
 
     function Download(AUrl: String): IHttpResponse;
     procedure Abort();
+    function PopLastError(): String;
   end;
 
 implementation
 
 uses
-  System.SysUtils, ContentDisposition;
+  System.SysUtils, ContentDisposition, Vcl.Dialogs;
 
 { TDownloader }
 
@@ -55,21 +58,24 @@ begin
     raise Exception.Create(cDownloaderIsNotDownloading);
 
   fState := TDownloaderState.dsAborted;
+
+  Subject.NotifyObservers();
 end;
 
 /// <summary>This method creates an instance of TDownloader class.</summary>
 /// <param name="ANetHTTPRequest">An instance of TNetHTTPRequest will be used to execute the download. Is not necessary to feed the "Client" property.</param>
 /// <remarks>If ANetHTTPRequest is null, raises an exception.</remarks>
 /// <returns>It returns an instance of TDownloader class.</returns>
-constructor TDownloader.Create(AHttpRequest: ISimpleNetHttpRequest);
+constructor TDownloader.Create(AHttpRequest: ISimpleNetHTTPRequest);
 begin
   if AHttpRequest = nil then
     raise Exception.Create(cNetHTTPRequestIsNull);
 
   fHttpRequest := AHttpRequest;
-  fHttpRequest.Client := TNetHTTPClient.Create(nil);
+  fHttpRequest.Client := TNetHttpClient.Create(nil);
   fHttpRequest.OnReceiveData := OnReceiveData;
   fHttpRequest.OnRequestCompleted := OnRequestCompleted;
+  fHttpRequest.OnRequestError := OnRequestError;
 
   fProgress := 0;
   fState := TDownloaderState.dsIdle;
@@ -80,7 +86,6 @@ end;
 destructor TDownloader.Destroy;
 begin
   fSubject.Free;
-  fHttpRequest.Client.Free;
   inherited;
 end;
 
@@ -106,6 +111,8 @@ begin
   fState := TDownloaderState.dsDownloading;
 
   Result := fHttpRequest.Get(AUrl);
+
+  Subject.NotifyObservers();
 end;
 
 /// <summary>A private method that analyses the HTTP header to check if the URL stands for a download link.</summary>
@@ -132,14 +139,14 @@ end;
 /// <summary>Private method used to deal with fNetHTTPRequest.OnReceiveData event. This method keep track on download progress.</summary>
 procedure TDownloader.OnReceiveData(const Sender: TObject; AContentLength, AReadCount: Int64; var AAbort: Boolean);
 begin
+  if AContentLength <> 0 then
+    fProgress := AReadCount / AContentLength  * 100;
+
   if fState = TDownloaderState.dsAborted then
   begin
     AAbort := True;
     fState := TDownloaderState.dsIdle;
   end;
-
-  if AContentLength <> 0 then
-    fProgress := AReadCount / AContentLength  * 100;
 
   Subject.NotifyObservers();
 end;
@@ -148,6 +155,20 @@ end;
 procedure TDownloader.OnRequestCompleted(const Sender: TObject; const AResponse: IHTTPResponse);
 begin
   fState := TDownloaderState.dsIdle;
+
+  Subject.NotifyObservers();
+end;
+
+procedure TDownloader.OnRequestError(const Sender: TObject; const AError: string);
+begin
+  fLastError := AError;
+  Subject.NotifyObservers();
+end;
+
+function TDownloader.PopLastError: String;
+begin
+  Result := fLastError;
+  fLastError := EmptyStr;
 end;
 
 end.

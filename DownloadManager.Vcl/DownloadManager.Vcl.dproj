@@ -109,8 +109,16 @@
         <DCCReference Include="Source\Domain\FileManager.pas"/>
         <DCCReference Include="Source\Infra\GuidGenerator.pas"/>
         <DCCReference Include="Source\Domain\Downloader.pas"/>
-        <DCCReference Include="Source\Infra\SimpleNetHTTPRequest.pas"/>
-        <DCCReference Include="Source\Infra\SimpleNetHTTPRequestProxy.pas"/>
+        <DCCReference Include="Source\Infra\Network\SimpleNetHTTPRequest.pas"/>
+        <DCCReference Include="Source\Infra\Network\SimpleNetHTTPRequestProxy.pas"/>
+        <DCCReference Include="Source\Domain\LogDownload.pas"/>
+        <DCCReference Include="Source\Infra\Repository\Repository.pas"/>
+        <DCCReference Include="Source\Infra\Repository\LogDownloadRepository.pas"/>
+        <DCCReference Include="Source\Desktop\Main.pas">
+            <Form>Form1</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Source\Domain\DownloadManager.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

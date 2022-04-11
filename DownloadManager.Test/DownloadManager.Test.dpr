@@ -21,13 +21,17 @@ uses
   ContentDispositionTest in 'Source\Domain\ContentDispositionTest.pas',
   Constants in '..\DownloadManager.Vcl\Source\Infra\Constants.pas',
   FileManager in '..\DownloadManager.Vcl\Source\Domain\FileManager.pas',
-  FileHelperTest in 'Source\Domain\FileHelperTest.pas',
+  FileManagerTest in 'Source\Domain\FileManagerTest.pas',
   GuidGenerator in '..\DownloadManager.Vcl\Source\Infra\GuidGenerator.pas',
   Downloader in '..\DownloadManager.Vcl\Source\Domain\Downloader.pas',
   DownloaderTest in 'Source\Domain\DownloaderTest.pas',
   MockNetHTTPRequest in 'Source\Infra\MockNetHTTPRequest.pas',
-  SimpleNetHTTPRequest in '..\DownloadManager.Vcl\Source\Infra\SimpleNetHTTPRequest.pas',
-  MockHttpResponse in 'Source\Infra\MockHttpResponse.pas';
+  SimpleNetHTTPRequest in '..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequest.pas',
+  MockHttpResponse in 'Source\Infra\MockHttpResponse.pas',
+  LogDownload in '..\DownloadManager.Vcl\Source\Domain\LogDownload.pas',
+  LogDownloadRepository in '..\DownloadManager.Vcl\Source\Infra\Repository\LogDownloadRepository.pas',
+  Repository in '..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas',
+  SimpleNetHTTPRequestProxy in '..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequestProxy.pas';
 
 {$IFNDEF TESTINSIGHT}
 var

@@ -22,12 +22,16 @@ type
 
     function GetOnRequestCompleted(): TRequestCompletedEvent;
     procedure SetOnRequestCompleted(ARequestCompletedEvent: TRequestCompletedEvent);
+
+    function GetOnRequestError(): TRequestErrorEvent;
+    procedure SetOnRequestError(ARequestErrorEvent: TRequestErrorEvent);
   public
     constructor Create(AHttpResponseForGet: IHttpResponse; AHttpResponseForHead: IHttpResponse; AContentLength: Integer; ACompleteRequest: Boolean);
 
     property Client: TNetHTTPClient read GetClient write SetClient;
     property OnReceiveData: TReceiveDataEvent read GetOnReceiveData write SetOnReceiveData;
     property OnRequestCompleted: TRequestCompletedEvent read GetOnRequestCompleted write SetOnRequestCompleted;
+    property OnRequestError: TRequestErrorEvent read GetOnRequestError write SetOnRequestError;
 
     function Get(const AURL: string; const AResponseContent: TStream = nil; const AHeaders: TNetHeaders = nil): IHTTPResponse;
     function Head(const AURL: string; const AHeaders: TNetHeaders = nil): IHTTPResponse;
@@ -81,6 +85,11 @@ begin
   Result := fOnRequestCompleted;
 end;
 
+function TMockNetHTTPRequest.GetOnRequestError: TRequestErrorEvent;
+begin
+  //
+end;
+
 function TMockNetHTTPRequest.Head(const AURL: string; const AHeaders: TNetHeaders): IHTTPResponse;
 begin
   Result := fHttpResponseForHead;
@@ -98,6 +107,12 @@ end;
 procedure TMockNetHTTPRequest.SetOnRequestCompleted(ARequestCompletedEvent: TRequestCompletedEvent);
 begin
   fOnRequestCompleted := ARequestCompletedEvent;
+end;
+
+procedure TMockNetHTTPRequest.SetOnRequestError(
+  ARequestErrorEvent: TRequestErrorEvent);
+begin
+
 end;
 
 end.

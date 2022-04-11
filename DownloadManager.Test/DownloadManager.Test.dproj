@@ -95,13 +95,17 @@
         <DCCReference Include="Source\Domain\ContentDispositionTest.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Constants.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\FileManager.pas"/>
-        <DCCReference Include="Source\Domain\FileHelperTest.pas"/>
+        <DCCReference Include="Source\Domain\FileManagerTest.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\GuidGenerator.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\Downloader.pas"/>
         <DCCReference Include="Source\Domain\DownloaderTest.pas"/>
         <DCCReference Include="Source\Infra\MockNetHTTPRequest.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\SimpleNetHTTPRequest.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequest.pas"/>
         <DCCReference Include="Source\Infra\MockHttpResponse.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\LogDownload.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\LogDownloadRepository.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequestProxy.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

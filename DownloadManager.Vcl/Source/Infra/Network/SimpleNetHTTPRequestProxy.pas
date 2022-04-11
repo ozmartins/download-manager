@@ -17,12 +17,16 @@ type
 
     function GetOnRequestCompleted(): TRequestCompletedEvent;
     procedure SetOnRequestCompleted(ARequestCompletedEvent: TRequestCompletedEvent);
+
+    function GetOnRequestError(): TRequestErrorEvent;
+    procedure SetOnRequestError(ARequestErrorEvent: TRequestErrorEvent);
   public
     constructor Create(ANetHTTPRequest: TNetHTTPRequest);
 
     property Client: TNetHTTPClient read GetClient write SetClient;
     property OnReceiveData: TReceiveDataEvent read GetOnReceiveData write SetOnReceiveData;
     property OnRequestCompleted: TRequestCompletedEvent read GetOnRequestCompleted write SetOnRequestCompleted;
+    property OnRequestError: TRequestErrorEvent read GetOnRequestError write SetOnRequestError;
 
     function Get(const AURL: string; const AResponseContent: TStream = nil; const AHeaders: TNetHeaders = nil): IHTTPResponse;
     function Head(const AURL: string; const AHeaders: TNetHeaders = nil): IHTTPResponse;
@@ -57,6 +61,11 @@ begin
   Result := fNetHTTPRequest.OnRequestCompleted;
 end;
 
+function TSimpleNetHTTPRequestProxy.GetOnRequestError: TRequestErrorEvent;
+begin
+  Result := fNetHTTPRequest.OnRequestError;
+end;
+
 function TSimpleNetHTTPRequestProxy.Head(const AURL: string; const AHeaders: TNetHeaders): IHTTPResponse;
 begin
   Result := fNetHTTPRequest.Head(AURL, AHeaders);
@@ -75,6 +84,11 @@ end;
 procedure TSimpleNetHTTPRequestProxy.SetOnRequestCompleted(ARequestCompletedEvent: TRequestCompletedEvent);
 begin
   fNetHTTPRequest.OnRequestCompleted := ARequestCompletedEvent;
+end;
+
+procedure TSimpleNetHTTPRequestProxy.SetOnRequestError(ARequestErrorEvent: TRequestErrorEvent);
+begin
+  fNetHTTPRequest.OnRequestError := ARequestErrorEvent;
 end;
 
 end.

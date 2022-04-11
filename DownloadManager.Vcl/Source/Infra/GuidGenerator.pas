@@ -21,7 +21,6 @@ uses
 class function TGuidGenerator.GenerateGUID: TGuid;
 var
   lGuid: TGuid;
-  lResult: HResult;
 begin
   if CreateGuid(lGuid) <> S_OK then
      raise Exception.Create(cGuidCantBeGenerate);

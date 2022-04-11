@@ -53,7 +53,10 @@ type
 
 implementation
 
-uses Subject, System.SysUtils, MockNetHTTPRequest, Constants, MockHttpResponse, System.Net.HttpClient, MockObserver;
+uses
+  Subject, System.SysUtils, MockNetHTTPRequest, Constants, MockHttpResponse,
+  System.Net.HttpClient, MockObserver, SimpleNetHTTPRequestProxy,
+  System.Net.HttpClientComponent;
 
 const
   cStatusCode200 = 200;
