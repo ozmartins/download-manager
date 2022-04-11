@@ -1,7 +1,7 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  Caption = 'Prova Delphi Minist'#233'rio P'#250'blico'
+  Caption = 'Download Manager'
   ClientHeight = 441
   ClientWidth = 624
   Color = clBtnFace
