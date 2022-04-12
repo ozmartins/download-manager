@@ -126,6 +126,13 @@ begin
     raise Exception.Create(cUrlIsEmpty);
 
   lResponse := fHttpRequest.Head(AUrl);
+
+  if lResponse = nil then
+  begin
+    Result := False;
+    Exit;
+  end;
+
   try
     if (not lResponse.ContainsHeader(cContentDisposition)) then
       raise Exception.Create(cResponseHeaderDoesNotContainsContentField);
