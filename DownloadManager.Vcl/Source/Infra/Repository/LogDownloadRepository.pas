@@ -38,10 +38,7 @@ const
   cCommandTextForEmptyDataSet = 'select codigo, url, datainicio, datafim from logdownload where 1=2';
   cCommandTextForSelectAll = 'select codigo, url, datainicio, datafim as datafim from logdownload';
 
-  cMoreThanOneRegistryFound = 'Something very odd happened: There is more than one registry in the database with %d ID. Run to the hills. Now!';
-  cMaxRegistriesPerPageViolated = 'Pages can have a maximum of 100 registries';
-
-  cMaxRegistriesPerPage = 100;
+  cMoreThanOneRegistryFound = 'Algo muito estranho ocorreu. Há mais que um registro no banco com o ID %d.';
 
 { TLogDownloadRepository }
 

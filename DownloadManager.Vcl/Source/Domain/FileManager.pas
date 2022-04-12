@@ -5,11 +5,11 @@ interface
 uses System.Classes, System.SysUtils;
 
 const
-  cDirectoryDoesntExists = 'Internal error: The destination directory (%s) doesn''t exists.';
-  cFileAlreadyExists  = 'Internal error: The file (%s) already exists.';
-  cFileDoesntExists  = 'Internal error: The file (%s) doesn''t exists.';
-  cFileNameIsEmpty  = 'Internal error: The file name is empty.';
-  cDirectoryPathIsEmpty  = 'Internal error: The directory name is empty.';
+  cDirectoryDoesntExists = 'Erro interno: The destination directory (%s) doesn''t exists.';
+  cFileAlreadyExists  = 'Erro interno: The file (%s) already exists.';
+  cFileDoesntExists  = 'Erro interno: The file (%s) doesn''t exists.';
+  cFileNameIsEmpty  = 'Erro interno: The file name is empty.';
+  cDirectoryPathIsEmpty  = 'Erro interno: The directory name is empty.';
 
 type
   ///<summary>Offers some tools to help with file management.</summary>

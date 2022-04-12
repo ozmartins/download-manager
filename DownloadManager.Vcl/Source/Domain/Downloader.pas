@@ -6,13 +6,13 @@ uses
   SimpleNetHTTPRequest, System.Net.HttpClient, Subject, System.Net.Mime, System.Net.HttpClientComponent ;
 
 const
-  cDownloaderIsNotDownloading = 'Internal error: Downloader isn''t downloading now.';
-  cDownloaderIsBusy = 'Internal error: Downloader is busy now. Try again later';
-  cUrlIsEmpty = 'Internal error: The AUrl argument is empty.';
-  cUrlIsNotALink = 'Internal error: The AUrl argument doesn''t stand for a download link.';
-  cResponseHeaderDoesNotContainsContentField = 'Internal error: The response header doesn''t have the Content-Disposition field.';
+  cDownloaderIsNotDownloading = 'Erro interno: O downloader não está realizando um download.';
+  cDownloaderIsBusy = 'Erro interno: O downloader está ocupado. Tente novamente mais tarde.';
+  cUrlIsEmpty = 'Erro interno: O parâmetro "URL" está vazio.';
+  cUrlIsNotALink = 'Erro interno: O parâmetro corresponde a um link para download.';
+  cResponseHeaderDoesNotContainsContentField = 'Erro interno: O cabeçalho da resposta HTTP não possui o campo "Content-Disposition".';
   cContentDisposition = 'Content-Disposition';
-  cNetHTTPRequestIsNull = 'The ANetHTTPRequestIsNull argument can''t be null.';
+  cNetHTTPRequestIsNull = 'O parâmetro ANetHTTPRequestIsNull não pode ser nulo.';
 
 type
   TDownloaderState = (dsIdle, dsDownloading, dsAborted);

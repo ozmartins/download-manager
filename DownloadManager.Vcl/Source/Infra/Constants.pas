@@ -16,7 +16,7 @@ const
   {$endregion}
 
   {$region messages}
-  cNotThronwException = 'An expected exception was not thrown.';
+  cNotThronwException = 'Uma exceção esperada não foi lançada.';
   {$endregion}
 
 implementation

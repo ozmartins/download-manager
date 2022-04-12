@@ -16,9 +16,6 @@ uses
   Vcl.ComCtrls, DateUtils, System.StrUtils, System.Threading, Data.DBXMySQL,
   DownloadManager, Downloader, SimpleNetHTTPRequestProxy, Observer, LogDownloadRepository;
 
-const
-  cDownloadDirectoryName = 'Download';
-
 type
   TMainForm = class(TForm, IObserver)
     SqLiteConnection: TSQLConnection;
@@ -74,6 +71,7 @@ const
   cDatabaseParameter = 'Database';
   cDatabaseFileExtension = '.db';
   cScrollBarWidth = 20;
+  cDownloadDirectoryName = 'Download';
 
 {$R *.dfm}
 

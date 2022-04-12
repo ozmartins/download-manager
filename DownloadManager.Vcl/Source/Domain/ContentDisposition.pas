@@ -9,7 +9,7 @@ const
   cContentDispositionTypeNameInLine = 'cdtInLine';
   cContentDispositionTypeNameAttachment = 'cdtAttachment';
 
-  cInvalidContentDispositionTypeMessage = 'Internal error: Invalid value for AContentDisposition argument.';
+  cInvalidContentDispositionTypeMessage = 'Erro interno: Valor inválido para o parâmetro AContentDisposition.';
 
 type
   TContentDispositionType = (cdtInLine = 0, cdtAttachment = 1);
