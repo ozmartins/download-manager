@@ -12,6 +12,7 @@ object MainForm: TMainForm
   Font.Style = []
   Position = poScreenCenter
   OnCreate = FormCreate
+  OnResize = FormResize
   TextHeight = 15
   object DownloadGroupBox: TGroupBox
     Left = 0
@@ -91,10 +92,11 @@ object MainForm: TMainForm
     TabOrder = 2
     OnClick = HistoryGroupBoxClick
     object HistoryDownloadsGrid: TDBGrid
-      Left = 5
-      Top = 27
-      Width = 616
-      Height = 307
+      Left = 2
+      Top = 17
+      Width = 620
+      Height = 318
+      Align = alClient
       DataSource = LogDownloadDataSource
       ReadOnly = True
       TabOrder = 0
@@ -147,7 +149,6 @@ object MainForm: TMainForm
       
         'Database=D:\download-manager\v3\DownloadManager\DownloadManager.' +
         'Vcl\Win32\Debug\DownloadManager.Vcl.db')
-    Connected = True
     Left = 295
     Top = 176
   end
@@ -165,7 +166,6 @@ object MainForm: TMainForm
     Top = 368
   end
   object LogDownloadClientDataSet: TClientDataSet
-    Active = True
     Aggregates = <>
     Params = <>
     ProviderName = 'LogDownloadProvider'
@@ -194,7 +194,7 @@ object MainForm: TMainForm
     Params = <>
     SQLConnection = SqLiteConnection
     Left = 455
-    Top = 192
+    Top = 184
   end
   object SequenceDataSetProvider: TDataSetProvider
     DataSet = SequenceSQLDataSet

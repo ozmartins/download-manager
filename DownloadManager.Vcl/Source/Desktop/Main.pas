@@ -44,10 +44,9 @@ type
     procedure FormCreate(Sender: TObject);
     procedure DownloadButtonClick(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
-    procedure LogDownloadClientDataSetReconcileError(
-      DataSet: TCustomClientDataSet; E: EReconcileError;
-      UpdateKind: TUpdateKind; var Action: TReconcileAction);
+    procedure LogDownloadClientDataSetReconcileError(DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
     procedure HistoryGroupBoxClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     fDownloader: TDownloader;
     fDownloadManager: TDownloadManager;
@@ -74,6 +73,7 @@ const
   cDownloadAborted = 'Download abortado pelo usuário';
   cDatabaseParameter = 'Database';
   cDatabaseFileExtension = '.db';
+  cScrollBarWidth = 20;
 
 {$R *.dfm}
 
@@ -118,9 +118,20 @@ begin
     SequenceSqlDataSet,
     SequenceClientDataSet
   );
+  fLogDownloadRepository.SelectAll();
 
   fDownloadManager := TDownloadManager.Create(fDownloader, fLogDownloadRepository);
   fDownloadManager.Subject.AddObserver(Self);
+end;
+
+procedure TMainForm.FormResize(Sender: TObject);
+begin
+  HistoryDownloadsGrid.Columns[1].Width :=
+      HistoryDownloadsGrid.ClientWidth
+    - HistoryDownloadsGrid.Columns[0].Width
+    - HistoryDownloadsGrid.Columns[2].Width
+    - HistoryDownloadsGrid.Columns[3].Width
+    - cScrollBarWidth
 end;
 
 function TMainForm.GetDestinationDirectory: String;
@@ -179,7 +190,7 @@ begin
   ASQLConnection.Params.Add('DriverPackageLoader=TDBXSqliteDriverLoader,DBXSqliteDriver280.bpl');
   ASQLConnection.Params.Add('MetaDataPackageLoader=TDBXSqliteMetaDataCommandFactory,DbxSqliteDriver280.bpl');
   ASQLConnection.Params.Add('FailIfMissing=True');
-  ASQLConnection.Params.Add('Database=D:\download-manager\v3\DownloadManager\DownloadManager.Vcl\Win32\Debug\DownloadManager.Vcl.db');
+  ASQLConnection.Params.Add('Database='+ChangeFileExt(Application.ExeName, '.db'));
   ASQLConnection.Open;
 end;
 
