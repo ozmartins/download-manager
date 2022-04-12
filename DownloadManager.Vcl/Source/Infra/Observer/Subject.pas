@@ -6,9 +6,8 @@ uses
    System.Generics.Collections, Observer;
 
 const
-  cAddObserverNullParameter = 'The observer parameter can''t be null';
-  cRemoveObserverNullParameter = 'Internal error: The observer parameter can''t be null';
-  cRemoveObserverDoesntExist = 'Internal error: Observer not found in the observers'' list.';
+  cObserverNullParameter = 'Erro interno: O parâmetro "observer" não pode ser nulo.';
+  cObserverDoesntExist = 'Erro interno: observado não encontrado na lista.';
 
 type
   /// <summary>
@@ -53,7 +52,7 @@ end;
 procedure TSubject.AddObserver(AObserver: IObserver);
 begin
   if AObserver = nil then
-    raise Exception.Create(cAddObserverNullParameter);
+    raise Exception.Create(cObserverNullParameter);
   fObservers.Add(AObserver);
 end;
 
@@ -63,10 +62,10 @@ end;
 procedure TSubject.RemoveObserver(AObserver: IObserver);
 begin
   if AObserver = nil then
-    raise Exception.Create(cRemoveObserverNullParameter);
+    raise Exception.Create(cObserverNullParameter);
 
   if not fObservers.Contains(AObserver) then
-    raise Exception.Create(cRemoveObserverDoesntExist);
+    raise Exception.Create(cObserverDoesntExist);
 
   fObservers.Remove(AObserver);
 end;

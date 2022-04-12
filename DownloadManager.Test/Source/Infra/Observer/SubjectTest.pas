@@ -80,7 +80,7 @@ begin
 
   {$region 'Act/Assert'}
   try
-    Assert.WillRaiseWithMessage(procedure () begin lSubject.AddObserver(nil) end, Exception, cAddObserverNullParameter);
+    Assert.WillRaiseWithMessage(procedure () begin lSubject.AddObserver(nil) end, Exception, cObserverNullParameter);
   finally
     lSubject.Free;
   end;
@@ -197,7 +197,7 @@ begin
 
   {$region 'act/assert'}
   try
-    Assert.WillRaiseWithMessage(procedure () begin lSubject.RemoveObserver(TMockObserver.Create()) end, Exception, cRemoveObserverDoesntExist);
+    Assert.WillRaiseWithMessage(procedure () begin lSubject.RemoveObserver(TMockObserver.Create()) end, Exception, cObserverDoesntExist);
   finally
     lSubject.Free;
   end;
@@ -219,7 +219,7 @@ begin
 
   {$region 'Act/Assert'}
   try
-    Assert.WillRaiseWithMessage(procedure () begin lSubject.RemoveObserver(lMockObserver2); end, Exception, cRemoveObserverDoesntExist);
+    Assert.WillRaiseWithMessage(procedure () begin lSubject.RemoveObserver(lMockObserver2); end, Exception, cObserverDoesntExist);
   finally
     lSubject.Free;
   end;
@@ -236,7 +236,7 @@ begin
 
   {$region 'act/assert'}
   try
-    Assert.WillRaiseWithMessage(procedure () begin lSubject.RemoveObserver(nil) end, Exception, cRemoveObserverNullParameter);
+    Assert.WillRaiseWithMessage(procedure () begin lSubject.RemoveObserver(nil) end, Exception, cObserverNullParameter);
   finally
     lSubject.Free;
   end;
