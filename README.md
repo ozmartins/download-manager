@@ -44,7 +44,7 @@ A aplicação teve seus métodos documentados dentro do próprio código fonte u
 - Múltiplos downloads simultâneos.
 - Configuração do banco de dados da aplicação.
 - Aumentar cobertura de testes.
-- Melhor classe TlogDownloadRepository.
+- Melhorar classe TlogDownloadRepository.
 - Usar ORM para persistência.
 - Usar framework de mock nos testes unitários.
 - Implementar um CLI (command-line interface)
