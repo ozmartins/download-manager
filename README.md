@@ -37,7 +37,7 @@ A aplicação teve seus métodos documentados dentro do próprio código fonte u
 ## Problemas conhecidos
 - Ao salvar o log do primeiro download, uma exceção do tipo "access violation" ocorre.
 - Eventualmente, um erro de “access violation” ocorre após a rotina de download assíncrono emitir uma exceção (o problema não ocorre com a versão síncrona da rotina).
-- A grade que exibe o log não consegue mostrar as datas de início e fim do downnload, apesar de ambas as data estarem devidamente salvas no banco de dados.
+- A grade que exibe o log não consegue mostrar as datas de início e fim do downnload, apesar de ambas as datas estarem devidamente salvas no banco de dados.
 
 ## Implementações futuras
 - Pausa de downloads.
