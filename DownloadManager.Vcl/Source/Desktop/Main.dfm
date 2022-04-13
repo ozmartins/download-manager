@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = 'Download Manager'
   ClientHeight = 441
-  ClientWidth = 624
+  ClientWidth = 584
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,57 +11,45 @@ object MainForm: TMainForm
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poScreenCenter
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnResize = FormResize
   TextHeight = 15
   object DownloadGroupBox: TGroupBox
     Left = 0
     Top = 0
-    Width = 624
-    Height = 85
+    Width = 584
+    Height = 89
     Align = alTop
     Caption = 'Download'
     TabOrder = 0
     DesignSize = (
-      624
-      85)
-    object UrlEdit: TEdit
-      Left = 11
-      Top = 23
-      Width = 446
-      Height = 23
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 0
-      Text = 
-        'https://az764295.vo.msecnd.net/stable/78a4c91400152c0f27ba4d363e' +
-        'b56d2835f9903a/VSCodeUserSetup-x64-1.43.0.exe'
-    end
+      584
+      89)
     object DownloadButton: TButton
-      Left = 463
-      Top = 22
-      Width = 75
+      Left = 10
+      Top = 52
+      Width = 140
       Height = 25
-      Anchors = [akTop, akRight]
-      Caption = 'Download'
+      Caption = 'Iniciar download'
       TabOrder = 1
       OnClick = DownloadButtonClick
     end
     object StopButton: TButton
-      Left = 544
-      Top = 22
-      Width = 75
+      Left = 151
+      Top = 52
+      Width = 140
       Height = 25
-      Anchors = [akTop, akRight]
-      Caption = 'Parar'
+      Caption = 'Parar download'
       Enabled = False
       TabOrder = 2
       OnClick = StopButtonClick
     end
     object ProgressBar: TProgressBar
-      Left = 13
-      Top = 52
-      Width = 608
-      Height = 17
+      Left = 10
+      Top = 23
+      Width = 565
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
       DoubleBuffered = True
       ParentDoubleBuffered = False
@@ -69,12 +57,43 @@ object MainForm: TMainForm
       MarqueeInterval = 1
       Step = 1
       TabOrder = 3
+      Visible = False
+    end
+    object ViewProgressButton: TButton
+      Left = 293
+      Top = 52
+      Width = 140
+      Height = 25
+      Caption = 'Ver mensagem'
+      Enabled = False
+      TabOrder = 4
+      OnClick = ViewProgressButtonClick
+    end
+    object HistoryButton: TButton
+      Left = 435
+      Top = 52
+      Width = 140
+      Height = 25
+      Caption = 'Ver hist'#243'rico'
+      TabOrder = 5
+      OnClick = HistoryButtonClick
+    end
+    object UrlEdit: TEdit
+      Left = 10
+      Top = 23
+      Width = 565
+      Height = 23
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 0
+      Text = 
+        'https://az764295.vo.msecnd.net/stable/78a4c91400152c0f27ba4d363e' +
+        'b56d2835f9903a/VSCodeUserSetup-x64-1.43.0.exe'
     end
   end
   object StatusBar: TStatusBar
     Left = 0
     Top = 422
-    Width = 624
+    Width = 584
     Height = 19
     Color = clMaroon
     Panels = <
@@ -84,18 +103,17 @@ object MainForm: TMainForm
   end
   object HistoryGroupBox: TGroupBox
     Left = 0
-    Top = 85
-    Width = 624
-    Height = 337
+    Top = 89
+    Width = 584
+    Height = 333
     Align = alClient
     Caption = 'Hist'#243'rico'
     TabOrder = 2
-    OnClick = HistoryGroupBoxClick
     object HistoryDownloadsGrid: TDBGrid
       Left = 2
       Top = 17
-      Width = 620
-      Height = 318
+      Width = 580
+      Height = 314
       Align = alClient
       DataSource = LogDownloadDataSource
       ReadOnly = True
@@ -117,7 +135,7 @@ object MainForm: TMainForm
           Expanded = False
           FieldName = 'Url'
           Title.Caption = 'URL'
-          Width = 359
+          Width = 329
           Visible = True
         end
         item
@@ -147,8 +165,9 @@ object MainForm: TMainForm
         'Driver280.bpl'
       'FailIfMissing=True'
       
-        'Database=D:\download-manager\v3\DownloadManager\DownloadManager.' +
-        'Vcl\Win32\Debug\DownloadManager.Vcl.db')
+        'Database=D:\softplan\prova-delphi\v3\download-manager\DownloadMa' +
+        'nager.Vcl\Win32\Debug\DownloadManager.Vcl.db')
+    Connected = True
     Left = 295
     Top = 176
   end

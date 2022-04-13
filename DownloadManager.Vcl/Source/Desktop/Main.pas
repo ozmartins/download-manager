@@ -37,13 +37,17 @@ type
     SequenceDataSetProvider: TDataSetProvider;
     SequenceClientDataSet: TClientDataSet;
     SequenceDataSource: TDataSource;
+    ViewProgressButton: TButton;
+    HistoryButton: TButton;
 
     procedure FormCreate(Sender: TObject);
     procedure DownloadButtonClick(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
     procedure LogDownloadClientDataSetReconcileError(DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
-    procedure HistoryGroupBoxClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure HistoryButtonClick(Sender: TObject);
+    procedure ViewProgressButtonClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     fDownloader: TDownloader;
     fDownloadManager: TDownloadManager;
@@ -52,7 +56,16 @@ type
     fLastShownMessage: String;
 
     function GetDestinationDirectory(): String;
+    procedure CreateDownloader();
+    procedure CreateLogDownloadRepository();
+    procedure CreateDownloadManager();
     procedure SetupSQLConnection(ASQLConnection: TSQLConnection);
+    procedure ConfigureComponentEnablement(ADownloadState: TDownloaderState);
+    procedure ResizeUrlColumn();
+    procedure LogDownloadRepository;
+    procedure CheckAbortedDownload();
+    procedure CheckCompletedDownload();
+    procedure CheckLastError();
   public
     procedure Notify();
   end;
@@ -61,6 +74,9 @@ var
   MainForm: TMainForm;
 
 implementation
+
+uses
+  System.Math;
 
 const
   cEmptyUrlMessage = 'Você precisa informar a URL antes de clicar no botão "Download".';
@@ -72,6 +88,8 @@ const
   cDatabaseFileExtension = '.db';
   cScrollBarWidth = 20;
   cDownloadDirectoryName = 'Download';
+  cDownloadProgressMessage = 'Progresso do download: %d';
+  cDownloadInterruptConfirmation = 'Existe um download em andamento, deseja interrompe-lo';
 
 {$R *.dfm}
 
@@ -82,64 +100,40 @@ begin
   else if fDownloader.State <> TDownloaderState.dsIdle then
     MessageDlg(cDownloaderIsBusy, mtInformation, [mbOk], 0)
   else
-  begin
-    DownloadButton.Enabled := False;
-    try
-      fDownloadManager.DownloadAsync(UrlEdit.Text, GetDestinationDirectory());
-      StopButton.Enabled := True;
-    except
-      on e: Exception do
-      begin
-        DownloadButton.Enabled :=True;
-        StopButton.Enabled := False;
-        raise Exception.Create(e.Message);
-      end;
-    end;
-  end
+    fDownloadManager.DownloadAsync(UrlEdit.Text, GetDestinationDirectory());
+end;
+
+procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  CanClose := True;
+  if (fDownloader.State = TDownloaderState.dsDownloading) then
+    if MessageDlg(cDownloadInterruptConfirmation, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+      CanClose := False;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
-  SetupSQLConnection(SqLiteConnection);
-
   fLastShownMessage := EmptyStr;
 
-  fHttpRequest := TSimpleNetHTTPRequestProxy.Create(NetHTTPRequest);
+  SetupSQLConnection(SqLiteConnection);
 
-  fDownloader := TDownloader.Create(fHttpRequest);
-  fDownloader.Subject.AddObserver(Self);
+  CreateDownloader();
 
-  fLogDownloadRepository := TLogDownloadRepository.Create(
-    SqLiteConnection,
-    LogDownloadSqlDataSet,
-    LogDownloadClientDataSet,
-    SequenceSqlDataSet,
-    SequenceClientDataSet
-  );
+  CreateLogDownloadRepository();
+
+  CreateDownloadManager();
+
   fLogDownloadRepository.SelectAll();
-
-  fDownloadManager := TDownloadManager.Create(fDownloader, fLogDownloadRepository);
-  fDownloadManager.Subject.AddObserver(Self);
 end;
 
 procedure TMainForm.FormResize(Sender: TObject);
 begin
-  HistoryDownloadsGrid.Columns[1].Width :=
-      HistoryDownloadsGrid.ClientWidth
-    - HistoryDownloadsGrid.Columns[0].Width
-    - HistoryDownloadsGrid.Columns[2].Width
-    - HistoryDownloadsGrid.Columns[3].Width
-    - cScrollBarWidth
+  ResizeUrlColumn();
 end;
 
-function TMainForm.GetDestinationDirectory: String;
+procedure TMainForm.HistoryButtonClick(Sender: TObject);
 begin
-  Result := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) + cDownloadDirectoryName;
-end;
-
-procedure TMainForm.HistoryGroupBoxClick(Sender: TObject);
-begin
-  ShowMessage(LogDownloadSqlDataSet.CommandText)
+  fLogDownloadRepository.SelectAll();
 end;
 
 procedure TMainForm.LogDownloadClientDataSetReconcileError(DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
@@ -148,36 +142,36 @@ begin
 end;
 
 procedure TMainForm.Notify;
-var
-  lLastError: String;
 begin
-  ProgressBar.Position := Trunc(fDownloadManager.GetProgress());
-  DownloadButton.Enabled := fDownloader.State = TDownloaderState.dsIdle;
-  StopButton.Enabled := fDownloader.State = TDownloaderState.dsDownloading;
+  ConfigureComponentEnablement(fDownloader.State);
+
   Application.ProcessMessages();
 
-  if (fDownloader.State = TDownloaderState.dsAborted) and (fLastShownMessage <> cDownloadAborted) then
-  begin
-    MessageDlg(Format(cDownloadAborted, [GetDestinationDirectory()]), mtWarning, [mbOk], 0);
-    fLastShownMessage := cDownloadAborted;
-  end;
+  CheckAbortedDownload();
 
-  if (fDownloader.State = TDownloaderState.dsIdle) and (fDownloadManager.GetProgress() >= 100) and (fLastShownMessage <> cDownloadCompleted) then
-  begin
-    MessageDlg(Format(cDownloadCompleted, [GetDestinationDirectory()]), mtInformation, [mbOk], 0);
-    fLastShownMessage := cDownloadCompleted;
-  end;
+  CheckCompletedDownload();
 
-  if (fDownloader.State = TDownloaderState.dsIdle) then
-    ProgressBar.Position := 0;
+  ProgressBar.Position := IfThen(fDownloader.State = TDownloaderState.dsIdle, 0, Trunc(fDownloadManager.GetProgress()));
 
-  lLastError := fDownloader.PopLastError();
-  if not lLastError.IsEmpty then
-    MessageDlg(lLastError, mtError, [mbOk], 0);
+  CheckLastError();
+end;
 
-  lLastError := fDownloadManager.PopLastError();
-  if not lLastError.IsEmpty then
-    MessageDlg(lLastError, mtError, [mbOk], 0);
+procedure TMainForm.StopButtonClick(Sender: TObject);
+begin
+  if fDownloader.State <> TDownloaderState.dsDownloading then
+    MessageDlg(cDownloaderCantStopNow, mtInformation, [mbOk], 0);
+
+ fDownloadManager.Stop();
+end;
+
+procedure TMainForm.ViewProgressButtonClick(Sender: TObject);
+begin
+  MessageDlg(Format(cDownloadProgressMessage, [Trunc(fDownloader.Progress)]), mtInformation, [mbOk], 0);
+end;
+
+function TMainForm.GetDestinationDirectory: String;
+begin
+  Result := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) + cDownloadDirectoryName;
 end;
 
 procedure TMainForm.SetupSQLConnection(ASQLConnection: TSQLConnection);
@@ -192,16 +186,87 @@ begin
   ASQLConnection.Open;
 end;
 
-procedure TMainForm.StopButtonClick(Sender: TObject);
+procedure TMainForm.ConfigureComponentEnablement(ADownloadState: TDownloaderState);
 begin
-  if fDownloader.State <> TDownloaderState.dsDownloading then
-    MessageDlg(cDownloaderCantStopNow, mtInformation, [mbOk], 0)
-  else
+  StopButton.Enabled := ADownloadState = TDownloaderState.dsDownloading;
+  ViewProgressButton.Enabled := ADownloadState = TDownloaderState.dsDownloading;
+  ProgressBar.Visible := ADownloadState = TDownloaderState.dsDownloading;
+  UrlEdit.Visible := ADownloadState <> TDownloaderState.dsDownloading;
+end;
+
+procedure TMainForm.ResizeUrlColumn;
+begin
+  HistoryDownloadsGrid.Columns[1].Width :=
+      HistoryDownloadsGrid.ClientWidth
+    - HistoryDownloadsGrid.Columns[0].Width
+    - HistoryDownloadsGrid.Columns[2].Width
+    - HistoryDownloadsGrid.Columns[3].Width
+    - cScrollBarWidth
+end;
+
+procedure TMainForm.CreateDownloader;
+begin
+  fHttpRequest := TSimpleNetHTTPRequestProxy.Create(NetHTTPRequest);
+  fDownloader := TDownloader.Create(fHttpRequest);
+  fDownloader.Subject.AddObserver(Self);
+end;
+
+procedure TMainForm.CreateDownloadManager;
+begin
+  fDownloadManager := TDownloadManager.Create(fDownloader, fLogDownloadRepository);
+  fDownloadManager.Subject.AddObserver(Self);
+end;
+
+procedure TMainForm.CreateLogDownloadRepository;
+begin
+  fLogDownloadRepository := TLogDownloadRepository.Create(
+    SqLiteConnection,
+    LogDownloadSqlDataSet,
+    LogDownloadClientDataSet,
+    SequenceSqlDataSet,
+    SequenceClientDataSet
+  );
+end;
+
+procedure TMainForm.LogDownloadRepository;
+begin
+  if (fDownloader.State = TDownloaderState.dsAborted) and (fLastShownMessage <> cDownloadAborted) then
   begin
-    fDownloadManager.Stop();
-    DownloadButton.Enabled := True;
-    StopButton.Enabled := False;
+    MessageDlg(Format(cDownloadAborted, [GetDestinationDirectory()]), mtWarning, [mbOk], 0);
+    fLastShownMessage := cDownloadAborted;
   end;
+end;
+
+procedure TMainForm.CheckAbortedDownload;
+begin
+  if (fDownloader.State = TDownloaderState.dsAborted) and (fLastShownMessage <> cDownloadAborted) then
+  begin
+    MessageDlg(Format(cDownloadAborted, [GetDestinationDirectory()]), mtWarning, [mbOk], 0);
+    fLastShownMessage := cDownloadAborted;
+  end;
+end;
+
+procedure TMainForm.CheckCompletedDownload;
+begin
+  if (fDownloader.State = TDownloaderState.dsIdle) and (fDownloadManager.GetProgress() >= 100) and (fLastShownMessage <> cDownloadCompleted) then
+  begin
+    MessageDlg(Format(cDownloadCompleted, [GetDestinationDirectory()]), mtInformation, [mbOk], 0);
+    fLastShownMessage := cDownloadCompleted;
+    fLogDownloadRepository.SelectAll();
+  end;
+end;
+
+procedure TMainForm.CheckLastError;
+var
+  lLastError: String;
+begin
+  lLastError := fDownloader.PopLastError();
+
+  if lLastError.IsEmpty then
+    lLastError := fDownloadManager.PopLastError();
+
+  if not lLastError.IsEmpty then
+    MessageDlg(lLastError, mtError, [mbOk], 0);
 end;
 
 end.
