@@ -9,7 +9,7 @@ const
   cDownloaderIsNotDownloading = 'Erro interno: O downloader não está realizando um download.';
   cDownloaderIsBusy = 'Erro interno: O downloader está ocupado. Tente novamente mais tarde.';
   cUrlIsEmpty = 'Erro interno: O parâmetro "URL" está vazio.';
-  cUrlIsNotALink = 'Erro interno: O parâmetro corresponde a um link para download.';
+  cUrlIsNotALink = 'Erro interno: O parâmetro não corresponde a um link para download.';
   cResponseHeaderDoesNotContainsContentField = 'Erro interno: O cabeçalho da resposta HTTP não possui o campo "Content-Disposition".';
   cContentDisposition = 'Content-Disposition';
   cNetHTTPRequestIsNull = 'O parâmetro ANetHTTPRequestIsNull não pode ser nulo.';

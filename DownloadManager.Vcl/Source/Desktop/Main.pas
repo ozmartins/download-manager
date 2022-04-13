@@ -45,7 +45,6 @@ type
     procedure HistoryButtonClick(Sender: TObject);
     procedure ViewProgressButtonClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    procedure HistoryGroupBoxClick(Sender: TObject);
   private
     fDownloader: TDownloader;
     fDownloadManager: TDownloadManager;
@@ -76,7 +75,7 @@ uses
   System.Math;
 
 const
-  cEmptyUrlMessage = 'Você precisa informar a URL antes de clicar no botão "Download".';
+  cEmptyUrlMessage = 'Você precisa informar a URL antes de clicar no botão "%s".';
   cDownloaderIsBusy = 'Já existe um download em andamento e a ferramenta não suporta downloads simultâneos. Por favor aguarde.';
   cDownloaderCantStopNow = 'Não há downloads em andamento no momento.';
   cDownloadCompleted = 'Download concluído com sucesso! O arquivo está disponível em %s';
@@ -85,15 +84,24 @@ const
   cDatabaseFileExtension = '.db';
   cScrollBarWidth = 20;
   cDownloadDirectoryName = 'Download';
-  cDownloadProgressMessage = 'Progresso do download: %d';
+  cDownloadProgressMessage = 'Progresso do download: %s';
   cDownloadInterruptConfirmation = 'Existe um download em andamento, deseja interrompe-lo';
+
+  cDriverUnit = 'DriverUnit=Data.DbxSqlite';
+  cDriverPackageLoader = 'DriverPackageLoader=TDBXSqliteDriverLoader,DBXSqliteDriver280.bpl';
+  cMetaDataPackageLoader = 'MetaDataPackageLoader=TDBXSqliteMetaDataCommandFactory,DbxSqliteDriver280.bpl';
+  cFailIfMissing = 'FailIfMissing=True';
+  cDatabase = 'Database=%s';
 
 {$R *.dfm}
 
 procedure TMainForm.DownloadButtonClick(Sender: TObject);
 begin
   if Trim(UrlEdit.Text) = EmptyStr then
-    MessageDlg(cEmptyUrlMessage, mtInformation, [mbOk], 0)
+  begin
+    MessageDlg(Format(cEmptyUrlMessage, [DownloadButton.Caption]), mtInformation, [mbOk], 0);
+    UrlEdit.SetFocus();
+  end
   else if fDownloader.State <> TDownloaderState.dsIdle then
     MessageDlg(cDownloaderIsBusy, mtInformation, [mbOk], 0)
   else
@@ -128,11 +136,6 @@ begin
   fLogDownloadRepository.SelectAll();
 end;
 
-procedure TMainForm.HistoryGroupBoxClick(Sender: TObject);
-begin
-  ShowMessage(LogDownloadSqlDataSet.CommandText)
-end;
-
 procedure TMainForm.LogDownloadClientDataSetReconcileError(DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
 begin
   raise E;
@@ -163,7 +166,7 @@ end;
 
 procedure TMainForm.ViewProgressButtonClick(Sender: TObject);
 begin
-  MessageDlg(Format(cDownloadProgressMessage, [Trunc(fDownloader.Progress)]), mtInformation, [mbOk], 0);
+  MessageDlg(Format(cDownloadProgressMessage, [Trunc(fDownloader.Progress).ToString()+'%']), mtInformation, [mbOk], 0);
 end;
 
 function TMainForm.GetDestinationDirectory: String;
@@ -175,11 +178,11 @@ procedure TMainForm.SetupSQLConnection(ASQLConnection: TSQLConnection);
 begin
   ASQLConnection.Close;
   ASQLConnection.Params.Clear();
-  ASQLConnection.Params.Add('DriverUnit=Data.DbxSqlite');
-  ASQLConnection.Params.Add('DriverPackageLoader=TDBXSqliteDriverLoader,DBXSqliteDriver280.bpl');
-  ASQLConnection.Params.Add('MetaDataPackageLoader=TDBXSqliteMetaDataCommandFactory,DbxSqliteDriver280.bpl');
-  ASQLConnection.Params.Add('FailIfMissing=True');
-  ASQLConnection.Params.Add('Database='+ChangeFileExt(Application.ExeName, '.db'));
+  ASQLConnection.Params.Add(cDriverUnit);
+  ASQLConnection.Params.Add(cDriverPackageLoader);
+  ASQLConnection.Params.Add(cMetaDataPackageLoader);
+  ASQLConnection.Params.Add(cFailIfMissing);
+  ASQLConnection.Params.Add(Format(cDatabase, [ChangeFileExt(Application.ExeName, '.db')]));
   ASQLConnection.Open;
 end;
 

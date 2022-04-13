@@ -1,6 +1,8 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'Download Manager'
   ClientHeight = 110
   ClientWidth = 584
@@ -22,8 +24,6 @@ object MainForm: TMainForm
     Align = alClient
     Caption = 'Download'
     TabOrder = 0
-    ExplicitTop = -6
-    ExplicitHeight = 422
     DesignSize = (
       584
       91)
@@ -102,7 +102,6 @@ object MainForm: TMainForm
       item
         Width = 50
       end>
-    ExplicitTop = 422
   end
   object SqLiteConnection: TSQLConnection
     DriverName = 'Sqlite'
