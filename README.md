@@ -6,7 +6,7 @@
   <a href="https://github.com/ozmartins/downloadmanager/commits/main">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/ozmartins/downloadmanager.svg">
   </a>
-  <a href="https://github.com/ozmartins/downloadmanager">
+  <a href="https://github.com/ozmartins/downloadmanager/issues">
     <img alt="Repository issues" src="https://img.shields.io/github/issues/ozmartins/downloadmanager.svg">
   </a>
   <img alt="GitHub" src="https://img.shields.io/github/license/ozmartins/downloadmanager.svg">
