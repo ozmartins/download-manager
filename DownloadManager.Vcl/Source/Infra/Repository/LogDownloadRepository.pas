@@ -86,7 +86,7 @@ var
   lErrorsCount: Integer;
 begin
   lId := GenerateId(cTableName);
-  
+
   fSqlDataSet.Close;
   fSqlDataSet.CommandText := cCommandTextForEmptyDataSet;
   fSqlDataSet.Open;

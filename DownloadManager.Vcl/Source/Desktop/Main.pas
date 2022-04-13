@@ -31,8 +31,6 @@ type
     StatusBar: TStatusBar;
     NetHTTPClient: TNetHTTPClient;
     NetHTTPRequest: TNetHTTPRequest;
-    HistoryGroupBox: TGroupBox;
-    HistoryDownloadsGrid: TDBGrid;
     SequenceSQLDataSet: TSQLDataSet;
     SequenceDataSetProvider: TDataSetProvider;
     SequenceClientDataSet: TClientDataSet;
@@ -44,10 +42,10 @@ type
     procedure DownloadButtonClick(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
     procedure LogDownloadClientDataSetReconcileError(DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
-    procedure FormResize(Sender: TObject);
     procedure HistoryButtonClick(Sender: TObject);
     procedure ViewProgressButtonClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure HistoryGroupBoxClick(Sender: TObject);
   private
     fDownloader: TDownloader;
     fDownloadManager: TDownloadManager;
@@ -61,7 +59,6 @@ type
     procedure CreateDownloadManager();
     procedure SetupSQLConnection(ASQLConnection: TSQLConnection);
     procedure ConfigureComponentEnablement(ADownloadState: TDownloaderState);
-    procedure ResizeUrlColumn();
     procedure LogDownloadRepository;
     procedure CheckAbortedDownload();
     procedure CheckCompletedDownload();
@@ -126,14 +123,14 @@ begin
   fLogDownloadRepository.SelectAll();
 end;
 
-procedure TMainForm.FormResize(Sender: TObject);
-begin
-  ResizeUrlColumn();
-end;
-
 procedure TMainForm.HistoryButtonClick(Sender: TObject);
 begin
   fLogDownloadRepository.SelectAll();
+end;
+
+procedure TMainForm.HistoryGroupBoxClick(Sender: TObject);
+begin
+  ShowMessage(LogDownloadSqlDataSet.CommandText)
 end;
 
 procedure TMainForm.LogDownloadClientDataSetReconcileError(DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
@@ -161,7 +158,7 @@ begin
   if fDownloader.State <> TDownloaderState.dsDownloading then
     MessageDlg(cDownloaderCantStopNow, mtInformation, [mbOk], 0);
 
- fDownloadManager.Stop();
+  fDownloadManager.Stop();
 end;
 
 procedure TMainForm.ViewProgressButtonClick(Sender: TObject);
@@ -192,16 +189,6 @@ begin
   ViewProgressButton.Enabled := ADownloadState = TDownloaderState.dsDownloading;
   ProgressBar.Visible := ADownloadState = TDownloaderState.dsDownloading;
   UrlEdit.Visible := ADownloadState <> TDownloaderState.dsDownloading;
-end;
-
-procedure TMainForm.ResizeUrlColumn;
-begin
-  HistoryDownloadsGrid.Columns[1].Width :=
-      HistoryDownloadsGrid.ClientWidth
-    - HistoryDownloadsGrid.Columns[0].Width
-    - HistoryDownloadsGrid.Columns[2].Width
-    - HistoryDownloadsGrid.Columns[3].Width
-    - cScrollBarWidth
 end;
 
 procedure TMainForm.CreateDownloader;
@@ -252,7 +239,6 @@ begin
   begin
     MessageDlg(Format(cDownloadCompleted, [GetDestinationDirectory()]), mtInformation, [mbOk], 0);
     fLastShownMessage := cDownloadCompleted;
-    fLogDownloadRepository.SelectAll();
   end;
 end;
 

@@ -15,7 +15,8 @@ uses
   Repository in 'Source\Infra\Repository\Repository.pas',
   LogDownloadRepository in 'Source\Infra\Repository\LogDownloadRepository.pas',
   Main in 'Source\Desktop\Main.pas' {Form1},
-  DownloadManager in 'Source\Domain\DownloadManager.pas';
+  DownloadManager in 'Source\Domain\DownloadManager.pas',
+  HistoryForm in 'Source\Desktop\HistoryForm.pas' {Form2};
 
 {$R *.res}
 
@@ -23,5 +24,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TForm2, Form2);
   Application.Run;
 end.

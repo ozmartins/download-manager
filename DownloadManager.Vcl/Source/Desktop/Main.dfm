@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'Download Manager'
-  ClientHeight = 441
+  ClientHeight = 110
   ClientWidth = 584
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -13,19 +13,20 @@ object MainForm: TMainForm
   Position = poScreenCenter
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnResize = FormResize
   TextHeight = 15
   object DownloadGroupBox: TGroupBox
     Left = 0
     Top = 0
     Width = 584
-    Height = 89
-    Align = alTop
+    Height = 91
+    Align = alClient
     Caption = 'Download'
     TabOrder = 0
+    ExplicitTop = -6
+    ExplicitHeight = 422
     DesignSize = (
       584
-      89)
+      91)
     object DownloadButton: TButton
       Left = 10
       Top = 52
@@ -70,12 +71,13 @@ object MainForm: TMainForm
       OnClick = ViewProgressButtonClick
     end
     object HistoryButton: TButton
-      Left = 435
+      Left = 439
       Top = 52
       Width = 140
       Height = 25
       Caption = 'Ver hist'#243'rico'
       TabOrder = 5
+      Visible = False
       OnClick = HistoryButtonClick
     end
     object UrlEdit: TEdit
@@ -92,7 +94,7 @@ object MainForm: TMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 422
+    Top = 91
     Width = 584
     Height = 19
     Color = clMaroon
@@ -100,57 +102,7 @@ object MainForm: TMainForm
       item
         Width = 50
       end>
-  end
-  object HistoryGroupBox: TGroupBox
-    Left = 0
-    Top = 89
-    Width = 584
-    Height = 333
-    Align = alClient
-    Caption = 'Hist'#243'rico'
-    TabOrder = 2
-    object HistoryDownloadsGrid: TDBGrid
-      Left = 2
-      Top = 17
-      Width = 580
-      Height = 314
-      Align = alClient
-      DataSource = LogDownloadDataSource
-      ReadOnly = True
-      TabOrder = 0
-      TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
-      TitleFont.Height = -12
-      TitleFont.Name = 'Segoe UI'
-      TitleFont.Style = []
-      Columns = <
-        item
-          Expanded = False
-          FieldName = 'Codigo'
-          Title.Caption = 'C'#243'digo'
-          Width = 80
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'Url'
-          Title.Caption = 'URL'
-          Width = 329
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'DataInicio'
-          Title.Caption = 'In'#237'cio'
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'DataFim'
-          Title.Caption = 'Fim'
-          Visible = True
-        end>
-    end
+    ExplicitTop = 422
   end
   object SqLiteConnection: TSQLConnection
     DriverName = 'Sqlite'

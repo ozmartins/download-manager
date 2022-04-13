@@ -64,6 +64,8 @@ begin
   fFileManager.SaveFile(lHttpResponse.ContentStream, ADestinationDirectory, lFileName, True, True);
 
   Result := fLogDownloadRepository.Insert(TLogDownload.Create(0, AUrl, lStartDate, Now));
+
+  fLogDownloadRepository.SelectAll();
 end;
 
 procedure TDownloadManager.DownloadAsync(AUrl, ADestinationDirectory: String);
