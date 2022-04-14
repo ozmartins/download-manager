@@ -114,15 +114,15 @@
         <DCCReference Include="Source\Domain\LogDownload.pas"/>
         <DCCReference Include="Source\Infra\Repository\Repository.pas"/>
         <DCCReference Include="Source\Infra\Repository\LogDownloadRepository.pas"/>
+        <DCCReference Include="Source\Domain\DownloadManager.pas"/>
         <DCCReference Include="Source\Desktop\Main.pas">
             <Form>Form1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Source\Domain\DownloadManager.pas"/>
-        <DCCReference Include="Source\Desktop\HistoryForm.pas">
-            <Form>Form2</Form>
-            <FormType>dfm</FormType>
+        <DCCReference Include="Source\Desktop\History.pas">
+            <Form>HistoryForm</Form>
         </DCCReference>
+        <DCCReference Include="Source\Infra\MessageQueue.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
