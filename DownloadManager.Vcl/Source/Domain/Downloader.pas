@@ -3,7 +3,8 @@ unit Downloader;
 interface
 
 uses
-  SimpleNetHTTPRequest, System.Net.HttpClient, Subject, System.Net.Mime, System.Net.HttpClientComponent ;
+  SimpleNetHTTPRequest, System.Net.HttpClient, Subject, System.Net.Mime, System.Net.HttpClientComponent,
+  MessageQueue;
 
 const
   cDownloaderIsNotDownloading = 'Erro interno: O downloader não está realizando um download.';
@@ -13,6 +14,7 @@ const
   cResponseHeaderDoesNotContainsContentField = 'Erro interno: O cabeçalho da resposta HTTP não possui o campo "Content-Disposition".';
   cContentDisposition = 'Content-Disposition';
   cNetHTTPRequestIsNull = 'O parâmetro ANetHTTPRequestIsNull não pode ser nulo.';
+  cDownloadCompleted = 'Download concluído com sucesso!';
 
 type
   TDownloaderState = (dsIdle, dsDownloading, dsAborted);
@@ -23,7 +25,7 @@ type
     fHttpRequest: ISimpleNetHTTPRequest;
     fProgress: Double;
     fState: TDownloaderState;
-    fLastError: String;
+    fMessageQueue: TMessageQueue;
 
     procedure OnReceiveData(const Sender: TObject; AContentLength, AReadCount: Int64; var AAbort: Boolean);
     procedure OnRequestCompleted(const Sender: TObject; const AResponse: IHTTPResponse);
@@ -32,6 +34,7 @@ type
     function Downloadable(AUrl: String): Boolean;
   public
     property Subject: TSubject read fSubject;
+    property MessageQueue: TMessageQueue read fMessageQueue;
     property Progress: Double read fProgress;
     property State: TDownloaderState read fState;
 
@@ -40,7 +43,6 @@ type
 
     function Download(AUrl: String): IHttpResponse;
     procedure Abort();
-    function PopLastError(): String;
   end;
 
 implementation
@@ -80,6 +82,7 @@ begin
   fProgress := 0;
   fState := TDownloaderState.dsIdle;
   fSubject := TSubject.Create();
+  fMessageQueue := TMessageQueue.Create();
 end;
 
 /// <summary>It frees the allocated memory by the class constructor.</summary>
@@ -162,20 +165,17 @@ end;
 procedure TDownloader.OnRequestCompleted(const Sender: TObject; const AResponse: IHTTPResponse);
 begin
   fState := TDownloaderState.dsIdle;
-
-  Subject.NotifyObservers();
+  if fProgress >= 100 then
+  begin
+    fMessageQueue.Push(cDownloadCompleted);
+    Subject.NotifyObservers();
+  end;
 end;
 
 procedure TDownloader.OnRequestError(const Sender: TObject; const AError: string);
 begin
-  fLastError := AError;
+  fMessageQueue.Push(AError);
   Subject.NotifyObservers();
-end;
-
-function TDownloader.PopLastError: String;
-begin
-  Result := fLastError;
-  fLastError := EmptyStr;
 end;
 
 end.
