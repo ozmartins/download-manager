@@ -31,7 +31,8 @@ uses
   LogDownload in '..\DownloadManager.Vcl\Source\Domain\LogDownload.pas',
   LogDownloadRepository in '..\DownloadManager.Vcl\Source\Infra\Repository\LogDownloadRepository.pas',
   Repository in '..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas',
-  SimpleNetHTTPRequestProxy in '..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequestProxy.pas';
+  SimpleNetHTTPRequestProxy in '..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequestProxy.pas',
+  MessageQueue in '..\DownloadManager.Vcl\Source\Infra\MessageQueue.pas';
 
 {$IFNDEF TESTINSIGHT}
 var

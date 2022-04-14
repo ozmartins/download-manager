@@ -1,10 +1,8 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsSingle
   Caption = 'Download Manager'
-  ClientHeight = 110
+  ClientHeight = 476
   ClientWidth = 584
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +19,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 584
     Height = 91
-    Align = alClient
+    Align = alTop
     Caption = 'Download'
     TabOrder = 0
     DesignSize = (
@@ -94,7 +92,7 @@ object MainForm: TMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 91
+    Top = 457
     Width = 584
     Height = 19
     Color = clMaroon
@@ -102,6 +100,22 @@ object MainForm: TMainForm
       item
         Width = 50
       end>
+  end
+  object LogMemo: TMemo
+    Left = 0
+    Top = 91
+    Width = 584
+    Height = 366
+    Align = alClient
+    Color = clBtnFace
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Courier New'
+    Font.Style = []
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 2
   end
   object SqLiteConnection: TSQLConnection
     DriverName = 'Sqlite'

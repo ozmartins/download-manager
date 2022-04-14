@@ -37,6 +37,7 @@ type
     SequenceDataSource: TDataSource;
     ViewProgressButton: TButton;
     HistoryButton: TButton;
+    LogMemo: TMemo;
 
     procedure FormCreate(Sender: TObject);
     procedure DownloadButtonClick(Sender: TObject);
@@ -58,10 +59,8 @@ type
     procedure CreateDownloadManager();
     procedure SetupSQLConnection(ASQLConnection: TSQLConnection);
     procedure ConfigureComponentEnablement(ADownloadState: TDownloaderState);
-    procedure LogDownloadRepository;
-    procedure CheckAbortedDownload();
-    procedure CheckCompletedDownload();
-    procedure CheckLastError();
+    procedure CheckMessages();
+    procedure Log(AText: String);
   public
     procedure Notify();
   end;
@@ -78,20 +77,19 @@ const
   cEmptyUrlMessage = 'Você precisa informar a URL antes de clicar no botão "%s".';
   cDownloaderIsBusy = 'Já existe um download em andamento e a ferramenta não suporta downloads simultâneos. Por favor aguarde.';
   cDownloaderCantStopNow = 'Não há downloads em andamento no momento.';
-  cDownloadCompleted = 'Download concluído com sucesso! O arquivo está disponível em %s';
-  cDownloadAborted = 'Download abortado pelo usuário';
   cDatabaseParameter = 'Database';
   cDatabaseFileExtension = '.db';
   cScrollBarWidth = 20;
   cDownloadDirectoryName = 'Download';
-  cDownloadProgressMessage = 'Progresso do download: %s';
   cDownloadInterruptConfirmation = 'Existe um download em andamento, deseja interrompe-lo';
+  cDownloadProgressMessage = 'Progresso = %s';
 
   cDriverUnit = 'DriverUnit=Data.DbxSqlite';
   cDriverPackageLoader = 'DriverPackageLoader=TDBXSqliteDriverLoader,DBXSqliteDriver280.bpl';
   cMetaDataPackageLoader = 'MetaDataPackageLoader=TDBXSqliteMetaDataCommandFactory,DbxSqliteDriver280.bpl';
   cFailIfMissing = 'FailIfMissing=True';
   cDatabase = 'Database=%s';
+  cViewMessageButtonCaption = 'Ver mensagem';
 
 {$R *.dfm}
 
@@ -136,6 +134,11 @@ begin
   fLogDownloadRepository.SelectAll();
 end;
 
+procedure TMainForm.Log(AText: String);
+begin
+  LogMemo.Lines.Add('['+DateTimeToStr(Now) + '] -> ' + AText);
+end;
+
 procedure TMainForm.LogDownloadClientDataSetReconcileError(DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
 begin
   raise E;
@@ -145,15 +148,13 @@ procedure TMainForm.Notify;
 begin
   ConfigureComponentEnablement(fDownloader.State);
 
-  Application.ProcessMessages();
-
-  CheckAbortedDownload();
-
-  CheckCompletedDownload();
-
   ProgressBar.Position := IfThen(fDownloader.State = TDownloaderState.dsIdle, 0, Trunc(fDownloadManager.GetProgress()));
 
-  CheckLastError();
+  CheckMessages();
+
+  ViewProgressButton.Caption := IfThen(fDownloadManager.GetProgress >= 100, cViewMessageButtonCaption, ViewProgressButton.Caption);
+
+  Application.ProcessMessages();
 end;
 
 procedure TMainForm.StopButtonClick(Sender: TObject);
@@ -165,8 +166,12 @@ begin
 end;
 
 procedure TMainForm.ViewProgressButtonClick(Sender: TObject);
+var
+  lProgressText: String;
 begin
-  MessageDlg(Format(cDownloadProgressMessage, [Trunc(fDownloader.Progress).ToString()+'%']), mtInformation, [mbOk], 0);
+  lProgressText := Format(cDownloadProgressMessage, [Trunc(fDownloader.Progress).ToString()+'%']);
+  ViewProgressButton.Caption := lProgressText;
+  Log(lProgressText);
 end;
 
 function TMainForm.GetDestinationDirectory: String;
@@ -218,44 +223,23 @@ begin
   );
 end;
 
-procedure TMainForm.LogDownloadRepository;
-begin
-  if (fDownloader.State = TDownloaderState.dsAborted) and (fLastShownMessage <> cDownloadAborted) then
-  begin
-    MessageDlg(Format(cDownloadAborted, [GetDestinationDirectory()]), mtWarning, [mbOk], 0);
-    fLastShownMessage := cDownloadAborted;
-  end;
-end;
-
-procedure TMainForm.CheckAbortedDownload;
-begin
-  if (fDownloader.State = TDownloaderState.dsAborted) and (fLastShownMessage <> cDownloadAborted) then
-  begin
-    MessageDlg(Format(cDownloadAborted, [GetDestinationDirectory()]), mtWarning, [mbOk], 0);
-    fLastShownMessage := cDownloadAborted;
-  end;
-end;
-
-procedure TMainForm.CheckCompletedDownload;
-begin
-  if (fDownloader.State = TDownloaderState.dsIdle) and (fDownloadManager.GetProgress() >= 100) and (fLastShownMessage <> cDownloadCompleted) then
-  begin
-    MessageDlg(Format(cDownloadCompleted, [GetDestinationDirectory()]), mtInformation, [mbOk], 0);
-    fLastShownMessage := cDownloadCompleted;
-  end;
-end;
-
-procedure TMainForm.CheckLastError;
+procedure TMainForm.CheckMessages();
 var
-  lLastError: String;
+  lLastMsg: String;
 begin
-  lLastError := fDownloader.PopLastError();
+  lLastMsg := fDownloader.MessageQueue.Pull();
+  while not lLastMsg.IsEmpty do
+  begin
+    Log(lLastMsg);
+    lLastMsg := fDownloader.MessageQueue.Pull();
+  end;
 
-  if lLastError.IsEmpty then
-    lLastError := fDownloadManager.PopLastError();
-
-  if not lLastError.IsEmpty then
-    MessageDlg(lLastError, mtError, [mbOk], 0);
+  lLastMsg := fDownloadManager.MessageQueue.Pull();
+  while not lLastMsg.IsEmpty do
+  begin
+    Log(lLastMsg);
+    lLastMsg := fDownloadManager.MessageQueue.Pull();
+  end;
 end;
 
 end.
