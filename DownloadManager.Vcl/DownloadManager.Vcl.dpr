@@ -25,6 +25,5 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(THistoryForm, HistoryForm);
   Application.Run;
 end.
