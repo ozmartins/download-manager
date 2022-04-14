@@ -106,6 +106,7 @@
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\LogDownloadRepository.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequestProxy.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\MessageQueue.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
