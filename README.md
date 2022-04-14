@@ -48,22 +48,5 @@ IMPORTANTE: O banco de dados precisar estar dentro do mesmo diretório do execut
 ## Documentação
 A aplicação teve seus métodos documentados dentro do próprio código fonte usando o recurso de XML Documentation do Delphi. Uma documentação externa ainda não está disponível.
 
-## Problemas conhecidos
-- Ao salvar o log do primeiro download, uma exceção do tipo "access violation" ocorre.
-- Eventualmente, um erro de “access violation” ocorre após a rotina de download assíncrono emitir uma exceção (o problema não ocorre com a versão síncrona da rotina).
-- A grade que exibe o log não consegue mostrar as datas de início e fim do downnload, apesar de ambas as datas estarem devidamente salvas no banco de dados.
-
-Ver lista completa na página de [issues](https://github.com/ozmartins/DownloadManager/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
-
-## Implementações futuras
-- Pausa de downloads.
-- Múltiplos downloads simultâneos.
-- Configuração do banco de dados da aplicação.
-- Aumentar cobertura de testes.
-- Melhorar classe TlogDownloadRepository.
-- Usar ORM para persistência.
-- Usar framework de mock nos testes unitários.
-- Implementar um CLI (command-line interface)
-- Ampliar documentação dos métodos
-
-Ver lista completa na página de [issues](https://github.com/ozmartins/DownloadManager/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement)
+## Problemas conhecidos e implementações futuras
+Ver página de [issues](https://github.com/ozmartins/DownloadManager/issues)
