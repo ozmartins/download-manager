@@ -1,4 +1,5 @@
-# Download Manager
+<h1 align="center">Download Manager</h1>
+<p align="center"><i>Um gerenciador de download simples feito com Delphi e SQLite.</i></p>
 
 <p align="center" display="inline-block">
   <img src="https://img.shields.io/github/languages/top/ozmartins/downloadmanager" alt="top-language"/>  
@@ -14,10 +15,23 @@
 </p>
 
 # Sobre este projeto
-Esta aplicação possui uma GUI que permite ao usuário realizar downloads a partir de uma URL. A aplicação possui, ainda, uma opção que permite abortar o download e uma grade que mostra o histórico de downloads.
+Esta aplicação possui uma GUI que permite ao usuário realizar downloads a partir de uma URL. A aplicação possui, ainda, as seguintes opções:
+- Abortar o download
+- Visualizar o progresso do download 
+- Visualizar o histórico de downloads
+
+A imagem abaixo mostra a tela da primeira versão da aplicação.
 
 ![Screenshot_12](https://user-images.githubusercontent.com/50338986/162771056-c62b28a5-b897-4104-9146-8d0f318ad639.png)
 
+## Tópicos
+
+ - [Tecnologias](#tecnologias)
+ - [Executando a aplicação](#executando-a-aplicação)
+ - [Documentação](#documentação)
+ - [Problemas conhecidos](#problemas-conhecidos)
+ - [Implementações futuras](#implementações-futuras)
+ 
 ## Tecnologias
 A aplicação foi desenvolvida com Delphi e SQLite. Nenhum framework externo foi utilizado.
 
@@ -39,6 +53,8 @@ A aplicação teve seus métodos documentados dentro do próprio código fonte u
 - Eventualmente, um erro de “access violation” ocorre após a rotina de download assíncrono emitir uma exceção (o problema não ocorre com a versão síncrona da rotina).
 - A grade que exibe o log não consegue mostrar as datas de início e fim do downnload, apesar de ambas as datas estarem devidamente salvas no banco de dados.
 
+Ver lista completa na página de [issues](https://github.com/ozmartins/DownloadManager/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+
 ## Implementações futuras
 - Pausa de downloads.
 - Múltiplos downloads simultâneos.
@@ -49,3 +65,5 @@ A aplicação teve seus métodos documentados dentro do próprio código fonte u
 - Usar framework de mock nos testes unitários.
 - Implementar um CLI (command-line interface)
 - Ampliar documentação dos métodos
+
+Ver lista completa na página de [issues](https://github.com/ozmartins/DownloadManager/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement)
