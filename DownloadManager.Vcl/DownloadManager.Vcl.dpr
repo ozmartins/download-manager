@@ -14,8 +14,10 @@ uses
   LogDownload in 'Source\Domain\LogDownload.pas',
   Repository in 'Source\Infra\Repository\Repository.pas',
   LogDownloadRepository in 'Source\Infra\Repository\LogDownloadRepository.pas',
+  DownloadManager in 'Source\Domain\DownloadManager.pas',
   Main in 'Source\Desktop\Main.pas' {Form1},
-  DownloadManager in 'Source\Domain\DownloadManager.pas';
+  History in 'Source\Desktop\History.pas' {HistoryForm},
+  MessageQueue in 'Source\Infra\MessageQueue.pas';
 
 {$R *.res}
 

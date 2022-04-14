@@ -3,27 +3,29 @@ unit DownloadManager;
 interface
 
 uses
-  System.Contnrs, Observer, Subject, Downloader, FileManager, LogDownload, System.Generics.Collections, LogDownloadRepository;
+  System.Contnrs, Observer, Subject, Downloader, FileManager, LogDownload,
+  System.Generics.Collections, LogDownloadRepository, MessageQueue;
 
 type
   TDownloadManager = class
   private
-    fLastError: String;
+    fMessageQueue: TMessageQueue;
     fSubject: TSubject;
     fFileManager: TFileManager;
     fDownloader: TDownloader;
     fLogDownloadRepository: TLogDownloadRepository;
+    procedure PushMessage(AMessage: String);
   public
     property Subject: TSubject read fSubject;
+    property MessageQueue: TMessageQueue read fMessageQueue;
 
     constructor Create(ADownloader: TDownloader; ALogDownloadRepository: TLogDownloadRepository);
     destructor Destroy(); override;
 
-    function Download(AUrl: String; ADestinationDirectory: String): Int64;
+    procedure Download(AUrl: String; ADestinationDirectory: String);
     procedure DownloadAsync(AUrl, ADestinationDirectory: String);
     procedure Stop();
     function GetProgress(): Double;
-    function PopLastError(): String;
   end;
 
 implementation
@@ -31,6 +33,11 @@ implementation
 uses
   System.SysUtils, Threading, System.Classes, Net.HttpClient,
   ContentDisposition, Variants;
+
+const
+  cDownloadStarted = 'Download iniciado';
+  cDownloadAborted = 'Download abortado pelo usuário';
+  cFileSaved = 'Arquivo salvo em "%s"';
 
 { TDownloadManager }
 
@@ -40,32 +47,39 @@ begin
   fFileManager := TFileManager.Create();
   fDownloader := ADownloader;
   fSubject := TSubject.Create();
+  fMessageQueue := TMessageQueue.Create();
 end;
 
 destructor TDownloadManager.Destroy;
 begin
   fDownloader.Free;
   fSubject.Free;
+  fMessageQueue.Free;
   inherited;
 end;
 
-function TDownloadManager.Download(AUrl, ADestinationDirectory: String): Int64;
+procedure TDownloadManager.Download(AUrl, ADestinationDirectory: String);
 var
   lFileName: String;
   lHttpResponse: IHttpResponse;
   lStartDate: TDateTime;
 begin
+  PushMessage(cDownloadStarted);
+
   lStartDate := Now;
 
   lHttpResponse := fDownloader.Download(AUrl);
 
-  lFileName := TContentDisposition.ExtractFileName(lHttpResponse.HeaderValue['Content-Disposition']);
+  if GetProgress() > 100 then
+  begin
+    lFileName := TContentDisposition.ExtractFileName(lHttpResponse.HeaderValue['Content-Disposition']);
 
-  fFileManager.SaveFile(lHttpResponse.ContentStream, ADestinationDirectory, lFileName, True, True);
+    fFileManager.SaveFile(lHttpResponse.ContentStream, ADestinationDirectory, lFileName, True, True);
 
-  Result := fLogDownloadRepository.Insert(TLogDownload.Create(0, AUrl, lStartDate, Now));
+    PushMessage(Format(cFileSaved, [lFileName]));
 
-  fLogDownloadRepository.SelectAll();
+    fLogDownloadRepository.Insert(TLogDownload.Create(0, AUrl, lStartDate, Now));
+  end;
 end;
 
 procedure TDownloadManager.DownloadAsync(AUrl, ADestinationDirectory: String);
@@ -78,7 +92,7 @@ begin
       except
         on e: Exception do
         begin
-          fLastError := e.Message;
+          fMessageQueue.Push(e.Message);
           fSubject.NotifyObservers();
         end;
       end;
@@ -91,15 +105,16 @@ begin
   Result := fDownloader.Progress;
 end;
 
-function TDownloadManager.PopLastError: String;
+procedure TDownloadManager.PushMessage(AMessage: String);
 begin
-  Result := fLastError;
-  fLastError := EmptyStr;
+  fMessageQueue.Push(AMessage);
+  fSubject.NotifyObservers();
 end;
 
 procedure TDownloadManager.Stop();
 begin
   fDownloader.Abort();
+  fMessageQueue.Push(cDownloadAborted);
 end;
 
 end.
