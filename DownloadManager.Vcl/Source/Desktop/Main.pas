@@ -71,7 +71,7 @@ var
 implementation
 
 uses
-  System.Math;
+  System.Math, History;
 
 const
   cEmptyUrlMessage = 'Você precisa informar a URL antes de clicar no botão "%s".';
@@ -131,7 +131,14 @@ end;
 
 procedure TMainForm.HistoryButtonClick(Sender: TObject);
 begin
-  fLogDownloadRepository.SelectAll();
+  with THistoryForm.Create(Self) do
+  begin
+    try
+      ShowModal();
+    finally
+      Free;
+    end;
+  end;
 end;
 
 procedure TMainForm.Log(AText: String);
