@@ -48,12 +48,11 @@ type
     fLastShownMessage: String;
 
     function GetDestinationDirectory(): String;
-    function Downloading(): Boolean;
     procedure CreateDownloader();
     procedure CreateLogDownloadRepository();
     procedure CreateDownloadManager();
     procedure SetupSQLConnection(ASQLConnection: TSQLConnection);
-    procedure ConfigureComponentEnablement(ADownloadState: TDownloaderState);
+    procedure ConfigureComponentEnablement();
     procedure CheckMessages();
     procedure Log(AText: String);
     procedure ShowHistoryForm();
@@ -80,20 +79,15 @@ begin
     MessageDlg(cEmptyUrlMessage, mtInformation, [mbOk], 0);
     UrlEdit.SetFocus();
   end
-  else if Downloading() then
+  else if fDownloader.Downloading() then
     MessageDlg(cDownloaderIsBusyMessage, mtInformation, [mbOk], 0)
   else
     fDownloadManager.DownloadAsync(UrlEdit.Text, GetDestinationDirectory());
 end;
 
-function TMainForm.Downloading: Boolean;
-begin
-  Result := (fDownloader.State = TDownloaderState.dsDownloading);
-end;
-
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  if Downloading() then
+  if fDownloader.Downloading() then
   begin
     CanClose := False;
     if (MessageDlg(cDownloadInterruptConfirmationMessage, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
@@ -138,7 +132,7 @@ end;
 
 procedure TMainForm.Notify;
 begin
-  ConfigureComponentEnablement(fDownloader.State);
+  ConfigureComponentEnablement();
 
   UpdateProgressBar();
 
@@ -146,7 +140,7 @@ begin
 
   CheckMessages();  
 
-  if fCloseTheWindowWhenDownloadFinishes and (not Downloading) then
+  if fCloseTheWindowWhenDownloadFinishes and (not fDownloader.Downloading()) then
     Self.Close()
   else
     Application.ProcessMessages();
@@ -154,7 +148,7 @@ end;
 
 procedure TMainForm.StopButtonClick(Sender: TObject);
 begin
-  if not Downloading() then
+  if not fDownloader.Downloading() then
     MessageDlg(cDownloaderCantStopNowMessage, mtInformation, [mbOk], 0)
   else
     fDownloadManager.Stop();
@@ -162,21 +156,15 @@ end;
 
 procedure TMainForm.UpdateProgressBar;
 begin
-  ProgressBar.Position := IfThen(Downloading(), Trunc(fDownloadManager.GetProgress()), 0);
-
-  ViewProgressButton.Caption := IfThen(fDownloadManager.GetProgress >= 100, cViewMessageButtonCaption, ViewProgressButton.Caption);
+  ProgressBar.Position := IfThen(fDownloader.Downloading(), Trunc(fDownloadManager.GetProgress()), 0);
 end;
 
 procedure TMainForm.UpdateViewProgressButton;
-var
-  lProgressText: String;
 begin
-  if fShowProgressOnButtonCaption and Downloading() then
-    lProgressText := Format(cDownloadProgressMessage, [Trunc(fDownloader.Progress).ToString()+'%'])
+  if fShowProgressOnButtonCaption and fDownloader.Downloading() then
+    ViewProgressButton.Caption := Format(cDownloadProgressMessage, [Trunc(fDownloader.Progress).ToString()+'%'])
   else
-    lProgressText := cViewMessageButtonCaption;  
-  
-  ViewProgressButton.Caption := lProgressText;
+    ViewProgressButton.Caption := cViewMessageButtonCaption;
 end;
 
 procedure TMainForm.ViewProgressButtonClick(Sender: TObject);
@@ -214,14 +202,15 @@ begin
   end;
 end;
 
-procedure TMainForm.ConfigureComponentEnablement(ADownloadState: TDownloaderState);
+procedure TMainForm.ConfigureComponentEnablement();
 begin
-  DownloadButton.Enabled := ADownloadState = TDownloaderState.dsIdle;
-  StopButton.Enabled := ADownloadState = TDownloaderState.dsDownloading;
-  ViewProgressButton.Enabled := ADownloadState = TDownloaderState.dsDownloading;
-  HistoryButton.Enabled := ADownloadState = TDownloaderState.dsIdle;
-  ProgressBar.Visible := ADownloadState = TDownloaderState.dsDownloading;
-  UrlEdit.Visible := ADownloadState <> TDownloaderState.dsDownloading;
+  StopButton.Enabled := fDownloader.Downloading();
+  ProgressBar.Visible := fDownloader.Downloading();
+  ViewProgressButton.Enabled := fDownloader.Downloading();
+
+  UrlEdit.Visible := not fDownloader.Downloading();
+  HistoryButton.Enabled := not fDownloader.Downloading();
+  DownloadButton.Enabled := not fDownloader.Downloading();
 end;
 
 procedure TMainForm.CreateDownloader;

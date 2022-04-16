@@ -17,7 +17,7 @@ const
   cDownloadCompleted = 'Download concluído com sucesso!';
 
 type
-  TDownloaderState = (dsIdle, dsDownloading, dsAborted);
+  TDownloaderState = (dsIdle, dsDownloading, dsAborted, dsCompleted);
 
   TDownloader = class
   private
@@ -36,13 +36,15 @@ type
     property Subject: TSubject read fSubject;
     property MessageQueue: TMessageQueue read fMessageQueue;
     property Progress: Double read fProgress;
-    property State: TDownloaderState read fState;
 
     constructor Create(AHttpRequest: ISimpleNetHTTPRequest);
     destructor Destroy(); override;
 
     function Download(AUrl: String): IHttpResponse;
     procedure Abort();
+
+    function Downloading(): Boolean;
+    function AllowNewDownload(): Boolean;
   end;
 
 implementation
@@ -68,6 +70,11 @@ end;
 /// <param name="ANetHTTPRequest">An instance of TNetHTTPRequest will be used to execute the download. Is not necessary to feed the "Client" property.</param>
 /// <remarks>If ANetHTTPRequest is null, raises an exception.</remarks>
 /// <returns>It returns an instance of TDownloader class.</returns>
+function TDownloader.AllowNewDownload: Boolean;
+begin
+  Result := fState <> TDownloaderState.dsDownloading;
+end;
+
 constructor TDownloader.Create(AHttpRequest: ISimpleNetHTTPRequest);
 begin
   if AHttpRequest = nil then
@@ -108,7 +115,7 @@ begin
   if not Downloadable(AUrl) then
     raise Exception.Create(cUrlIsNotALink);
 
-  if fState <> TDownloaderState.dsIdle then
+  if Downloading() then
     raise Exception.Create(cDownloaderIsBusy);
 
   fState := TDownloaderState.dsDownloading;
@@ -141,17 +148,18 @@ begin
   end;
 end;
 
+function TDownloader.Downloading: Boolean;
+begin
+  Result := fState = TDownloaderState.dsDownloading;
+end;
+
 /// <summary>Private method used to deal with fNetHTTPRequest.OnReceiveData event. This method keep track on download progress.</summary>
 procedure TDownloader.OnReceiveData(const Sender: TObject; AContentLength, AReadCount: Int64; var AAbort: Boolean);
 begin
   if AContentLength <> 0 then
     fProgress := AReadCount / AContentLength  * 100;
 
-  if fState = TDownloaderState.dsAborted then
-  begin
-    AAbort := True;
-    fState := TDownloaderState.dsIdle;
-  end;
+  AAbort := fState = TDownloaderState.dsAborted;
 
   Subject.NotifyObservers();
 end;
@@ -159,12 +167,10 @@ end;
 /// <summary>A private method that is used to deal with fNetHTTPRequest.OnRequestCompleted event. This method just puts the downloader in an idle state.</summary>
 procedure TDownloader.OnRequestCompleted(const Sender: TObject; const AResponse: IHTTPResponse);
 begin
-  fState := TDownloaderState.dsIdle;
   if fProgress >= 100 then
   begin
-    fMessageQueue.Push(cDownloadCompleted);
+    fState := TDownloaderState.dsCompleted;
     Subject.NotifyObservers();
-    fProgress := 0;
   end;
 end;
 

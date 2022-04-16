@@ -38,6 +38,7 @@ const
   cDownloadStarted = 'Download iniciado';
   cDownloadAborted = 'Download abortado pelo usuário';
   cFileSaved = 'Arquivo salvo em "%s"';
+  cLogCreate = 'Log do download salvo com sucesso';
 
 { TDownloadManager }
 
@@ -72,13 +73,17 @@ begin
 
   if GetProgress() >= 100 then
   begin
+    PushMessage(cDownloadCompleted);
+
     lFileName := TContentDisposition.ExtractFileName(lHttpResponse.HeaderValue['Content-Disposition']);
 
     fFileManager.SaveFile(lHttpResponse.ContentStream, ADestinationDirectory, lFileName, True, True);
 
-    PushMessage(Format(cFileSaved, [lFileName]));
+    PushMessage(Format(cFileSaved, [IncludeTrailingPathDelimiter(ADestinationDirectory) + lFileName]));
 
     fLogDownloadRepository.Insert(TLogDownload.Create(0, AUrl, lStartDate, Now));
+
+    PushMessage(cLogCreate);
   end;
 end;
 
