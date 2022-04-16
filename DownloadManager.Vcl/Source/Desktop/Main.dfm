@@ -161,13 +161,10 @@ object MainForm: TMainForm
     Left = 295
     Top = 272
   end
-  object NetHTTPClient: TNetHTTPClient
-    UserAgent = 'Embarcadero URI Client/1.0'
-    Left = 72
-    Top = 240
-  end
   object NetHTTPRequest: TNetHTTPRequest
-    Client = NetHTTPClient
+    ConnectionTimeout = 0
+    SendTimeout = 0
+    ResponseTimeout = 0
     Left = 72
     Top = 168
   end

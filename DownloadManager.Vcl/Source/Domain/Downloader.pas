@@ -131,18 +131,13 @@ begin
   lResponse := fHttpRequest.Head(AUrl);
 
   if lResponse = nil then
+    Result := False
+  else
   begin
-    Result := False;
-    Exit;
-  end;
-
-  try
     if (not lResponse.ContainsHeader(cContentDisposition)) then
       raise Exception.Create(cResponseHeaderDoesNotContainsContentField);
 
     Result := TContentDisposition.ExtractType(lResponse.HeaderValue[cContentDisposition]) = cdtAttachment;
-  finally
-    lResponse._Release();
   end;
 end;
 
@@ -169,6 +164,7 @@ begin
   begin
     fMessageQueue.Push(cDownloadCompleted);
     Subject.NotifyObservers();
+    fProgress := 0;
   end;
 end;
 
