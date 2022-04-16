@@ -75,7 +75,6 @@ object MainForm: TMainForm
       Height = 25
       Caption = 'Ver hist'#243'rico'
       TabOrder = 5
-      Visible = False
       OnClick = HistoryButtonClick
     end
     object UrlEdit: TEdit
