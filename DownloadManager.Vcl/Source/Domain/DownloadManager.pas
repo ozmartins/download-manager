@@ -70,7 +70,7 @@ begin
 
   lHttpResponse := fDownloader.Download(AUrl);
 
-  if GetProgress() > 100 then
+  if GetProgress() >= 100 then
   begin
     lFileName := TContentDisposition.ExtractFileName(lHttpResponse.HeaderValue['Content-Disposition']);
 

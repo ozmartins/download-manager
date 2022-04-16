@@ -17,7 +17,8 @@ uses
   DownloadManager in 'Source\Domain\DownloadManager.pas',
   Main in 'Source\Desktop\Main.pas' {Form1},
   History in 'Source\Desktop\History.pas' {HistoryForm},
-  MessageQueue in 'Source\Infra\MessageQueue.pas';
+  MessageQueue in 'Source\Infra\MessageQueue.pas',
+  DesktopConsts in 'Source\Desktop\DesktopConsts.pas';
 
 {$R *.res}
 
