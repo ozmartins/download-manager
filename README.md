@@ -20,10 +20,6 @@ Esta aplicação possui uma GUI que permite ao usuário realizar downloads a par
 - Visualizar o progresso do download 
 - Visualizar o histórico de downloads
 
-A imagem abaixo mostra a tela da primeira versão da aplicação.
-
-![Screenshot_12](https://user-images.githubusercontent.com/50338986/162771056-c62b28a5-b897-4104-9146-8d0f318ad639.png)
-
 ## Tópicos
 
  - [Tecnologias](#tecnologias)
