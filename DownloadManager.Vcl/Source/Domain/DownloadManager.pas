@@ -4,7 +4,7 @@ interface
 
 uses
   System.Contnrs, Observer, Subject, Downloader, FileManager, LogDownload,
-  System.Generics.Collections, LogDownloadRepository, MessageQueue;
+  System.Generics.Collections, LogDownloadRepository, MessageQueue, IdGenerator;
 
 type
   TDownloadManager = class
@@ -14,12 +14,13 @@ type
     fFileManager: TFileManager;
     fDownloader: TDownloader;
     fLogDownloadRepository: TLogDownloadRepository;
+    fIdGenerator: TIdGenerator;
     procedure PushMessage(AMessage: String);
   public
     property Subject: TSubject read fSubject;
     property MessageQueue: TMessageQueue read fMessageQueue;
 
-    constructor Create(ADownloader: TDownloader; ALogDownloadRepository: TLogDownloadRepository);
+    constructor Create(ADownloader: TDownloader; ALogDownloadRepository: TLogDownloadRepository; AIdGenerator: TIdGenerator);
     destructor Destroy(); override;
 
     procedure Download(AUrl: String; ADestinationDirectory: String);
@@ -32,7 +33,7 @@ implementation
 
 uses
   System.SysUtils, Threading, System.Classes, Net.HttpClient,
-  ContentDisposition, Variants;
+  ContentDisposition, Variants, RepositoryConsts;
 
 const
   cDownloadStarted = 'Download iniciado';
@@ -42,13 +43,14 @@ const
 
 { TDownloadManager }
 
-constructor TDownloadManager.Create(ADownloader: TDownloader; ALogDownloadRepository: TLogDownloadRepository);
+constructor TDownloadManager.Create(ADownloader: TDownloader; ALogDownloadRepository: TLogDownloadRepository; AIdGenerator: TIdGenerator);
 begin
   fLogDownloadRepository := ALogDownloadRepository;
   fFileManager := TFileManager.Create();
   fDownloader := ADownloader;
   fSubject := TSubject.Create();
   fMessageQueue := TMessageQueue.Create();
+  fIdGenerator := AIdGenerator;
 end;
 
 destructor TDownloadManager.Destroy;
@@ -64,6 +66,7 @@ var
   lFileName: String;
   lHttpResponse: IHttpResponse;
   lStartDate: TDateTime;
+  lId: Int64;
 begin
   PushMessage(cDownloadStarted);
 
@@ -81,7 +84,9 @@ begin
 
     PushMessage(Format(cFileSaved, [IncludeTrailingPathDelimiter(ADestinationDirectory) + lFileName]));
 
-    fLogDownloadRepository.Insert(TLogDownload.Create(0, AUrl, lStartDate, Now));
+    lId := fIdGenerator.GenerateId(cLogDownloadTableName);
+
+    fLogDownloadRepository.Insert(TLogDownload.Create(lId, AUrl, lStartDate, Now));
 
     PushMessage(cLogCreate);
   end;

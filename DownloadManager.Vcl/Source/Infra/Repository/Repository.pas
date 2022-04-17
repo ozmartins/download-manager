@@ -3,106 +3,116 @@ unit Repository;
 interface
 
 uses
-  System.Generics.Collections, Data.SqlExpr, Datasnap.Provider, 
-  Datasnap.DBClient, Data.DB;
-
-const
-  cLastIdField = 'ultimocodigo';
-  cTableNameField = 'nometabela';
-
-  cLastIdFieldIndex = 0;
-  cTableNameFieldIndex = 1;
-
-  cDriverNameProperty = 'Sqlite';
-  cDriverNameParam = 'DriverName=Sqlite';
-  cDatabaseParam = 'Database=%s';
-  cSelectLastTableID = 'select ultimocodigo, nometabela from sequence where nometabela = :nometabela';
-  cSelectEspecificTableID = 'select * from sequence where nometabela = :nometabela and ultimocodigo = :ultimocodigo';
+  Data.SqlExpr, DataSnap.DBClient, Data.DB;
 
 type
   TRepository<TEntity> = class
-  private  
-    fLastError: String;
+  private
+    procedure OnReconcileError(DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
   protected
-    fSqlConnection: TSQLConnection;
-
     fSqlDataSet: TSQLDataSet;
     fClientDataSet: TClientDataSet;
+    fLastError: String;
 
-    fSeqSqlDataSet: TSQLDataSet;
-    fSeqClientDataSet: TClientDataSet;
-
-    property LastError: String read fLastError;
-
-    function GenerateId(ATableName: String): Int64;
+    procedure OpenDataSet(ASql: String; AParams: Array of variant);
+    procedure OpenDataSetWithAllRegistries(ATableName: String);
+    procedure OpenDataSetWithNoRegistry(ATableName: String);
+    procedure OpenDataSetWithOneRegistry(ATableName, AIdFieldName: String; AId: Variant);
+    procedure PersistToDataBase();
   public
-    function Insert(AEntity: TEntity): Int64; virtual; abstract;
-    procedure Update(AEntity: TEntity); virtual; abstract;
-    procedure Delete(AId: Int64); virtual; abstract;
-    procedure SelectById(AId: Int64); virtual; abstract;
+    constructor Create(ASqlDataSet: TSqlDataSet; AClientDataSet: TClientDataSet);
+
+    procedure Insert(AEntity: TEntity); virtual; abstract;
+    procedure Update(AId: Variant; AEntity: TEntity); virtual; abstract;
+    procedure Delete(AId: Variant); virtual; abstract;
+    procedure SelectById(AId: Variant); virtual; abstract;
     procedure SelectAll(); virtual; abstract;
+    procedure Select(ASql: String; AParams: Array of variant);
   end;
 
 implementation
 
 uses
-  System.SysUtils, Constants, FileManager, System.Classes;
+  System.SysUtils, StrUtils, RepositoryConsts;
+
 
 { TRepository<TEntity> }
 
-function TRepository<TEntity>.GenerateId(ATableName: String): Int64;
+constructor TRepository<TEntity>.Create(ASqlDataSet: TSqlDataSet; AClientDataSet: TClientDataSet);
+begin
+  fSqlDataSet := ASqlDataSet;
+  fClientDataSet := AClientDataSet;
+  fClientDataSet.OnReconcileError := OnReconcileError;
+end;
+
+procedure TRepository<TEntity>.OnReconcileError(DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
+begin
+  fLastError := E.Message;
+end;
+
+procedure TRepository<TEntity>.OpenDataSetWithNoRegistry(ATableName: String);
 var
-  lLastID: Int64;
-  lNextID: Int64;
+  lSql: String;
+begin
+  lSql := Format(cCommandTextForNoRegistry, [ATableName]);
+
+  OpenDataSet(lSql, []);
+
+  if fClientDataSet.RecordCount > 0 then
+    raise Exception.Create(cMoreThanZeroRegistryFound);
+end;
+
+procedure TRepository<TEntity>.OpenDataSet(ASql: String; AParams: Array of variant);
+var
+  I: Integer;
+begin
+  fSqlDataSet.Close;
+
+  fSqlDataSet.CommandText := ASql;
+
+  for I := Low(AParams) to High(AParams) do
+    fSqlDataSet.Params[0].Value := AParams[I];
+
+  fSqlDataSet.Open;
+
+  fClientDataSet.Close();
+
+  fClientDataSet.Open();
+end;
+
+procedure TRepository<TEntity>.OpenDataSetWithAllRegistries(ATableName: String);
+var
+  lSql: String;
+begin
+  lSql := Format(cCommandTextForAllRegistries, [ATableName]);
+  OpenDataSet(lSql, []);
+end;
+
+procedure TRepository<TEntity>.OpenDataSetWithOneRegistry(ATableName, AIdFieldName: String; AId: Variant);
+var
+  lSql: String;
+begin
+  lSql := Format(cCommandTextForOneRegistry, [ATableName, AIdFieldName]);
+
+  OpenDataSet(lSql, [AId]);
+
+  if fClientDataSet.RecordCount <> 1 then
+    raise Exception.Create(cMoreThanOneRegistryFound);
+end;
+
+procedure TRepository<TEntity>.PersistToDataBase;
+var
   lErrorsCount: Integer;
 begin
-  fSeqSqlDataSet.Close;
-  fSeqSqlDataSet.CommandText := cSelectLastTableID;
-  fSeqSqlDataSet.Params[0].Value := ATableName;
-  fSeqSqlDataSet.Open;
+  lErrorsCount := fClientDataSet.ApplyUpdates(0);
 
-  fSeqClientDataSet.Close;
-  fSeqClientDataSet.Open;
+  if lErrorsCount > 0 then
+    raise Exception.Create(IfThen(fLastError.IsEmpty, cUnknownError));
+end;
 
-  if fSeqClientDataSet.IsEmpty then
-  begin
-    fSeqClientDataSet.Append;
-    fSeqClientDataSet.Fields[cLastIdFieldIndex].Value := 1;
-    fSeqClientDataSet.Fields[cTableNameFieldIndex].Value := ATableName;
-    fSeqClientDataSet.Post;
-
-    lErrorsCount := fSeqClientDataSet.ApplyUpdates(0);
-
-    if lErrorsCount > 0 then
-      raise Exception.Create(LastError);
-
-    Result := 1;
-  end
-  else
-  begin
-    lLastID := fSeqClientDataSet.Fields[cLastIdFieldIndex].Value;
-    lNextID := lLastID + 1;
-
-    fSeqSqlDataSet.Close;
-    fSeqSqlDataSet.CommandText := cSelectEspecificTableID;
-    fSeqSqlDataSet.Params[0].Value := ATableName;
-    fSeqSqlDataSet.Params[1].Value := lLastID;
-    fSeqSqlDataSet.Open;
-
-    fSeqClientDataSet.Close;
-    fSeqClientDataSet.Open;
-
-    fSeqClientDataSet.Edit;
-    fSeqClientDataSet.Fields[cLastIdFieldIndex].Value := lNextID;
-    fSeqClientDataSet.Post;
-
-    lErrorsCount := fSeqClientDataSet.ApplyUpdates(0);
-
-    if lErrorsCount > 0 then
-      raise Exception.Create(LastError);
-
-    Result := lNextID;
-  end;
+procedure TRepository<TEntity>.Select(ASql: String; AParams: array of variant);
+begin
+  OpenDataSet(ASql, AParams);
 end;
 
 end.

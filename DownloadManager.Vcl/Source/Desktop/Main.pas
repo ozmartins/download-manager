@@ -68,7 +68,8 @@ var
 implementation
 
 uses
-  System.Math, History, System.SysUtils, Vcl.Dialogs, StrUtils, DesktopConsts;
+  System.Math, History, System.SysUtils, Vcl.Dialogs, StrUtils, DesktopConsts,
+  System.UITypes, IdGenerator, SequenceRepository;
 
 {$R *.dfm}
 
@@ -221,20 +222,22 @@ begin
 end;
 
 procedure TMainForm.CreateDownloadManager;
+var
+  lSequenceRepository: TSequenceRepository;
+  lIdGenerator: TIdGenerator;
 begin
-  fDownloadManager := TDownloadManager.Create(fDownloader, fLogDownloadRepository);
+  lSequenceRepository := TSequenceRepository.Create(SequenceSQLDataSet, SequenceClientDataSet);
+
+  lIdGenerator := TIdGenerator.Create(lSequenceRepository, SequenceClientDataSet);
+
+  fDownloadManager := TDownloadManager.Create(fDownloader, fLogDownloadRepository, lIdGenerator);
+
   fDownloadManager.Subject.AddObserver(Self);
 end;
 
 procedure TMainForm.CreateLogDownloadRepository;
 begin
-  fLogDownloadRepository := TLogDownloadRepository.Create(
-    SqLiteConnection,
-    LogDownloadSqlDataSet,
-    LogDownloadClientDataSet,
-    SequenceSqlDataSet,
-    SequenceClientDataSet
-  );
+  fLogDownloadRepository := TLogDownloadRepository.Create(LogDownloadSqlDataSet, LogDownloadClientDataSet);
 end;
 
 procedure TMainForm.CheckMessages();

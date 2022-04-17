@@ -104,9 +104,10 @@
         <DCCReference Include="Source\Infra\MockHttpResponse.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\LogDownload.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\LogDownloadRepository.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequestProxy.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\MessageQueue.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\RepositoryConsts.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

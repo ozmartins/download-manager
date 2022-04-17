@@ -4,161 +4,79 @@ interface
 
 uses
   Data.SqlExpr, LogDownload, Datasnap.Provider, Datasnap.DBClient, Repository,
-  System.Generics.Collections;
+  System.Generics.Collections, System.Variants;
 
 type
   TLogDownloadRepository = class(TRepository<TLogDownload>)
+  private
+    procedure MapFieldsFromEntityToDataSet(ALogDownload: TLogDownload);
   public
-    constructor Create(ASqlConnection: TSQLConnection; 
-      ASqlDataSet: TSqlDataSet; AClientDataSet: TClientDataSet;
-      ASeqSqlDataSet: TSQLDataSet; AseqClientDataSet: TClientDataSet
-    );
-
-    function Insert(AEntity: TLogDownload): Int64; override;
-    procedure Update(AEntity: TLogDownload); override;
-    procedure Delete(AId: Int64); override;
-    procedure SelectById(AId: Int64); override;
+    procedure Insert(AEntity: TLogDownload); override;
+    procedure Update(AId: Variant; AEntity: TLogDownload); override;
+    procedure Delete(AId: Variant); override;
+    procedure SelectById(AId: Variant); override;
     procedure SelectAll(); override;
   end;
 
 implementation
 
 uses
-  System.SysUtils;
-
-const
-  cTableName = 'logdownload';
-
-  cIdFieldIndex = 0;
-  cUrlFieldIndex = 1;
-  cStartDateFieldIndex = 2;
-  cFinishDateFieldIndex = 3;
-  
-  cCommandTextForOneRegistry = 'select codigo, url, datainicio, datafim from logdownload where codigo = :codigo';
-  cCommandTextForEmptyDataSet = 'select codigo, url, datainicio, datafim from logdownload where 1=2';
-  cCommandTextForSelectAll = 'select codigo, url, datainicio, datafim as datafim from logdownload';
-
-  cMoreThanOneRegistryFound = 'Algo muito estranho ocorreu. Há mais que um registro no banco com o ID %d.';
+  System.SysUtils, RepositoryConsts;
 
 { TLogDownloadRepository }
 
-constructor TLogDownloadRepository.Create(ASqlConnection: TSQLConnection; 
-  ASqlDataSet: TSQLDataSet; AClientDataSet: TClientDataSet;
-  ASeqSqlDataSet: TSQLDataSet; AseqClientDataSet: TClientDataSet
-);
+procedure TLogDownloadRepository.Delete(AId: Variant);
 begin
-  fSqlConnection := ASqlConnection;
-
-  fSqlDataSet := ASqlDataSet;
-  fClientDataSet := AClientDataSet;
-
-  fSeqSqlDataSet := ASeqSqlDataSet;
-  fSeqClientDataSet := ASeqClientDataSet;
-end;
-
-procedure TLogDownloadRepository.Delete(AId: Int64);
-var
-  lErrorsCount: Integer;
-begin
-  fSqlDataSet.Close;
-  fSqlDataSet.CommandText := cCommandTextForOneRegistry;
-  fSqlDataSet.Params[0].Value := AId;
-  fSqlDataSet.Open;
-
-  fClientDataSet.Close();
-  fClientDataSet.Open();
-
-  if fClientDataSet.RecordCount <> 1 then
-    raise Exception.Create(cMoreThanOneRegistryFound);
+  OpenDataSetWithOneRegistry(cLogDownloadTableName, cIdFieldName, AId);
 
   fClientDataSet.Delete();
 
-  lErrorsCount := fClientDataSet.ApplyUpdates(0);
-
-  if lErrorsCount > 0 then
-    raise Exception.Create(LastError);
+  PersistToDataBase();
 end;
 
 
-function TLogDownloadRepository.Insert(AEntity: TLogDownload): Int64;
-var
-  lId: Int64;
-  lErrorsCount: Integer;
+procedure TLogDownloadRepository.Insert(AEntity: TLogDownload);
 begin
-  lId := GenerateId(cTableName);
-
-  fSqlDataSet.Close;
-  fSqlDataSet.CommandText := cCommandTextForEmptyDataSet;
-  fSqlDataSet.Open;
-
-  fClientDataSet.Close();
-  fClientDataSet.Open();
+  OpenDataSetWithNoRegistry(cLogDownloadTableName);
 
   fClientDataSet.Append;
-  fClientDataSet.Fields[cIdFieldIndex].Value := lId;
-  fClientDataSet.Fields[cUrlFieldIndex].Value := AEntity.Url;
-  fClientDataSet.Fields[cStartDateFieldIndex].Value := AEntity.StartDate;
-  fClientDataSet.Fields[cFinishDateFieldIndex].Value := AEntity.FinishDate;
+
+  MapFieldsFromEntityToDataSet(AEntity);
+
   fClientDataSet.Post;
 
-  lErrorsCount := fClientDataSet.ApplyUpdates(0);
-
-  if lErrorsCount > 0 then
-    raise Exception.Create(LastError);
-
-  Result := lId;
+  PersistToDataBase();
 end;
 
-//APageNumber is zero based!
+procedure TLogDownloadRepository.MapFieldsFromEntityToDataSet(ALogDownload: TLogDownload);
+begin
+  fClientDataSet.FieldByName(cIdFieldName).Value := ALogDownload.Id;
+  fClientDataSet.FieldByName(cUrlFieldName).Value := ALogDownload.Url;
+  fClientDataSet.FieldByName(cStartDateFieldName).Value := ALogDownload.StartDate;
+  fClientDataSet.FieldByName(cFinishDateFieldName).Value := ALogDownload.FinishDate;
+end;
+
 procedure TLogDownloadRepository.SelectAll();
 begin
-  fSqlDataSet.Close;
-  fSqlDataSet.CommandText := cCommandTextForSelectAll;
-  fSqlDataSet.Open;
-
-  fClientDataSet.Close();
-  fClientDataSet.Open();
+  OpenDataSetWithAllRegistries(cLogDownloadTableName);
 end;
 
-procedure TLogDownloadRepository.SelectById(AId: Int64);
+procedure TLogDownloadRepository.SelectById(AId: Variant);
 begin
-  fSqlDataSet.Close;
-  fSqlDataSet.CommandText := cCommandTextForOneRegistry;
-  fSqlDataSet.Params[0].Value := AId;
-  fSqlDataSet.Open;
-
-  fClientDataSet.Close();
-  fClientDataSet.Open();
-
-  if fClientDataSet.RecordCount <> 1 then
-    raise Exception.Create(cMoreThanOneRegistryFound);
+  OpenDataSetWithOneRegistry(cLogDownloadTableName, cIdFieldName, AId);
 end;
 
-procedure TLogDownloadRepository.Update(AEntity: TLogDownload);
-var
-  lErrorsCount: Integer;
+procedure TLogDownloadRepository.Update(AId: Variant; AEntity: TLogDownload);
 begin
-  fSqlDataSet.Close;
-  fSqlDataSet.CommandText := cCommandTextForOneRegistry;
-  fSqlDataSet.Params[0].Value := AEntity.Id;
-  fSqlDataSet.Open;
-
-  fClientDataSet.Close();
-  fClientDataSet.Open();
-
-  if fClientDataSet.RecordCount <> 1 then
-    raise Exception.Create(cMoreThanOneRegistryFound);
+  OpenDataSetWithOneRegistry(cLogDownloadTableName, cIdFieldName, AId);
 
   fClientDataSet.Edit;
-  fClientDataSet.Fields[cUrlFieldIndex].Value := AEntity.Url;
-  fClientDataSet.Fields[cStartDateFieldIndex].Value := AEntity.StartDate;
-  fClientDataSet.Fields[cFinishDateFieldIndex].Value := AEntity.FinishDate;
+
+  MapFieldsFromEntityToDataSet(AEntity);
+
   fClientDataSet.Post;
 
-  lErrorsCount := fClientDataSet.ApplyUpdates(0);
-
-  if lErrorsCount > 0 then
-    raise Exception.Create(LastError);
+  PersistToDataBase();
 end;
 
 end.
