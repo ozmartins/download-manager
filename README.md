@@ -25,8 +25,7 @@ Esta aplicação possui uma GUI que permite ao usuário realizar downloads a par
  - [Tecnologias](#tecnologias)
  - [Executando a aplicação](#executando-a-aplicação)
  - [Documentação](#documentação)
- - [Problemas conhecidos](#problemas-conhecidos)
- - [Implementações futuras](#implementações-futuras)
+ - [Problemas conhecidos e implementações futuras](#problemas-conhecidos-e-implementações-futuras)
  
 ## Tecnologias
 A aplicação foi desenvolvida com Delphi e SQLite. Nenhum framework externo foi utilizado.
