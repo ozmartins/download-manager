@@ -91,9 +91,8 @@
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Observer\Observer.pas"/>
         <DCCReference Include="Source\Infra\Observer\SubjectTest.pas"/>
         <DCCReference Include="Source\Infra\Observer\MockObserver.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\ContentDisposition.pas"/>
-        <DCCReference Include="Source\Domain\ContentDispositionTest.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Constants.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Network\HttpHeaderHelper.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\InfraConsts.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\FileManager.pas"/>
         <DCCReference Include="Source\Domain\FileManagerTest.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\GuidGenerator.pas"/>
@@ -108,6 +107,7 @@
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\MessageQueue.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\RepositoryConsts.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\DomainConsts.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

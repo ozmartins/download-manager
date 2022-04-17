@@ -131,7 +131,6 @@ object MainForm: TMainForm
       
         'Database=D:\softplan\prova-delphi\v3\download-manager\DownloadMa' +
         'nager.Vcl\Win32\Debug\DownloadManager.Vcl.db')
-    Connected = True
     Left = 295
     Top = 176
   end

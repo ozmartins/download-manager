@@ -54,7 +54,8 @@ type
 
 implementation
 
-uses FileManager, System.SysUtils, System.Classes, Constants, GuidGenerator;
+uses FileManager, System.SysUtils, System.Classes, InfraConsts, GuidGenerator,
+DomainConsts;
 
 const
   cDummyDirectory = 'j:\dummy';

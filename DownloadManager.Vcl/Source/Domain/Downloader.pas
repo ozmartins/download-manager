@@ -4,17 +4,7 @@ interface
 
 uses
   SimpleNetHTTPRequest, System.Net.HttpClient, Subject, System.Net.Mime, System.Net.HttpClientComponent,
-  MessageQueue;
-
-const
-  cDownloaderIsNotDownloading = 'Erro interno: O downloader não está realizando um download.';
-  cDownloaderIsBusy = 'Erro interno: O downloader está ocupado. Tente novamente mais tarde.';
-  cUrlIsEmpty = 'Erro interno: O parâmetro "URL" está vazio.';
-  cUrlIsNotALink = 'Erro interno: O parâmetro não corresponde a um link para download.';
-  cResponseHeaderDoesNotContainsContentField = 'Erro interno: O cabeçalho da resposta HTTP não possui o campo "Content-Disposition".';
-  cContentDisposition = 'Content-Disposition';
-  cNetHTTPRequestIsNull = 'O parâmetro ANetHTTPRequestIsNull não pode ser nulo.';
-  cDownloadCompleted = 'Download concluído com sucesso!';
+  MessageQueue, DomainConsts;
 
 type
   TDownloaderState = (dsIdle, dsDownloading, dsAborted, dsCompleted);
@@ -30,8 +20,6 @@ type
     procedure OnReceiveData(const Sender: TObject; AContentLength, AReadCount: Int64; var AAbort: Boolean);
     procedure OnRequestCompleted(const Sender: TObject; const AResponse: IHTTPResponse);
     procedure OnRequestError(const Sender: TObject; const AError: string);
-
-    function Downloadable(AUrl: String): Boolean;
   public
     property Subject: TSubject read fSubject;
     property MessageQueue: TMessageQueue read fMessageQueue;
@@ -51,7 +39,7 @@ type
 implementation
 
 uses
-  System.SysUtils, ContentDisposition, Vcl.Dialogs;
+  System.SysUtils, HttpHeaderHelper, Vcl.Dialogs;
 
 { TDownloader }
 
@@ -113,9 +101,6 @@ begin
   if AUrl.IsEmpty() then
     raise Exception.Create(cUrlIsEmpty);
 
-  if not Downloadable(AUrl) then
-    raise Exception.Create(cUrlIsNotALink);
-
   if Downloading() then
     raise Exception.Create(cDownloaderIsBusy);
 
@@ -124,29 +109,6 @@ begin
   Result := fHttpRequest.Get(AUrl);
 
   Subject.NotifyObservers();
-end;
-
-/// <summary>A private method that analyses the HTTP header to check if the URL stands for a download link.</summary>
-/// <param name="AUrl">The URL you want to check.</param>
-/// <returns>If the Content-Disposition field in the HTTP header has a file name, returns true, otherwise returns false.</returns>
-function TDownloader.Downloadable(AUrl: String): Boolean;
-var
-  lResponse: IHttpResponse;
-begin
-  if AUrl.IsEmpty() then
-    raise Exception.Create(cUrlIsEmpty);
-
-  lResponse := fHttpRequest.Head(AUrl);
-
-  if lResponse = nil then
-    Result := False
-  else
-  begin
-    if (not lResponse.ContainsHeader(cContentDisposition)) then
-      raise Exception.Create(cResponseHeaderDoesNotContainsContentField);
-
-    Result := TContentDisposition.ExtractType(lResponse.HeaderValue[cContentDisposition]) = cdtAttachment;
-  end;
 end;
 
 function TDownloader.Downloading: Boolean;

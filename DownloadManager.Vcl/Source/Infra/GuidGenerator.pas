@@ -16,7 +16,7 @@ type
 implementation
 
 uses
-  System.SysUtils, Constants;
+  System.SysUtils, InfraConsts;
 
 class function TGuidGenerator.GenerateGUID: TGuid;
 var

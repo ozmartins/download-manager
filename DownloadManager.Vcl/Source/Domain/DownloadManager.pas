@@ -4,7 +4,8 @@ interface
 
 uses
   System.Contnrs, Observer, Subject, Downloader, FileManager, LogDownload,
-  System.Generics.Collections, LogDownloadRepository, MessageQueue, IdGenerator;
+  System.Generics.Collections, LogDownloadRepository, MessageQueue, IdGenerator,
+  Net.HttpClient;
 
 type
   TDownloadManager = class
@@ -15,6 +16,7 @@ type
     fDownloader: TDownloader;
     fLogDownloadRepository: TLogDownloadRepository;
     fIdGenerator: TIdGenerator;
+    function GetFileName(AUrl: String; AHttpResponse: IHttpResponse): String;
     procedure PushMessage(AMessage: String);
   public
     property Subject: TSubject read fSubject;
@@ -32,14 +34,8 @@ type
 implementation
 
 uses
-  System.SysUtils, Threading, System.Classes, Net.HttpClient,
-  ContentDisposition, Variants, RepositoryConsts;
-
-const
-  cDownloadStarted = 'Download iniciado';
-  cDownloadAborted = 'Download abortado pelo usuário';
-  cFileSaved = 'Arquivo salvo em "%s"';
-  cLogCreate = 'Log do download salvo com sucesso';
+  System.SysUtils, Threading, System.Classes, HttpHeaderHelper, Variants,
+  RepositoryConsts, DomainConsts, IdUri;
 
 { TDownloadManager }
 
@@ -78,7 +74,7 @@ begin
   begin
     PushMessage(cDownloadCompleted);
 
-    lFileName := TContentDisposition.ExtractFileName(lHttpResponse.HeaderValue['Content-Disposition']);
+    lFileName := GetFileName(AUrl, lHttpResponse);
 
     fFileManager.SaveFile(lHttpResponse.ContentStream, ADestinationDirectory, lFileName, True, True);
 
@@ -108,6 +104,14 @@ begin
       end;
     end
   );
+end;
+
+function TDownloadManager.GetFileName(AUrl: String; AHttpResponse: IHttpResponse): String;
+begin
+  Result := THttpHeaderHelper.ExtractFileNameFromHeader(AHttpResponse);
+
+  if Result.IsEmpty then
+    Result := TIdUri.Create(AUrl).Document;
 end;
 
 function TDownloadManager.GetProgress(): Double;

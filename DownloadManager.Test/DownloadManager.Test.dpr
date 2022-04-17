@@ -17,9 +17,8 @@ uses
   Observer in '..\DownloadManager.Vcl\Source\Infra\Observer\Observer.pas',
   SubjectTest in 'Source\Infra\Observer\SubjectTest.pas',
   MockObserver in 'Source\Infra\Observer\MockObserver.pas',
-  ContentDisposition in '..\DownloadManager.Vcl\Source\Domain\ContentDisposition.pas',
-  ContentDispositionTest in 'Source\Domain\ContentDispositionTest.pas',
-  Constants in '..\DownloadManager.Vcl\Source\Infra\Constants.pas',
+  HttpHeaderHelper in '..\DownloadManager.Vcl\Source\Infra\Network\HttpHeaderHelper.pas',
+  InfraConsts in '..\DownloadManager.Vcl\Source\Infra\InfraConsts.pas',
   FileManager in '..\DownloadManager.Vcl\Source\Domain\FileManager.pas',
   FileManagerTest in 'Source\Domain\FileManagerTest.pas',
   GuidGenerator in '..\DownloadManager.Vcl\Source\Infra\GuidGenerator.pas',
@@ -33,7 +32,8 @@ uses
   SimpleNetHTTPRequestProxy in '..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequestProxy.pas',
   MessageQueue in '..\DownloadManager.Vcl\Source\Infra\MessageQueue.pas',
   Repository in '..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas',
-  RepositoryConsts in '..\DownloadManager.Vcl\Source\Infra\Repository\RepositoryConsts.pas';
+  RepositoryConsts in '..\DownloadManager.Vcl\Source\Infra\Repository\RepositoryConsts.pas',
+  DomainConsts in '..\DownloadManager.Vcl\Source\Domain\DomainConsts.pas';
 
 {$IFNDEF TESTINSIGHT}
 var
