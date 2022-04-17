@@ -2,14 +2,7 @@ unit FileManager;
 
 interface
 
-uses System.Classes, System.SysUtils;
-
-const
-  cDirectoryDoesntExists = 'Erro interno: The destination directory (%s) doesn''t exists.';
-  cFileAlreadyExists  = 'Erro interno: The file (%s) already exists.';
-  cFileDoesntExists  = 'Erro interno: The file (%s) doesn''t exists.';
-  cFileNameIsEmpty  = 'Erro interno: The file name is empty.';
-  cDirectoryPathIsEmpty  = 'Erro interno: The directory name is empty.';
+uses System.Classes, System.SysUtils, DomainConsts;
 
 type
   ///<summary>Offers some tools to help with file management.</summary>

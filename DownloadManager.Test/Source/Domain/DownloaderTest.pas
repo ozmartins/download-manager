@@ -14,12 +14,6 @@ type
     procedure DownloadWithEmptyUrl();
 
     [Test]
-    procedure DownloadWithNonDownloadableUrl();
-
-    [Test]
-    procedure DownloadWhereResponseHeaderHasNoContenDisposition();
-
-    [Test]
     procedure DownloadWhenDownloaderIsNotIdle();
 
     [Test]
@@ -54,9 +48,9 @@ type
 implementation
 
 uses
-  Subject, System.SysUtils, MockNetHTTPRequest, Constants, MockHttpResponse,
+  Subject, System.SysUtils, MockNetHTTPRequest, InfraConsts, MockHttpResponse,
   System.Net.HttpClient, MockObserver, SimpleNetHTTPRequestProxy,
-  System.Net.HttpClientComponent;
+  System.Net.HttpClientComponent, DomainConsts;
 
 const
   cStatusCode200 = 200;
@@ -149,25 +143,6 @@ begin
   end;
 end;
 
-procedure TDownloaderTest.DownloadWhereResponseHeaderHasNoContenDisposition;
-var
-  lMockHttpResponse: TMockHttpResponse;
-  lDownloader: TDownloader;
-begin
-  {$region 'arrange'}
-  lMockHttpResponse := TMockHttpResponse.Create(cStatusCode200, cContentDispositionInLine, False);
-  lDownloader := TDownloader.Create(TMockNetHTTPRequest.Create(nil, lMockHttpResponse, 0, False));
-  {$endregion}
-
-  try
-    {$region 'act/assert'}
-    Assert.WillRaiseWithMessage(procedure () begin lDownloader.Download(cDummyUrl); end, Exception, cResponseHeaderDoesNotContainsContentField);
-    {$endregion}
-  finally
-    lDownloader.Free;
-  end;
-end;
-
 procedure TDownloaderTest.DownloadWithEmptyUrl();
 var
   lDownloader: TDownloader;
@@ -179,25 +154,6 @@ begin
   try
     {$region 'act/assert'}
     Assert.WillRaiseWithMessage(procedure () begin lDownloader.Download(cEmptyString); end, Exception, cUrlIsEmpty);
-    {$endregion}
-  finally
-    lDownloader.Free;
-  end;
-end;
-
-procedure TDownloaderTest.DownloadWithNonDownloadableUrl;
-var
-  lMockHttpResponse: TMockHttpResponse;
-  lDownloader: TDownloader;
-begin
-  {$region 'arrange'}
-  lMockHttpResponse := TMockHttpResponse.Create(cStatusCode200, cContentDispositionInLine, True);
-  lDownloader := TDownloader.Create(TMockNetHTTPRequest.Create(nil, lMockHttpResponse, 0, False));
-  {$endregion}
-
-  try
-    {$region 'act/assert'}
-    Assert.WillRaiseWithMessage(procedure () begin lDownloader.Download(cDummyUrl); end, Exception, cUrlIsNotALink);
     {$endregion}
   finally
     lDownloader.Free;

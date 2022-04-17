@@ -109,8 +109,8 @@
         </DelphiCompile>
         <DCCReference Include="Source\Infra\Observer\Observer.pas"/>
         <DCCReference Include="Source\Infra\Observer\Subject.pas"/>
-        <DCCReference Include="Source\Domain\ContentDisposition.pas"/>
-        <DCCReference Include="Source\Infra\Constants.pas"/>
+        <DCCReference Include="Source\Infra\Network\HttpHeaderHelper.pas"/>
+        <DCCReference Include="Source\Infra\InfraConsts.pas"/>
         <DCCReference Include="Source\Domain\FileManager.pas"/>
         <DCCReference Include="Source\Infra\GuidGenerator.pas"/>
         <DCCReference Include="Source\Domain\Downloader.pas"/>
@@ -133,6 +133,7 @@
         <DCCReference Include="Source\Infra\Repository\Sequence.pas"/>
         <DCCReference Include="Source\Infra\Repository\SequenceRepository.pas"/>
         <DCCReference Include="Source\Infra\Repository\RepositoryConsts.pas"/>
+        <DCCReference Include="Source\Domain\DomainConsts.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
