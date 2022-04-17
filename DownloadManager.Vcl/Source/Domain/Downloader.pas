@@ -36,6 +36,7 @@ type
     property Subject: TSubject read fSubject;
     property MessageQueue: TMessageQueue read fMessageQueue;
     property Progress: Double read fProgress;
+    property State: TDownloaderState read fState;
 
     constructor Create(AHttpRequest: ISimpleNetHTTPRequest);
     destructor Destroy(); override;
