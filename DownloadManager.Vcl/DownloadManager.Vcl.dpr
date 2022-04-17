@@ -15,10 +15,14 @@ uses
   Repository in 'Source\Infra\Repository\Repository.pas',
   LogDownloadRepository in 'Source\Infra\Repository\LogDownloadRepository.pas',
   DownloadManager in 'Source\Domain\DownloadManager.pas',
-  Main in 'Source\Desktop\Main.pas' {Form1},
-  History in 'Source\Desktop\History.pas' {HistoryForm},
+  Main in 'Source\Desktop\Main.pas' ,
+  History in 'Source\Desktop\History.pas',
   MessageQueue in 'Source\Infra\MessageQueue.pas',
-  DesktopConsts in 'Source\Desktop\DesktopConsts.pas';
+  DesktopConsts in 'Source\Desktop\DesktopConsts.pas',
+  IdGenerator in 'Source\Infra\Repository\IdGenerator.pas',
+  Sequence in 'Source\Infra\Repository\Sequence.pas',
+  SequenceRepository in 'Source\Infra\Repository\SequenceRepository.pas',
+  RepositoryConsts in 'Source\Infra\Repository\RepositoryConsts.pas';
 
 {$R *.res}
 

@@ -309,7 +309,7 @@ begin
     {$region 'act/assert'}
     Assert.AreEqual(lDownloader.State, TDownloaderState.dsIdle);
     lDownloader.Download(cDummyUrl);
-    Assert.AreEqual(lDownloader.State, TDownloaderState.dsIdle);  //It continues idle after downloading, because the state machine comes back to this state after download.
+    Assert.AreEqual(lDownloader.State, TDownloaderState.dsCompleted);  //It continues idle after downloading, because the state machine comes back to this state after download.
     {$endregion}
   finally
     lDownloader.Free;

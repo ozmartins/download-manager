@@ -129,6 +129,10 @@
         </DCCReference>
         <DCCReference Include="Source\Infra\MessageQueue.pas"/>
         <DCCReference Include="Source\Desktop\DesktopConsts.pas"/>
+        <DCCReference Include="Source\Infra\Repository\IdGenerator.pas"/>
+        <DCCReference Include="Source\Infra\Repository\Sequence.pas"/>
+        <DCCReference Include="Source\Infra\Repository\SequenceRepository.pas"/>
+        <DCCReference Include="Source\Infra\Repository\RepositoryConsts.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
