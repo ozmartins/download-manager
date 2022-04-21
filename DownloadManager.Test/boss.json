@@ -1,0 +1,12 @@
+{
+	"name": "DownloadManager.Test",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "Source",
+	"projects": [
+		"./DownloadManager.Test.dproj"
+	],
+	"dependencies": {		
+	}
+}
