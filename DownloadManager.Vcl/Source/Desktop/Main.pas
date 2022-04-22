@@ -7,7 +7,7 @@ uses
   System.Net.HttpClient, System.Net.HttpClientComponent, Datasnap.Provider,
   Datasnap.DBClient, Data.DB, Data.SqlExpr, Vcl.StdCtrls, Vcl.ComCtrls,
   Vcl.Controls, Downloader, DownloadManager, SimpleNetHTTPRequestProxy,
-  LogDownloadRepository, Observer;
+  LogDownloadRepository, Observer, MessageQueue;
 
 type
   TMainForm = class(TForm, IObserver)
@@ -53,7 +53,8 @@ type
     procedure CreateDownloadManager();
     procedure SetupSQLConnection(ASQLConnection: TSQLConnection);
     procedure ConfigureComponentEnablement();
-    procedure CheckMessages();
+    procedure CheckMessages(); overload;
+    procedure CheckMessages(AMessageQueue: TMessageQueue); overload;
     procedure Log(AText: String);
     procedure ShowHistoryForm();
     procedure UpdateProgressBar();
@@ -171,6 +172,7 @@ end;
 procedure TMainForm.ViewProgressButtonClick(Sender: TObject);
 begin
   fShowProgressOnButtonCaption := not fShowProgressOnButtonCaption;
+
   UpdateViewProgressButton();
 end;
 
@@ -241,21 +243,20 @@ begin
 end;
 
 procedure TMainForm.CheckMessages();
+begin
+  CheckMessages(fDownloader.MessageQueue);
+  CheckMessages(fDownloadManager.MessageQueue);
+end;
+
+procedure TMainForm.CheckMessages(AMessageQueue: TMessageQueue);
 var
   lLastMsg: String;
 begin
-  lLastMsg := fDownloader.MessageQueue.Pull();
+  lLastMsg := AMessageQueue.Pull();
   while not lLastMsg.IsEmpty do
   begin
     Log(lLastMsg);
-    lLastMsg := fDownloader.MessageQueue.Pull();
-  end;
-
-  lLastMsg := fDownloadManager.MessageQueue.Pull();
-  while not lLastMsg.IsEmpty do
-  begin
-    Log(lLastMsg);
-    lLastMsg := fDownloadManager.MessageQueue.Pull();
+    lLastMsg := AMessageQueue.Pull();
   end;
 end;
 

@@ -12,6 +12,7 @@ type
     fSequenceRepository: TSequenceRepository;
   public
     constructor Create(ASequenceRepository: TSequenceRepository; AClientDataSet: TClientDataSet);
+
     function GenerateId(ATableName: String): Int64;
   end;
 
@@ -34,6 +35,9 @@ var
   lNextID: Int64;
   lSequence: TSequence;
 begin
+  if ATableName.IsEmpty then
+    raise Exception.Create(cTableNameParameterIsEmpty);
+
   fSequenceRepository.Select(cSelectLastTableID, [ATableName]);
 
   if fClientDataSet.IsEmpty then
