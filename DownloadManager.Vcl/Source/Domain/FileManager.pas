@@ -10,7 +10,7 @@ type
     class procedure SaveFile(ASourceStream: TStream; ADestDirectory: String; ADestFile: String; AForceDirectory: Boolean = False; AOverwriteExistentFile: Boolean = False);
     class procedure RemoveFile(ADirectoryPath: String; AFileName: String);
     class function BuildCompleteFileName(ADirectoryPath: String; AFileName: String): String;
-    class function GenerateUniqueName(): String;
+    class function GenerateUniqueName(APrefix: String): String;
   end;
 
 implementation
@@ -18,13 +18,13 @@ implementation
 uses
   GuidGenerator;
 
-/// <summary>Create a file on disk based on stream object.</summary>
-/// <param name="ASourceStream">A stream object that has the source data</param>
-/// <param name="ADestFolder">Name of the directory where the file will be saved.</param>
-/// <param name="ADestFile">Used to name the file that will be created.</param>
+/// <summary> Concatenates the directory path and the file name, including a path delimiter if necessary.</summary>
+/// <param name="ADirectoryPath">The directory path.</param>
+/// <param name="AFileName">The name (with extension) of the file.</param>
 /// <remarks>
-/// If the parameter "ADestFolder" doesn't exist on the disk or the parameter "ADestFile" is empty, an exception is raised.
+/// If "ADirectoryPath" or "AFileName" is null, an exception is raised.
 /// </remarks>
+/// <returns>The complete file name.</returns>
 class function TFileManager.BuildCompleteFileName(ADirectoryPath, AFileName: String): String;
 begin
   if ADirectoryPath.IsEmpty() then
@@ -36,20 +36,18 @@ begin
   Result := IncludeTrailingPathDelimiter(ADirectoryPath) + AFileName;
 end;
 
-/// <summary>It checks if the file exists. After that, it removes the file from the disk.</summary>
-/// <param name="ADirectoryPath">Your file directory path.</param>
-/// <param name="AFileName">The name (with extension) of the file you want to remove. If the file doesn't exist an exception is thrown.</param>
-/// <remarks>
-/// An exception will be thrown in the following cases:
-/// - ADirectoryPath is empty
-/// - AFileName is empty
-/// - AFileName doesn't exist
-/// </remarks>
-class function TFileManager.GenerateUniqueName: String;
+/// <summary> Concatenates the prefix parameter with a GUID to create a unique file name.</summary>
+/// <param name="APrefix">A string will be placed at the start of the generated file name.</param>
+/// <returns>The generated file name.</returns>
+class function TFileManager.GenerateUniqueName(APrefix: String): String;
 begin
   Result := TGuidGenerator.GenerateGuidAsStringWithoutSpecialChars();
 end;
 
+/// <summary> Removes the specified file from the specified directory.</summary>
+/// <param name="ADirectoryPath">The directory path where the file is.</param>
+/// <param name="AFileName">The name (with extension) of the file you want to remove.</param>
+/// <remarks>If the file doesn't exist in the directory, an exception will be thrown.</remarks>
 class procedure TFileManager.RemoveFile(ADirectoryPath, AFileName: String);
 var
   lCompleteFileName: String;
@@ -67,7 +65,7 @@ end;
 /// <param name="ADestDirectory">The directory path where you want to save your file. If AForceDirectory is true, the directory will be created in case it doesn't exist.</param>
 /// <param name="ADestFile">The name (with extension) of the new file. If the file already exists and AOverwriteExistentFile is false, an exception is thrown.</param>
 /// <param name="AForceDirectory">Indicates if the directory should be created in case it doesn't exist.</param>
-/// <param name="AOverwriteExistentFilet">Indicates if the file should be overwritten in case it already exists.</param>
+/// <param name="AOverwriteExistentFile">Indicates if the file should be overwritten in case it already exists.</param>
 /// <remarks>
 /// An exception will be thrown in the following cases:
 /// - ADestDirectory is empty
