@@ -43,7 +43,7 @@ type
 implementation
 
 uses
-  System.SysUtils, MockObserver;
+  System.SysUtils, MockObserver, ObserverConsts;
 
 procedure TSubjectTest.TestAddObserverPassingMockParameter;
 var

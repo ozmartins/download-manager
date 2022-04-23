@@ -5,6 +5,7 @@ interface
 uses System.Classes, System.Net.UrlClient, System.Net.HttpClient, System.Net.HttpClientComponent, SimpleNetHTTPRequest;
 
 type
+  /// <summary> This is a proxy class that maps the ISimpleNetHTTPRequest interface to a TNetHTTPRequest object.</summary>
   TSimpleNetHTTPRequestProxy = class(TInterfacedObject, ISimpleNetHTTPRequest)
   private
     fNetHTTPRequest: TNetHTTPRequest;

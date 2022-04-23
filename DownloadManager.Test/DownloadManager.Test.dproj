@@ -108,6 +108,7 @@
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\RepositoryConsts.pas"/>
         <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\DomainConsts.pas"/>
+        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Observer\ObserverConsts.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
