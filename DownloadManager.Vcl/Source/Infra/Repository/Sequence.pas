@@ -15,6 +15,10 @@ type
 
 implementation
 
+/// <summary>This method creates an instance of TSequence class.</summary>
+/// <param name="ATableName">The name of table which ID will be tracked.</param>
+/// <param name="ALastId">The last used ID for a record in the table.</param>
+/// <returns>It returns an instance of TSequence class.</returns>
 constructor TSequence.Create(ATableName: String; ALastId: Int64);
 begin
   fTableName := ATableName;
