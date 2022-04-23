@@ -21,8 +21,6 @@ implementation
 uses
   System.SysUtils, RepositoryConsts, Sequence, Data.DB;
 
-{ TIdGenerator }
-
 /// <summary>Creates an instance of TIdGenerator</summary>
 /// <returns>An instance of TIdGenerator</returns>
 constructor TIdGenerator.Create(ASequenceRepository: TSequenceRepository; AClientDataSet: TClientDataSet);
