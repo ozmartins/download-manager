@@ -35,6 +35,9 @@ implementation
 uses
   System.SysUtils, StrUtils, RepositoryConsts;
 
+/// <summary>This method creates an instance of TSequence class.</summary>
+/// <param name="ATableName">The name of table which ID will be tracked.</param>
+/// <returns>It returns an instance of TSequence class.</returns>
 constructor TRepository<TEntity>.Create(ASqlDataSet: TSqlDataSet; AClientDataSet: TClientDataSet);
 begin
   fSqlDataSet := ASqlDataSet;
@@ -42,11 +45,19 @@ begin
   fClientDataSet.OnReconcileError := OnReconcileError;
 end;
 
+/// <summary>A private method to deal with dataset OnReconcileError event.</summary>
+/// <param name="DataSet">The dataset that triggered the event.</param>
+/// <param name="E">The exception object.</param>
+/// <param name="UpdateKind">Indicates if the exception occurred during insertion, updating, or deleting.</param>
+/// <param name="Action">A var parameter that allows us to decide how to respond to the error.</param>
 procedure TRepository<TEntity>.OnReconcileError(DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
 begin
   fLastError := E.Message;
 end;
 
+/// <summary>Opens the internal dataset using a 1=2 expression.</summary>
+/// <param name="ATableName">The table name is used in the SELECT statement.</param>
+/// <remarks>If the internal dataset retrieves one or more records, an exception is thrown.</remarks>
 procedure TRepository<TEntity>.OpenDataSetWithNoRegistry(ATableName: String);
 var
   lSql: String;
@@ -59,6 +70,9 @@ begin
     raise Exception.Create(cMoreThanZeroRegistryFound);
 end;
 
+/// <summary>Opens the internal dataset using the ASql parameter.</summary>
+/// <param name="ASql">The SQL statement was used to open the dataset.</param>
+/// <param name="AParams">An array of params is used to bind the SQL statement.</param>
 procedure TRepository<TEntity>.OpenDataSet(ASql: String; AParams: Array of variant);
 var
   I: Integer;
@@ -77,6 +91,8 @@ begin
   fClientDataSet.Open();
 end;
 
+/// <summary>Opens the internal dataset using no WHERE expression.</summary>
+/// <param name="ATableName">The table name is used in the SELECT statement.</param>
 procedure TRepository<TEntity>.OpenDataSetWithAllRegistries(ATableName: String);
 var
   lSql: String;
@@ -85,6 +101,10 @@ begin
   OpenDataSet(lSql, []);
 end;
 
+/// <summary>Opens the internal dataset using the primary key in the WHERE expression.</summary>
+/// <param name="ATableName">The table name is used in the SELECT statement.</param>
+/// <param name="AIdFieldName">The name of the primary key field.</param>
+/// <remarks>If the internal dataset retrieves a number of records different from one, an exception is thrown.</remarks>
 procedure TRepository<TEntity>.OpenDataSetWithOneRegistry(ATableName, AIdFieldName: String; AId: Variant);
 var
   lSql: String;
@@ -97,6 +117,8 @@ begin
     raise Exception.Create(cMoreThanOneRegistryFound);
 end;
 
+/// <summary>Commits the data to the database and checks for persistence errors.</summary>
+/// <remarks>If an error occurs during the persistence, an exception is thrown.</remarks>
 procedure TRepository<TEntity>.PersistToDataBase;
 var
   lErrorsCount: Integer;
@@ -107,6 +129,9 @@ begin
     raise Exception.Create(IfThen(fLastError.IsEmpty, cUnknownError));
 end;
 
+/// <summary>Opens the internal dataset using the ASql parameter.</summary>
+/// <param name="ASql">The SQL statement was used to open the dataset.</param>
+/// <param name="AParams">An array of params is used to bind the SQL statement.</param>
 procedure TRepository<TEntity>.Select(ASql: String; AParams: array of variant);
 begin
   OpenDataSet(ASql, AParams);
