@@ -20,24 +20,15 @@ type
     SqLiteConnection: TSQLConnection;
     StatusBar1: TStatusBar;
     HistoryDBGrid: TDBGrid;
-    HistoryClientDataSetCodigo: TLargeintField;
-    HistoryClientDataSetUrl: TWideStringField;
-    HistoryClientDataSetDataInicio: TWideMemoField;
-    HistoryClientDataSetDataFim: TWideMemoField;
-    HistorySQLDataSetCodigo: TLargeintField;
-    HistorySQLDataSetUrl: TWideStringField;
-    HistorySQLDataSetDataInicio: TWideMemoField;
-    HistorySQLDataSetDataFim: TWideMemoField;
 
     procedure CloseButtonClick(Sender: TObject);
     procedure DateGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure HistoryDBGridDblClick(Sender: TObject);
   private
-    { Private declarations }
-  public
-    { Public declarations }
+    procedure SelectFileInExplorer(ACompleteFileName: string);
   end;
 
 var
@@ -45,10 +36,10 @@ var
 
 implementation
 
-{$R *.dfm}
+uses
+  RepositoryConsts, ShellAPI, DesktopConsts;
 
-const
-  cScrollBarWidth = 37;
+{$R *.dfm}
 
 procedure THistoryForm.CloseButtonClick(Sender: TObject);
 begin
@@ -56,8 +47,15 @@ begin
 end;
 
 procedure THistoryForm.DateGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+var
+  lDateAsString: String;
 begin
-  Text := DateTimeToStr(StrToDateTime(Sender.AsString));
+  if not HistoryClientDataSet.IsEmpty then
+  begin
+    lDateAsString := Sender.AsString;
+    if not lDateAsString.IsEmpty then
+      Text := DateTimeToStr(StrToDateTime(lDateAsString));
+  end;
 end;
 
 procedure THistoryForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -73,6 +71,7 @@ begin
     + HistoryDBGrid.Width
     - HistoryDBGrid.Columns[0].Width
     - HistoryDBGrid.Columns[1].Width
+    - HistoryDBGrid.Columns[3].Width
     - cScrollBarWidth;
 end;
 
@@ -80,6 +79,33 @@ procedure THistoryForm.FormShow(Sender: TObject);
 begin
   HistoryClientDataSet.Close;
   HistoryClientDataSet.Open;
+
+  HistoryClientDataSet.FieldByName(cStartDateFieldName).OnGetText := DateGetText;
+  HistoryClientDataSet.FieldByName(cFinishDateFieldName).OnGetText := DateGetText;
+end;
+
+procedure THistoryForm.HistoryDBGridDblClick(Sender: TObject);
+var
+  lCompleteFileName: String;
+begin
+  if not HistoryClientDataSet.IsEmpty then
+  begin
+    lCompleteFileName := HistoryClientDataSet.FieldByName(cCompleteFileName).AsString;
+    if not lCompleteFileName.IsEmpty then
+      SelectFileInExplorer(lCompleteFileName);
+  end;
+end;
+
+procedure THistoryForm.SelectFileInExplorer(ACompleteFileName: string);
+begin
+  ShellExecute(
+    Application.Handle,
+    cShellExecuteOperationOpen,
+    cWindowsExplorer,
+    PChar(cShellExecuteOperationParameter + '"' + ACompleteFileName + '"'),
+    nil,
+    SW_NORMAL
+  );
 end;
 
 end.

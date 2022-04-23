@@ -6,6 +6,7 @@ const
   {$region 'log download field names'}
   cIdFieldName = 'codigo';
   cUrlFieldName = 'url';
+  cCompleteFileName = 'nomecompletoarquivo';
   cStartDateFieldName = 'datainicio';
   cFinishDateFieldName = 'datafim';
   {$endregion}

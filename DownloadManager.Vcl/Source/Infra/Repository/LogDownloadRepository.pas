@@ -55,6 +55,7 @@ procedure TLogDownloadRepository.MapFieldsFromEntityToDataSet(ALogDownload: TLog
 begin
   fClientDataSet.FieldByName(cIdFieldName).Value := ALogDownload.Id;
   fClientDataSet.FieldByName(cUrlFieldName).Value := ALogDownload.Url;
+  fClientDataSet.FieldByName(cCompleteFileName).Value := ALogDownload.CompleteFileName;
   fClientDataSet.FieldByName(cStartDateFieldName).Value := ALogDownload.StartDate;
   fClientDataSet.FieldByName(cFinishDateFieldName).Value := ALogDownload.FinishDate;
 end;

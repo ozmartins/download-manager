@@ -24,6 +24,10 @@ const
   cDatabaseFileExtension = '.db';
   cViewMessageButtonCaption = 'Ver mensagem';
   cLogText = '[%s] -> %s';
+  cShellExecuteOperationOpen = 'open';
+  cShellExecuteOperationParameter = '/select,';
+  cWindowsExplorer = 'explorer.exe';
+  cScrollBarWidth = 37;
   {$endregion}
 
 implementation

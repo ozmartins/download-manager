@@ -16,8 +16,10 @@ type
     fDownloader: TDownloader;
     fLogDownloadRepository: TLogDownloadRepository;
     fIdGenerator: TIdGenerator;
-    function GetFileName(AUrl: String; AHttpResponse: IHttpResponse): String;
+    function ExtractFileName(AUrl: String; AHttpResponse: IHttpResponse): String;
+    function SaveDownloadedFile(AHttpResponse: IHttpResponse; ADestinationDirectory, AUrl: String): String;
     procedure PushMessage(AMessage: String);
+    procedure SaveDownloadLog(AUrl, ACompleteFileName: String; AStartDate: TDateTime);
   public
     property Subject: TSubject read fSubject;
     property MessageQueue: TMessageQueue read fMessageQueue;
@@ -62,16 +64,15 @@ begin
   inherited;
 end;
 
-/// <summary> Performs the HTTP request to initiate the download,
+/// <summary>Performs the HTTP request to initiate the download,
 /// saves the file on disk, and persists a log into the database.</summary>
 /// <param name="AUrl">The URL for the download file.</param>
 /// <param name="ADestinationDirectory">The directory where the file will be saved.</param>
 procedure TDownloadManager.Download(AUrl, ADestinationDirectory: String);
 var
-  lFileName: String;
+  lCompleteFileName: String;
   lHttpResponse: IHttpResponse;
   lStartDate: TDateTime;
-  lId: Int64;
 begin
   PushMessage(cDownloadStarted);
 
@@ -83,18 +84,43 @@ begin
   begin
     PushMessage(cDownloadCompleted);
 
-    lFileName := GetFileName(AUrl, lHttpResponse);
+    lCompleteFileName := SaveDownloadedFile(lHttpResponse, ADestinationDirectory, AUrl);
 
-    fFileManager.SaveFile(lHttpResponse.ContentStream, ADestinationDirectory, lFileName, True, True);
-
-    PushMessage(Format(cFileSaved, [IncludeTrailingPathDelimiter(ADestinationDirectory) + lFileName]));
-
-    lId := fIdGenerator.GenerateId(cLogDownloadTableName);
-
-    fLogDownloadRepository.Insert(TLogDownload.Create(lId, AUrl, lStartDate, Now));
-
-    PushMessage(cLogCreate);
+    SaveDownloadLog(AUrl, lCompleteFileName, lStartDate);
   end;
+end;
+
+/// <summary>Saves the downloaded file on disk</summary>
+/// <param name="AHttpResponse">The HTTP response object that contains the file content.</param>
+/// <param name="ADestinationDirectory">The directory where the file will be saved.</param>
+/// <param name="AUrl">The URL used to download the file</param>
+/// <returns>Returns the created complete file name.</returns>
+function TDownloadManager.SaveDownloadedFile(AHttpResponse: IHttpResponse; ADestinationDirectory, AUrl: String): String;
+var
+  lFileName: String;
+begin
+  lFileName := ExtractFileName(AUrl, AHttpResponse);
+
+  fFileManager.SaveFile(AHttpResponse.ContentStream, ADestinationDirectory, lFileName, True, True);
+
+  Result := fFileManager.BuildCompleteFileName(ADestinationDirectory, lFileName);
+
+  PushMessage(Format(cFileSaved, [Result]));
+end;
+
+/// <summary>Saves the log into the database.</summary>
+/// <param name="AUrl">The URL used to download the file</param>
+/// <param name="ACompleteFileName">The saved complete file name.</param>
+/// <param name="AStartDate">The date and time when the download has started.</param>
+procedure TDownloadManager.SaveDownloadLog(AUrl, ACompleteFileName: String; AStartDate: TDateTime);
+var
+  lId: Int64;
+begin
+  lId := fIdGenerator.GenerateId(cLogDownloadTableName);
+
+  fLogDownloadRepository.Insert(TLogDownload.Create(lId, AUrl, ACompleteFileName, AStartDate, Now));
+
+  PushMessage(cLogCreate);
 end;
 
 /// <summary> Call the download method through the TTask.Run method.</summary>
@@ -124,7 +150,7 @@ end;
 /// <param name="AHttpResponse">The HTTP response object returned by the request.</param>
 /// <returns>The filename from the content-disposition header field. If it is empty,
 /// then return the document component from the request URL.</returns>
-function TDownloadManager.GetFileName(AUrl: String; AHttpResponse: IHttpResponse): String;
+function TDownloadManager.ExtractFileName(AUrl: String; AHttpResponse: IHttpResponse): String;
 begin
   Result := THttpHeaderHelper.ExtractFileNameFromHeader(AHttpResponse);
 
