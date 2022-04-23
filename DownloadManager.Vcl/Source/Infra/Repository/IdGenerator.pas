@@ -23,12 +23,18 @@ uses
 
 { TIdGenerator }
 
+/// <summary>Creates an instance of TIdGenerator</summary>
+/// <returns>An instance of TIdGenerator</returns>
 constructor TIdGenerator.Create(ASequenceRepository: TSequenceRepository; AClientDataSet: TClientDataSet);
 begin
   fSequenceRepository := ASequenceRepository;
   fClientDataSet := AClientDataSet;
 end;
 
+/// <summary> Generates the next integer ID for a record in the table given by ATableName parameter.</summary>
+/// <param name="ATableName">The table you want the next ID to.</param>
+/// <remarks>If parameter "ATableName" is null, an exception is raised.</remarks>
+/// <returns>The next ID for a record in the table.</returns>
 function TIdGenerator.GenerateId(ATableName: String): Int64;
 var
   lLastID: Int64;
