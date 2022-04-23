@@ -23,8 +23,6 @@ implementation
 uses
   System.SysUtils, RepositoryConsts;
 
-{ TLogDownloadRepository }
-
 procedure TLogDownloadRepository.Delete(AId: Variant);
 begin
   OpenDataSetWithOneRegistry(cLogDownloadTableName, cIdFieldName, AId);

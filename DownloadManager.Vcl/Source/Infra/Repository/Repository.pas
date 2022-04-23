@@ -35,9 +35,6 @@ implementation
 uses
   System.SysUtils, StrUtils, RepositoryConsts;
 
-
-{ TRepository<TEntity> }
-
 constructor TRepository<TEntity>.Create(ASqlDataSet: TSqlDataSet; AClientDataSet: TClientDataSet);
 begin
   fSqlDataSet := ASqlDataSet;

@@ -15,8 +15,6 @@ type
 
 implementation
 
-{ TSequence }
-
 constructor TSequence.Create(ATableName: String; ALastId: Int64);
 begin
   fTableName := ATableName;

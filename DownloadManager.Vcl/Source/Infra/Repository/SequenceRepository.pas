@@ -23,8 +23,6 @@ implementation
 uses
   System.SysUtils, RepositoryConsts;
 
-{ TSequenceRepository }
-
 procedure TSequenceRepository.Delete(AId: Variant);
 begin
   OpenDataSetWithOneRegistry(cSequenceTableName, cTableNameFieldName, AId);
