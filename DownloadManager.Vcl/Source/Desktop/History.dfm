@@ -3,7 +3,7 @@ object HistoryForm: THistoryForm
   Top = 0
   Caption = 'Hist'#243'rico'
   ClientHeight = 455
-  ClientWidth = 917
+  ClientWidth = 887
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,17 +18,16 @@ object HistoryForm: THistoryForm
   object GridPanel: TPanel
     Left = 0
     Top = 0
-    Width = 917
+    Width = 887
     Height = 399
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = -2
-    ExplicitWidth = 603
+    ExplicitWidth = 917
     object HistoryDBGrid: TDBGrid
       Left = 0
       Top = 0
-      Width = 917
+      Width = 887
       Height = 399
       Align = alClient
       DataSource = HistorySQLDataSetDataSource
@@ -40,6 +39,7 @@ object HistoryForm: THistoryForm
       TitleFont.Height = -12
       TitleFont.Name = 'Segoe UI'
       TitleFont.Style = []
+      OnDblClick = HistoryDBGridDblClick
       Columns = <
         item
           Alignment = taCenter
@@ -63,7 +63,14 @@ object HistoryForm: THistoryForm
           Expanded = False
           FieldName = 'Url'
           Title.Caption = 'URL'
-          Width = 580
+          Width = 250
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'NomeCompletoArquivo'
+          Title.Caption = 'Arquivo'
+          Width = 245
           Visible = True
         end>
     end
@@ -71,17 +78,17 @@ object HistoryForm: THistoryForm
   object ButtonsPanel: TPanel
     Left = 0
     Top = 399
-    Width = 917
+    Width = 887
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 603
+    ExplicitWidth = 917
     DesignSize = (
-      917
+      887
       37)
     object CloseButton: TButton
-      Left = 832
+      Left = 802
       Top = 4
       Width = 75
       Height = 25
@@ -89,46 +96,26 @@ object HistoryForm: THistoryForm
       Caption = 'Fechar'
       TabOrder = 0
       OnClick = CloseButtonClick
-      ExplicitLeft = 518
+      ExplicitLeft = 832
     end
   end
   object StatusBar1: TStatusBar
     Left = 0
     Top = 436
-    Width = 917
+    Width = 887
     Height = 19
     Panels = <>
-    ExplicitWidth = 603
+    ExplicitWidth = 917
   end
   object HistorySQLDataSet: TSQLDataSet
     CommandText = 
-      'select codigo, url, datainicio as datetime, datafim as datetime ' +
-      'from logdownload order by datainicio'
+      'select codigo, url, nomecompletoarquivo, datainicio as datetime,' +
+      ' datafim as datetime from logdownload order by datainicio'
     MaxBlobSize = 1
     Params = <>
     SQLConnection = SqLiteConnection
     Left = 455
     Top = 184
-    object HistorySQLDataSetCodigo: TLargeintField
-      FieldName = 'Codigo'
-      Required = True
-    end
-    object HistorySQLDataSetUrl: TWideStringField
-      FieldName = 'Url'
-      Required = True
-      Size = 600
-    end
-    object HistorySQLDataSetDataInicio: TWideMemoField
-      FieldName = 'DataInicio'
-      Required = True
-      BlobType = ftWideMemo
-      Size = 1
-    end
-    object HistorySQLDataSetDataFim: TWideMemoField
-      FieldName = 'DataFim'
-      BlobType = ftWideMemo
-      Size = 1
-    end
   end
   object HistoryDataSetProvider: TDataSetProvider
     DataSet = HistorySQLDataSet
@@ -141,26 +128,6 @@ object HistoryForm: THistoryForm
     ProviderName = 'HistoryDataSetProvider'
     Left = 455
     Top = 280
-    object HistoryClientDataSetCodigo: TLargeintField
-      FieldName = 'Codigo'
-      Required = True
-    end
-    object HistoryClientDataSetUrl: TWideStringField
-      FieldName = 'Url'
-      Required = True
-      Size = 600
-    end
-    object HistoryClientDataSetDataInicio: TWideMemoField
-      FieldName = 'DataInicio'
-      Required = True
-      OnGetText = DateGetText
-      BlobType = ftWideMemo
-    end
-    object HistoryClientDataSetDataFim: TWideMemoField
-      FieldName = 'DataFim'
-      OnGetText = DateGetText
-      BlobType = ftWideMemo
-    end
   end
   object HistorySQLDataSetDataSource: TDataSource
     DataSet = HistoryClientDataSet
@@ -182,7 +149,6 @@ object HistoryForm: THistoryForm
       
         'Database=D:\softplan\prova-delphi\v3\download-manager\DownloadMa' +
         'nager.Vcl\Win32\Debug\DownloadManager.Vcl.db')
-    Connected = True
     Left = 455
     Top = 144
   end
