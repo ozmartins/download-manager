@@ -3,7 +3,7 @@ unit InfraConsts;
 interface
 
 const
-  {$region symbols}
+  {$region 'symbols'}
   cEmptyString = '';
   cComma = ',';
   cSemiColon = ';';
@@ -13,6 +13,10 @@ const
   cCloseBracket = '}';
   cHifen = '-';
   cBackSlash = '\';
+  {$endregion}
+
+  {$region 'messages'}
+  cGuidCantBeGenerate = 'Não foi possível gerar o GUID';
   {$endregion}
 
 implementation
