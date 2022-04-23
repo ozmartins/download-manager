@@ -3,17 +3,9 @@ unit Subject;
 interface
 
 uses
-   System.Generics.Collections, Observer;
-
-const
-  cObserverNullParameter = 'Erro interno: O parâmetro "observer" não pode ser nulo.';
-  cObserverDoesntExist = 'Erro interno: observado não encontrado na lista.';
+   System.Generics.Collections, Observer, ObserverConsts;
 
 type
-  /// <summary>
-  /// This is a concrete class used in an Observer Pattern implementation.
-  /// You can compose your class with a property of this type adding observer capabilities to your class.
-  /// </summary>
   TSubject = class
   private
     fObservers: TList<IObserver>;

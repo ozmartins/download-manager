@@ -23,7 +23,8 @@ uses
   Sequence in 'Source\Infra\Repository\Sequence.pas',
   SequenceRepository in 'Source\Infra\Repository\SequenceRepository.pas',
   RepositoryConsts in 'Source\Infra\Repository\RepositoryConsts.pas',
-  DomainConsts in 'Source\Domain\DomainConsts.pas';
+  DomainConsts in 'Source\Domain\DomainConsts.pas',
+  ObserverConsts in 'Source\Infra\Observer\ObserverConsts.pas';
 
 {$R *.res}
 

@@ -33,7 +33,8 @@ uses
   MessageQueue in '..\DownloadManager.Vcl\Source\Infra\MessageQueue.pas',
   Repository in '..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas',
   RepositoryConsts in '..\DownloadManager.Vcl\Source\Infra\Repository\RepositoryConsts.pas',
-  DomainConsts in '..\DownloadManager.Vcl\Source\Domain\DomainConsts.pas';
+  DomainConsts in '..\DownloadManager.Vcl\Source\Domain\DomainConsts.pas',
+  ObserverConsts in '..\DownloadManager.Vcl\Source\Infra\Observer\ObserverConsts.pas';
 
 {$IFNDEF TESTINSIGHT}
 var

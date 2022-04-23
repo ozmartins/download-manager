@@ -23,8 +23,8 @@ implementation
 uses
   System.SysUtils, RepositoryConsts;
 
-{ TLogDownloadRepository }
-
+/// <summary>Removes a specific log register from the database.</summary>
+/// <param name="AId">The record ID you want to remove.</param>
 procedure TLogDownloadRepository.Delete(AId: Variant);
 begin
   OpenDataSetWithOneRegistry(cLogDownloadTableName, cIdFieldName, AId);
@@ -34,7 +34,8 @@ begin
   PersistToDataBase();
 end;
 
-
+/// <summary>Inserts a log register into the database.</summary>
+/// <param name="AEntity">The entity with the log data.</param>
 procedure TLogDownloadRepository.Insert(AEntity: TLogDownload);
 begin
   OpenDataSetWithNoRegistry(cLogDownloadTableName);
@@ -48,6 +49,8 @@ begin
   PersistToDataBase();
 end;
 
+/// <summary>A private method that maps data from TLogDownload to a dataset.</summary>
+/// <param name="AEntity">The entity with the log data.</param>
 procedure TLogDownloadRepository.MapFieldsFromEntityToDataSet(ALogDownload: TLogDownload);
 begin
   fClientDataSet.FieldByName(cIdFieldName).Value := ALogDownload.Id;
@@ -56,16 +59,22 @@ begin
   fClientDataSet.FieldByName(cFinishDateFieldName).Value := ALogDownload.FinishDate;
 end;
 
+/// <summary> Uses the internal dataset to retrieve all the log entries from the database.</summary>
 procedure TLogDownloadRepository.SelectAll();
 begin
   OpenDataSetWithAllRegistries(cLogDownloadTableName);
 end;
 
+/// <summary> Uses the internal dataset to retrieve a specific log entry from the database.</summary>
+/// <param name="AId">The record ID you want to recover.</param>
 procedure TLogDownloadRepository.SelectById(AId: Variant);
 begin
   OpenDataSetWithOneRegistry(cLogDownloadTableName, cIdFieldName, AId);
 end;
 
+/// <summary>Updates a specific log register in the database.</summary>
+/// <param name="AId">The record ID you want to update.</param>
+/// <param name="AEntity">The entity with the log data.</param>
 procedure TLogDownloadRepository.Update(AId: Variant; AEntity: TLogDownload);
 begin
   OpenDataSetWithOneRegistry(cLogDownloadTableName, cIdFieldName, AId);

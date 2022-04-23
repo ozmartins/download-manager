@@ -33,6 +33,7 @@ const
   cMoreThanOneRegistryFound = 'Algo muito estranho ocorreu: Há mais que um registro no banco de dados com o ID %d. Por favor, avise o desenvolvedor imediatamente.';
   cMoreThanZeroRegistryFound = 'Algo muito estranho ocorreu: O dataset deveria estar vazio, mas não está. Isso é um bug e preciso que você avise o desenvolvedor.';
   cUnknownError = 'Erro desconhecido';
+  cTableNameParameterIsEmpty = 'O parâmetro ATableName está vazio';
   {$endregion}
 
   {$region 'Others'}

@@ -20,8 +20,12 @@ type
 
 implementation
 
-{ TLogDownload }
-
+/// <summary>This method creates an instance of TLogDownload class.</summary>
+/// <param name="AId">The log unique ID.</param>
+/// <param name="AUrl">The URL was used to perform the download.</param>
+/// <param name="AStartDate">The download's starting date and time.</param>
+/// <param name="AFinishDate">The download's finishing date and time.</param>
+/// <returns>Returns an instance of TLogDownload class.</returns>
 constructor TLogDownload.Create(AId: Int64; AUrl: String; AStartDate, AFinishDate: TDateTime);
 begin
   fId := AId;

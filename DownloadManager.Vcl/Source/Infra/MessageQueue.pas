@@ -26,15 +26,15 @@ implementation
 uses
   System.SysUtils;
 
-{ TMessageQueue }
-
-/// <summary>Creates an instance of TMessageQueue</summary>
-/// <returns>An instance of TMessageQueue</returns>
+/// <summary>Counts the elements in the message queue.</summary>
+/// <returns>The number of elements in the message queue.</returns>
 function TMessageQueue.Count: Integer;
 begin
   Result := fStringList.Count;
 end;
 
+/// <summary>Creates an instance of TMessageQueue</summary>
+/// <returns>An instance of TMessageQueue</returns>
 constructor TMessageQueue.Create;
 begin
   fStringList := TStringList.Create();
@@ -46,9 +46,8 @@ begin
   fStringList.Free;
 end;
 
-/// <summary> Removes the first message from the queue and returns it</summary>
-/// <param name="Item">The item to remove
-/// <returns>If the message count is bigger then zero, it returns the first message. Otherwise, it returns an empty string.</returns>
+/// <summary>Removes the first message from the queue and returns it</summary>
+/// <returns>If the message queue count is bigger than zero, it returns the first message. Otherwise, it returns an empty string.</returns>
 function TMessageQueue.Pull: String;
 begin
   Result := EmptyStr;
