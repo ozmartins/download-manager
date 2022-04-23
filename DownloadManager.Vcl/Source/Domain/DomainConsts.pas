@@ -14,7 +14,6 @@ const
   cContentDisposition = 'Content-Disposition';
   cNetHTTPRequestIsNull = 'O parâmetro ANetHTTPRequestIsNull não pode ser nulo.';
   cDownloadCompleted = 'Download concluído com sucesso!';
-  //cInvalidContentDispositionTypeMessage = 'Erro interno: Valor inválido para o parâmetro AContentDisposition.';
   cDirectoryDoesntExists = 'Erro interno: O diretório de destino (%s) não existe.';
   cFileAlreadyExists  = 'Erro interno: O arquivo (%s) já existe.';
   cFileDoesntExists  = 'Erro interno: O arquivo (%s) não existe.';

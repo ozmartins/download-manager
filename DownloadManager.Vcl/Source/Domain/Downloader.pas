@@ -41,8 +41,6 @@ implementation
 uses
   System.SysUtils, HttpHeaderHelper, Vcl.Dialogs;
 
-{ TDownloader }
-
 /// <summary>Interrupts the downloading process.</summary>
 /// <remarks>If no downloading is being performed, raises an exception.</remarks>
 procedure TDownloader.Abort;

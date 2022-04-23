@@ -37,8 +37,6 @@ uses
   System.SysUtils, Threading, System.Classes, HttpHeaderHelper, Variants,
   RepositoryConsts, DomainConsts, IdUri;
 
-{ TDownloadManager }
-
 /// <summary>This method creates an instance of TDownloadManager class.</summary>
 /// <param name="ADownloader">The object used to actually execute performs the download.</param>
 /// <param name="ALogDownloadRepository">The repository object that's used to persist the download log.</param>

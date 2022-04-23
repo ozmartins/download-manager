@@ -5,7 +5,6 @@ interface
 uses System.Classes, System.SysUtils, DomainConsts;
 
 type
-  ///<summary>Offers some tools to help with file management.</summary>
   TFileManager = class
   public
     class procedure SaveFile(ASourceStream: TStream; ADestDirectory: String; ADestFile: String; AForceDirectory: Boolean = False; AOverwriteExistentFile: Boolean = False);
@@ -18,8 +17,6 @@ implementation
 
 uses
   GuidGenerator;
-
-{ TFileManager }
 
 /// <summary>Create a file on disk based on stream object.</summary>
 /// <param name="ASourceStream">A stream object that has the source data</param>
