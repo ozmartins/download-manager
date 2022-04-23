@@ -61,7 +61,7 @@ const
   cDummyDirectory = 'j:\dummy';
   cDummyFile = 'dummy.txt';
   cUnitTestDirectory = 'UnitTest';
-
+  cNotThronwException = 'Uma exceção esperada não foi lançada.';
 
 procedure TFileManagerTest.BuildCompleteFileNameUsingAnEmptyDirectoryPath;
 begin
@@ -136,7 +136,7 @@ begin
   lStringStream := TStringStream.Create('Teste');
   try
     {$region arrange}
-    lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash + TFileManager.GenerateUniqueName();
+    lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash + TFileManager.GenerateUniqueName(cEmptyString);
     TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
     Assert.IsTrue(FileExists(TFileManager.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
     {$endregion}
@@ -165,7 +165,7 @@ var
   lDirectoryPath: String;
 begin
   {$region arrange}
-  lFileName := TFileManager.GenerateUniqueName();
+  lFileName := TFileManager.GenerateUniqueName(cEmptyString);
   lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash;
   {$endregion}
 
@@ -273,7 +273,7 @@ begin
   lStringStream := TStringStream.Create('Teste');
   try
     {$region arrange}
-    lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + TFileManager.GenerateUniqueName();
+    lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + TFileManager.GenerateUniqueName(cEmptyString);
     {$endregion}
 
     {$region act/assert}
@@ -298,7 +298,7 @@ var
   lDirectoryPath: String;
 begin
   {$region arrange}
-  lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + TFileManager.GenerateUniqueName();
+  lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + TFileManager.GenerateUniqueName(cEmptyString);
   {$endregion}
 
   {$region act/assert}
