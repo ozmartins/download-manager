@@ -115,6 +115,7 @@ object MainForm: TMainForm
     ParentFont = False
     ReadOnly = True
     TabOrder = 2
+    ExplicitTop = 85
   end
   object SqLiteConnection: TSQLConnection
     DriverName = 'Sqlite'
@@ -192,5 +193,12 @@ object MainForm: TMainForm
     DataSet = SequenceClientDataSet
     Left = 455
     Top = 328
+  end
+  object FileSaveDialog: TFileSaveDialog
+    FavoriteLinks = <>
+    FileTypes = <>
+    Options = [fdoOverWritePrompt, fdoPathMustExist, fdoCreatePrompt]
+    Left = 184
+    Top = 120
   end
 end

@@ -16,8 +16,7 @@ type
     fDownloader: TDownloader;
     fLogDownloadRepository: TLogDownloadRepository;
     fIdGenerator: TIdGenerator;
-    function ExtractFileName(AUrl: String; AHttpResponse: IHttpResponse): String;
-    function SaveDownloadedFile(AHttpResponse: IHttpResponse; ADestinationDirectory, AUrl: String): String;
+    function SaveDownloadedFile(AHttpResponse: IHttpResponse; AUrl, ACompleteFileName: String): String;
     procedure PushMessage(AMessage: String);
     procedure SaveDownloadLog(AUrl, ACompleteFileName: String; AStartDate: TDateTime);
   public
@@ -27,10 +26,12 @@ type
     constructor Create(ADownloader: TDownloader; ALogDownloadRepository: TLogDownloadRepository; AIdGenerator: TIdGenerator);
     destructor Destroy(); override;
 
-    procedure Download(AUrl: String; ADestinationDirectory: String);
-    procedure DownloadAsync(AUrl, ADestinationDirectory: String);
+    procedure Download(AUrl: String; ACompleteFileName: String);
+    procedure DownloadAsync(AUrl, ACompleteFileName: String);
     procedure Stop();
     function GetProgress(): Double;
+    function ExtractFileName(AUrl: String; AHttpResponse: IHttpResponse): String; overload;
+    function ExtractFileName(AUrl: String): String; overload;
   end;
 
 implementation
@@ -67,10 +68,9 @@ end;
 /// <summary>Performs the HTTP request to initiate the download,
 /// saves the file on disk, and persists a log into the database.</summary>
 /// <param name="AUrl">The URL for the download file.</param>
-/// <param name="ADestinationDirectory">The directory where the file will be saved.</param>
-procedure TDownloadManager.Download(AUrl, ADestinationDirectory: String);
+/// <param name="ACompleteFileName">The path, file name and extension of the file will be saved.</param>
+procedure TDownloadManager.Download(AUrl, ACompleteFileName: String);
 var
-  lCompleteFileName: String;
   lHttpResponse: IHttpResponse;
   lStartDate: TDateTime;
 begin
@@ -84,28 +84,24 @@ begin
   begin
     PushMessage(cDownloadCompleted);
 
-    lCompleteFileName := SaveDownloadedFile(lHttpResponse, ADestinationDirectory, AUrl);
+    SaveDownloadedFile(lHttpResponse, AUrl, ACompleteFileName);
 
-    SaveDownloadLog(AUrl, lCompleteFileName, lStartDate);
+    SaveDownloadLog(AUrl, ACompleteFileName, lStartDate);
   end;
 end;
 
 /// <summary>Saves the downloaded file on disk</summary>
 /// <param name="AHttpResponse">The HTTP response object that contains the file content.</param>
-/// <param name="ADestinationDirectory">The directory where the file will be saved.</param>
+/// <param name="ACompleteFileName">The path, file name and extension of the file will be saved.</param>
 /// <param name="AUrl">The URL used to download the file</param>
 /// <returns>Returns the created complete file name.</returns>
-function TDownloadManager.SaveDownloadedFile(AHttpResponse: IHttpResponse; ADestinationDirectory, AUrl: String): String;
-var
-  lFileName: String;
+function TDownloadManager.SaveDownloadedFile(AHttpResponse: IHttpResponse; AUrl, ACompleteFileName: String): String;
 begin
-  lFileName := ExtractFileName(AUrl, AHttpResponse);
+  fFileManager.SaveFile(AHttpResponse.ContentStream, ACompleteFileName, True, True);
 
-  fFileManager.SaveFile(AHttpResponse.ContentStream, ADestinationDirectory, lFileName, True, True);
+  PushMessage(Format(cFileSaved, [ACompleteFileName]));
 
-  Result := fFileManager.BuildCompleteFileName(ADestinationDirectory, lFileName);
-
-  PushMessage(Format(cFileSaved, [Result]));
+  Result := ACompleteFileName;
 end;
 
 /// <summary>Saves the log into the database.</summary>
@@ -125,14 +121,14 @@ end;
 
 /// <summary> Call the download method through the TTask.Run method.</summary>
 /// <param name="AUrl">The URL for the download file.</param>
-/// <param name="ADestinationDirectory">The directory where the file will be saved.</param>
-procedure TDownloadManager.DownloadAsync(AUrl, ADestinationDirectory: String);
+/// <param name="ACompleteFileName">The path, file name and extension of the file will be saved.</param>
+procedure TDownloadManager.DownloadAsync(AUrl, ACompleteFileName: String);
 begin
   TTask.Run(
     procedure ()
     begin
       try
-        Self.Download(AUrl, ADestinationDirectory);
+        Self.Download(AUrl, ACompleteFileName);
       except
         on e: Exception do
         begin
@@ -144,7 +140,7 @@ begin
   );
 end;
 
-/// <summary>A private method that tries to get the downloaded file name from
+/// <summary>A method that tries to get the downloaded file name from
 /// the HTTP response header or from the request URL.</summary>
 /// <param name="AUrl">The URL for the download file.</param>
 /// <param name="AHttpResponse">The HTTP response object returned by the request.</param>
@@ -153,6 +149,18 @@ end;
 function TDownloadManager.ExtractFileName(AUrl: String; AHttpResponse: IHttpResponse): String;
 begin
   Result := THttpHeaderHelper.ExtractFileNameFromHeader(AHttpResponse);
+
+  if Result.IsEmpty then
+    Result := TIdUri.Create(AUrl).Document;
+end;
+
+function TDownloadManager.ExtractFileName(AUrl: String): String;
+var
+  lHttpResponse: IHttpResponse;
+begin
+  lHttpResponse := fDownloader.DownloadHeader(AUrl);
+
+  Result := THttpHeaderHelper.ExtractFileNameFromHeader(lHttpResponse);
 
   if Result.IsEmpty then
     Result := TIdUri.Create(AUrl).Document;

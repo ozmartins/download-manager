@@ -19,6 +19,7 @@ const
   cFileDoesntExists  = 'Erro interno: O arquivo (%s) não existe.';
   cFileNameIsEmpty  = 'Erro interno: O nome do arquivo está vazio.';
   cDirectoryPathIsEmpty  = 'Erro interno: O nome do diretório está vazio.';
+  ACompleteFileNameIsEmpty  = 'Erro interno: O nome completo do arquivo está vazio.';
   {$endregion}
 
 implementation
