@@ -13,28 +13,12 @@ uses
   DUnitX.Loggers.Xml.NUnit,
   {$ENDIF }
   DUnitX.TestFramework,
-  Subject in '..\DownloadManager.Vcl\Source\Infra\Observer\Subject.pas',
-  Observer in '..\DownloadManager.Vcl\Source\Infra\Observer\Observer.pas',
   SubjectTest in 'Source\Infra\Observer\SubjectTest.pas',
   MockObserver in 'Source\Infra\Observer\MockObserver.pas',
-  HttpHeaderHelper in '..\DownloadManager.Vcl\Source\Infra\Network\HttpHeaderHelper.pas',
-  InfraConsts in '..\DownloadManager.Vcl\Source\Infra\InfraConsts.pas',
-  FileManager in '..\DownloadManager.Vcl\Source\Domain\FileManager.pas',
   FileManagerTest in 'Source\Domain\FileManagerTest.pas',
-  GuidGenerator in '..\DownloadManager.Vcl\Source\Infra\GuidGenerator.pas',
-  Downloader in '..\DownloadManager.Vcl\Source\Domain\Downloader.pas',
   DownloaderTest in 'Source\Domain\DownloaderTest.pas',
   MockNetHTTPRequest in 'Source\Infra\MockNetHTTPRequest.pas',
-  SimpleNetHTTPRequest in '..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequest.pas',
-  MockHttpResponse in 'Source\Infra\MockHttpResponse.pas',
-  LogDownload in '..\DownloadManager.Vcl\Source\Domain\LogDownload.pas',
-  LogDownloadRepository in '..\DownloadManager.Vcl\Source\Infra\Repository\LogDownloadRepository.pas',
-  SimpleNetHTTPRequestProxy in '..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequestProxy.pas',
-  MessageQueue in '..\DownloadManager.Vcl\Source\Infra\MessageQueue.pas',
-  Repository in '..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas',
-  RepositoryConsts in '..\DownloadManager.Vcl\Source\Infra\Repository\RepositoryConsts.pas',
-  DomainConsts in '..\DownloadManager.Vcl\Source\Domain\DomainConsts.pas',
-  ObserverConsts in '..\DownloadManager.Vcl\Source\Infra\Observer\ObserverConsts.pas';
+  MockHttpResponse in 'Source\Infra\MockHttpResponse.pas';
 
 {$IFNDEF TESTINSIGHT}
 var

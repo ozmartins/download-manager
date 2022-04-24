@@ -76,6 +76,10 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
+        <DCC_UnitSearchPath>..\DownloadManager.Vcl\Source\Domain;..\DownloadManager.Vcl\Source\Infra\Network;..\DownloadManager.Vcl\Source\Infra\Observer;..\DownloadManager.Vcl\Source\Infra\Repository;..\DownloadManager.Vcl\Source\Infra;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>(None)</Manifest_File>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -87,28 +91,12 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Observer\Subject.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Observer\Observer.pas"/>
         <DCCReference Include="Source\Infra\Observer\SubjectTest.pas"/>
         <DCCReference Include="Source\Infra\Observer\MockObserver.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Network\HttpHeaderHelper.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\InfraConsts.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\FileManager.pas"/>
         <DCCReference Include="Source\Domain\FileManagerTest.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\GuidGenerator.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\Downloader.pas"/>
         <DCCReference Include="Source\Domain\DownloaderTest.pas"/>
         <DCCReference Include="Source\Infra\MockNetHTTPRequest.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequest.pas"/>
         <DCCReference Include="Source\Infra\MockHttpResponse.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\LogDownload.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\LogDownloadRepository.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Network\SimpleNetHTTPRequestProxy.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\MessageQueue.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\Repository.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Repository\RepositoryConsts.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Domain\DomainConsts.pas"/>
-        <DCCReference Include="..\DownloadManager.Vcl\Source\Infra\Observer\ObserverConsts.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -129,6 +117,10 @@
                 <Source>
                     <Source Name="MainSource">DownloadManager.Test.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
