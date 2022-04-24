@@ -7,7 +7,7 @@ uses System.Classes, System.SysUtils, DomainConsts;
 type
   TFileManager = class
   public
-    class procedure SaveFile(ASourceStream: TStream; ADestDirectory: String; ADestFile: String; AForceDirectory: Boolean = False; AOverwriteExistentFile: Boolean = False);
+    class procedure SaveFile(ASourceStream: TStream; ACompleteFileName: String; AForceDirectory: Boolean = False; AOverwriteExistentFile: Boolean = False);
     class procedure RemoveFile(ADirectoryPath: String; AFileName: String);
     class function BuildCompleteFileName(ADirectoryPath: String; AFileName: String): String;
     class function GenerateUniqueName(APrefix: String): String;
@@ -62,34 +62,35 @@ end;
 
 /// <summary>It checks if the directory already exists. After that, it saves the content of ASourceStream into a file.</summary>
 /// <param name="ASourceStream">A stream that contains the data you want to save into the file.</param>
-/// <param name="ADestDirectory">The directory path where you want to save your file. If AForceDirectory is true, the directory will be created in case it doesn't exist.</param>
-/// <param name="ADestFile">The name (with extension) of the new file. If the file already exists and AOverwriteExistentFile is false, an exception is thrown.</param>
+/// <param name="ACompleteFileName">The path, file name and extension where you want to save your file.</param>
 /// <param name="AForceDirectory">Indicates if the directory should be created in case it doesn't exist.</param>
 /// <param name="AOverwriteExistentFile">Indicates if the file should be overwritten in case it already exists.</param>
 /// <remarks>
 /// An exception will be thrown in the following cases:
-/// - ADestDirectory is empty
-/// - ADestFile is empty
-/// - ADestDirectory doesn't exist and AForceDirectory is false
-/// - ADestFile already exists and AOverwriteExistentFile is false
+/// - ACompleteFileName is empty
+/// - Directory doesn't exist and AForceDirectory is false
+/// - ACompleteFileName already exists and AOverwriteExistentFile is false
 /// </remarks>
-class procedure TFileManager.SaveFile(ASourceStream: TStream; ADestDirectory: String; ADestFile: String; AForceDirectory: Boolean = False; AOverwriteExistentFile: Boolean = False);
+class procedure TFileManager.SaveFile(ASourceStream: TStream; ACompleteFileName: String; AForceDirectory: Boolean = False; AOverwriteExistentFile: Boolean = False);
 var
   lFileStream: TFileStream;
-  lCompleteFileName: String;
+  lDestinationDirectory: String;
 begin
-  lCompleteFileName := BuildCompleteFileName(ADestDirectory, ADestFile);
+  if ACompleteFileName.IsEmpty then
+    raise Exception.Create(ACompleteFileNameIsEmpty);
+
+  lDestinationDirectory := ExtractFilePath(ACompleteFileName);
 
   if AForceDirectory then
-    ForceDirectories(ADestDirectory);
+    ForceDirectories(lDestinationDirectory);
 
-  if not DirectoryExists(ADestDirectory) then
-    raise Exception.Create(Format(cDirectoryDoesntExists, [ADestDirectory]));
+  if not DirectoryExists(lDestinationDirectory) then
+    raise Exception.Create(Format(cDirectoryDoesntExists, [lDestinationDirectory]));
 
-  if FileExists(lCompleteFileName) and (not AOverwriteExistentFile) then
-    raise Exception.Create(Format(cFileAlreadyExists, [lCompleteFileName]));
+  if FileExists(ACompleteFileName) and (not AOverwriteExistentFile) then
+    raise Exception.Create(Format(cFileAlreadyExists, [ACompleteFileName]));
 
-  lFileStream := TFileStream.Create(lCompleteFileName, fmCreate);
+  lFileStream := TFileStream.Create(ACompleteFileName, fmCreate);
   try
     lFileStream.CopyFrom(ASourceStream);
   finally

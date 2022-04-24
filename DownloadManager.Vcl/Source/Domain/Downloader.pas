@@ -30,6 +30,7 @@ type
     destructor Destroy(); override;
 
     function Download(AUrl: String): IHttpResponse;
+    function DownloadHeader(AUrl: String): IHttpResponse;
     procedure Abort();
 
     function Downloading(): Boolean;
@@ -110,6 +111,24 @@ begin
   Result := fHttpRequest.Get(AUrl);
 
   Subject.NotifyObservers();
+end;
+
+/// <summary>Download the header of the HTTP response based on a URL</summary>
+/// <param name="AUrl">The URL from where you will download</param>
+/// <remarks>
+/// If the AUrl argument is empty, an exception is thrown.
+/// If a download is already being executed, an exception is thrown.
+/// </remarks>
+/// <returns>Returns a IHttpResponse interface with header and without content</returns>
+function TDownloader.DownloadHeader(AUrl: String): IHttpResponse;
+begin
+  if AUrl.IsEmpty() then
+    raise Exception.Create(cUrlIsEmpty);
+
+  if Downloading() then
+    raise Exception.Create(cDownloaderIsBusy);
+
+  Result := fHttpRequest.Head(AUrl);
 end;
 
 /// <summary>Checks the downloader state to decide if it's performing a download or not.</summary>

@@ -7,7 +7,7 @@ uses
   System.Net.HttpClient, System.Net.HttpClientComponent, Datasnap.Provider,
   Datasnap.DBClient, Data.DB, Data.SqlExpr, Vcl.StdCtrls, Vcl.ComCtrls,
   Vcl.Controls, Downloader, DownloadManager, SimpleNetHTTPRequestProxy,
-  LogDownloadRepository, Observer, MessageQueue;
+  LogDownloadRepository, Observer, MessageQueue, Vcl.Dialogs;
 
 type
   TMainForm = class(TForm, IObserver)
@@ -30,6 +30,7 @@ type
     ViewProgressButton: TButton;
     HistoryButton: TButton;
     LogMemo: TMemo;
+    FileSaveDialog: TFileSaveDialog;
 
     procedure FormCreate(Sender: TObject);
     procedure DownloadButtonClick(Sender: TObject);
@@ -48,6 +49,9 @@ type
     fLastShownMessage: String;
 
     function GetDestinationDirectory(): String;
+    function GetDestinationFileName(AUrl: String): String;
+    function ExecuteSaveDialog(AUrl: String): String;
+
     procedure CreateDownloader();
     procedure CreateLogDownloadRepository();
     procedure CreateDownloadManager();
@@ -69,12 +73,14 @@ var
 implementation
 
 uses
-  System.Math, History, System.SysUtils, Vcl.Dialogs, StrUtils, DesktopConsts,
-  System.UITypes, IdGenerator, SequenceRepository;
+  System.Math, History, System.SysUtils, StrUtils, DesktopConsts,
+  System.UITypes, IdGenerator, SequenceRepository, FileManager;
 
 {$R *.dfm}
 
 procedure TMainForm.DownloadButtonClick(Sender: TObject);
+var
+  lCompleteFileName: String;
 begin
   if Trim(UrlEdit.Text) = EmptyStr then
   begin
@@ -84,7 +90,25 @@ begin
   else if fDownloader.Downloading() then
     MessageDlg(cDownloaderIsBusyMessage, mtInformation, [mbOk], 0)
   else
-    fDownloadManager.DownloadAsync(UrlEdit.Text, GetDestinationDirectory());
+  begin
+    lCompleteFileName := ExecuteSaveDialog(UrlEdit.Text);
+    if lCompleteFileName.IsEmpty then
+      MessageDlg('O nome do arquivo não foi informado.', TMsgDlgType.mtWarning, [mbOk], 0)
+    else
+      fDownloadManager.DownloadAsync(UrlEdit.Text, lCompleteFileName);
+  end;
+end;
+
+function TMainForm.ExecuteSaveDialog(AUrl: String): String;
+begin
+  FileSaveDialog.DefaultFolder := GetDestinationDirectory();
+
+  FileSaveDialog.FileName := GetDestinationFileName(AUrl);
+
+  if FileSaveDialog.Execute() then
+    Result := FileSaveDialog.FileName
+  else
+    Result := EmptyStr;
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -179,6 +203,36 @@ end;
 function TMainForm.GetDestinationDirectory: String;
 begin
   Result := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) + cDownloadDirectoryName;
+end;
+
+function TMainForm.GetDestinationFileName(AUrl: String): String;
+var
+  lFileName: String;
+  lFileExtension: String;
+  lFileNameWithouExtension: String;
+  lCompleteFileName: String;
+  lCount: Integer;
+begin
+  lCount := 0;
+
+  lFileName := fDownloadManager.ExtractFileName(AUrl);
+
+  lFileNameWithouExtension := ChangeFileExt(lFileName, '');
+
+  lCompleteFileName := TFileManager.BuildCompleteFileName(GetDestinationDirectory(), lFileName);
+
+  while FileExists(lCompleteFileName) do
+  begin
+    lCount := lCount + 1;
+
+    lFileExtension := ExtractFileExt(lFileName);
+
+    lFileName := Format(lFileNameWithouExtension + ' (%d)' + lFileExtension, [lCount]);
+
+    lCompleteFileName := TFileManager.BuildCompleteFileName(GetDestinationDirectory(), lFileName);
+  end;
+
+  Result := lFileName;
 end;
 
 procedure TMainForm.SetupSQLConnection(ASQLConnection: TSQLConnection);

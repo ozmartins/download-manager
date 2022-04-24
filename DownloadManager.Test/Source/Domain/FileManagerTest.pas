@@ -11,10 +11,7 @@ type
   public
     //Save file tests
     [Test]
-    procedure SaveFileUsingAnEmptyDirectoryPath();
-
-    [Test]
-    procedure SaveFileUsingAnEmptyFileName();
+    procedure SaveFileUsingAnEmptyFilePath();
 
     [Test]
     procedure SaveFileUsingANonExistentDirectoryPathWithoutForceDirectory();
@@ -119,7 +116,7 @@ procedure TFileManagerTest.RemoveFileUsingAnEmptyFileName;
 begin
   {$region act/assert}
   try
-    TFileManager.SaveFile(nil, cDummyDirectory, cEmptyString);
+    TFileManager.RemoveFile(cDummyDirectory, cEmptyString);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
@@ -137,7 +134,7 @@ begin
   try
     {$region arrange}
     lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash + TFileManager.GenerateUniqueName(cEmptyString);
-    TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
+    TFileManager.SaveFile(lStringStream, lDirectoryPath + cBackSlash + cDummyFile, True, True);
     Assert.IsTrue(FileExists(TFileManager.BuildCompleteFileName(lDirectoryPath, cDummyFile)));
     {$endregion}
 
@@ -180,28 +177,15 @@ begin
   {$endregion}
 end;
 
-procedure TFileManagerTest.SaveFileUsingAnEmptyDirectoryPath();
+procedure TFileManagerTest.SaveFileUsingAnEmptyFilePath();
 begin
   {$region act/assert}
   try
-    TFileManager.SaveFile(nil, cEmptyString, cDummyFile);
+    TFileManager.SaveFile(nil, cEmptyString);
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
-      Assert.AreEqual(e.Message, cDirectoryPathIsEmpty);
-  end;
-  {$endregion}
-end;
-
-procedure TFileManagerTest.SaveFileUsingAnEmptyFileName();
-begin
-  {$region act/assert}
-  try
-    TFileManager.SaveFile(nil, cDummyDirectory, cEmptyString);
-    Assert.Fail(cNotThronwException);
-  except
-    on e: Exception do
-      Assert.AreEqual(e.Message, cFileNameIsEmpty);
+      Assert.AreEqual(e.Message, ACompleteFileNameIsEmpty);
   end;
   {$endregion}
 end;
@@ -215,16 +199,16 @@ begin
   try
     {$region arrange}
     lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash;
-    TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True);
+    TFileManager.SaveFile(lStringStream, lDirectoryPath + cBackSlash + cDummyFile, True);
     {$endregion}
 
     {$region act/assert}
     try
-      TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True);
+      TFileManager.SaveFile(lStringStream, lDirectoryPath + cDummyFile, True);
       Assert.Fail(cNotThronwException);
     except
       on e: Exception do
-        Assert.AreEqual(e.Message, Format(cFileAlreadyExists, [TFileManager.BuildCompleteFileName(lDirectoryPath, cDummyFile)]));
+        Assert.AreEqual(e.Message, Format(cFileAlreadyExists, [lDirectoryPath + cDummyFile]));
     end;
     {$endregion}
   finally
@@ -243,12 +227,12 @@ begin
   try
     {$region arrange}
     lDirectoryPath := IncludeTrailingPathDelimiter(GetCurrentDir()) + cUnitTestDirectory + cBackSlash;
-    TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
+    TFileManager.SaveFile(lStringStream, lDirectoryPath + cBackSlash + cDummyFile, True, True);
     {$endregion}
 
     {$region act}
     try
-      TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True, True);
+      TFileManager.SaveFile(lStringStream, lDirectoryPath + cBackSlash + cDummyFile, True, True);
     except
       on e: Exception do
         Assert.Fail(e.Message);
@@ -278,7 +262,7 @@ begin
 
     {$region act/assert}
     try
-      TFileManager.SaveFile(lStringStream, lDirectoryPath, cDummyFile, True);
+      TFileManager.SaveFile(lStringStream, lDirectoryPath + cBackSlash + cDummyFile, True);
     except
       on e: Exception do
         Assert.Fail(e.Message);
@@ -303,11 +287,11 @@ begin
 
   {$region act/assert}
   try
-    TFileManager.SaveFile(nil, lDirectoryPath, 'file.txt');
+    TFileManager.SaveFile(nil, lDirectoryPath + cBackSlash + 'file.txt');
     Assert.Fail(cNotThronwException);
   except
     on e: Exception do
-      Assert.AreEqual(e.Message, Format(cDirectoryDoesntExists, [lDirectoryPath]));
+      Assert.AreEqual(e.Message, Format(cDirectoryDoesntExists, [lDirectoryPath + cBackSlash]));
   end;
   {$endregion}
 end;
