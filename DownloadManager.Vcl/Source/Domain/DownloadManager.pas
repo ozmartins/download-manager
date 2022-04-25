@@ -4,8 +4,7 @@ interface
 
 uses
   System.Contnrs, Observer, Subject, Downloader, FileManager, LogDownload,
-  System.Generics.Collections, LogDownloadRepository, MessageQueue, IdGenerator,
-  Net.HttpClient;
+  System.Generics.Collections, Repository, MessageQueue, Net.HttpClient;
 
 type
   TDownloadManager = class
@@ -14,8 +13,7 @@ type
     fSubject: TSubject;
     fFileManager: TFileManager;
     fDownloader: TDownloader;
-    fLogDownloadRepository: TLogDownloadRepository;
-    fIdGenerator: TIdGenerator;
+    fLogDownloadRepository: TRepository<TLogDownload>;
     function SaveDownloadedFile(AHttpResponse: IHttpResponse; AUrl, ACompleteFileName: String): String;
     procedure PushMessage(AMessage: String);
     procedure SaveDownloadLog(AUrl, ACompleteFileName: String; AStartDate: TDateTime);
@@ -23,7 +21,7 @@ type
     property Subject: TSubject read fSubject;
     property MessageQueue: TMessageQueue read fMessageQueue;
 
-    constructor Create(ADownloader: TDownloader; ALogDownloadRepository: TLogDownloadRepository; AIdGenerator: TIdGenerator);
+    constructor Create(ADownloader: TDownloader; ALogDownloadRepository: TRepository<TLogDownload>);
     destructor Destroy(); override;
 
     procedure Download(AUrl: String; ACompleteFileName: String);
@@ -43,16 +41,14 @@ uses
 /// <summary>This method creates an instance of TDownloadManager class.</summary>
 /// <param name="ADownloader">The object used to actually execute performs the download.</param>
 /// <param name="ALogDownloadRepository">The repository object that's used to persist the download log.</param>
-/// <param name="AIdGenerator">The object used by the repository to generate the logs IDs.</param>
 /// <returns>Returns an instance of TDownloadManager class.</returns>
-constructor TDownloadManager.Create(ADownloader: TDownloader; ALogDownloadRepository: TLogDownloadRepository; AIdGenerator: TIdGenerator);
+constructor TDownloadManager.Create(ADownloader: TDownloader; ALogDownloadRepository: TRepository<TLogDownload>);
 begin
   fLogDownloadRepository := ALogDownloadRepository;
   fFileManager := TFileManager.Create();
   fDownloader := ADownloader;
   fSubject := TSubject.Create();
   fMessageQueue := TMessageQueue.Create();
-  fIdGenerator := AIdGenerator;
 end;
 
 /// <summary>It frees the allocated memory by the class constructor.</summary>
@@ -109,12 +105,8 @@ end;
 /// <param name="ACompleteFileName">The saved complete file name.</param>
 /// <param name="AStartDate">The date and time when the download has started.</param>
 procedure TDownloadManager.SaveDownloadLog(AUrl, ACompleteFileName: String; AStartDate: TDateTime);
-var
-  lId: Int64;
 begin
-  lId := fIdGenerator.GenerateId(cLogDownloadTableName);
-
-  fLogDownloadRepository.Insert(TLogDownload.Create(lId, AUrl, ACompleteFileName, AStartDate, Now));
+  fLogDownloadRepository.Insert(TLogDownload.Create(AUrl, ACompleteFileName, AStartDate, Now));
 
   PushMessage(cLogCreate);
 end;

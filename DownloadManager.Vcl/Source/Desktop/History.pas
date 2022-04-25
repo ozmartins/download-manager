@@ -80,8 +80,8 @@ begin
   HistoryClientDataSet.Close;
   HistoryClientDataSet.Open;
 
-  HistoryClientDataSet.FieldByName(cStartDateFieldName).OnGetText := DateGetText;
-  HistoryClientDataSet.FieldByName(cFinishDateFieldName).OnGetText := DateGetText;
+  HistoryClientDataSet.FieldByName('startdate').OnGetText := DateGetText;
+  HistoryClientDataSet.FieldByName('finishdate').OnGetText := DateGetText;
 end;
 
 procedure THistoryForm.HistoryDBGridDblClick(Sender: TObject);
@@ -90,7 +90,7 @@ var
 begin
   if not HistoryClientDataSet.IsEmpty then
   begin
-    lCompleteFileName := HistoryClientDataSet.FieldByName(cCompleteFileName).AsString;
+    lCompleteFileName := HistoryClientDataSet.FieldByName('CompleteFileName').AsString;
     if not lCompleteFileName.IsEmpty then
       SelectFileInExplorer(lCompleteFileName);
   end;

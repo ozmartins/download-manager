@@ -7,5 +7,7 @@
 	"projects": [
 		"./DownloadManager.Vcl.dproj"
 	],
-	"dependencies": {}
+	"dependencies": {
+		"https://github.com/ozmartins/delphi-orm": ">0.0.0"
+	}
 }
