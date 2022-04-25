@@ -85,8 +85,8 @@ object MainForm: TMainForm
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
       Text = 
-        'https://az764295.vo.msecnd.net/stable/78a4c91400152c0f27ba4d363e' +
-        'b56d2835f9903a/VSCodeUserSetup-x64-1.43.0.exe'
+        'https://github.com/ozmartins/ozmartins/archive/refs/heads/main.z' +
+        'ip'
     end
   end
   object StatusBar: TStatusBar
@@ -115,7 +115,6 @@ object MainForm: TMainForm
     ParentFont = False
     ReadOnly = True
     TabOrder = 2
-    ExplicitTop = 85
   end
   object SqLiteConnection: TSQLConnection
     DriverName = 'Sqlite'

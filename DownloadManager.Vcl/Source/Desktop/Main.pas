@@ -7,7 +7,7 @@ uses
   System.Net.HttpClient, System.Net.HttpClientComponent, Datasnap.Provider,
   Datasnap.DBClient, Data.DB, Data.SqlExpr, Vcl.StdCtrls, Vcl.ComCtrls,
   Vcl.Controls, Downloader, DownloadManager, SimpleNetHTTPRequestProxy,
-  LogDownloadRepository, Observer, MessageQueue, Vcl.Dialogs;
+  Observer, MessageQueue, Vcl.Dialogs, LogDownload, Repository;
 
 type
   TMainForm = class(TForm, IObserver)
@@ -45,7 +45,7 @@ type
     fDownloader: TDownloader;
     fDownloadManager: TDownloadManager;
     fHttpRequest: TSimpleNetHTTPRequestProxy;
-    fLogDownloadRepository: TLogDownloadRepository;
+    fLogDownloadRepository: TRepository<TLogDownload>;
     fLastShownMessage: String;
 
     function GetDestinationDirectory(): String;
@@ -53,9 +53,7 @@ type
     function ExecuteSaveDialog(AUrl: String): String;
 
     procedure CreateDownloader();
-    procedure CreateLogDownloadRepository();
     procedure CreateDownloadManager();
-    procedure SetupSQLConnection(ASQLConnection: TSQLConnection);
     procedure ConfigureComponentEnablement();
     procedure CheckMessages(); overload;
     procedure CheckMessages(AMessageQueue: TMessageQueue); overload;
@@ -74,7 +72,7 @@ implementation
 
 uses
   System.Math, History, System.SysUtils, StrUtils, DesktopConsts,
-  System.UITypes, IdGenerator, SequenceRepository, FileManager;
+  System.UITypes, FileManager;
 
 {$R *.dfm}
 
@@ -132,11 +130,9 @@ begin
 
   fShowProgressOnButtonCaption := False;
 
-  SetupSQLConnection(SqLiteConnection);
+  fLogDownloadRepository := TRepository<TLogDownload>.Create();
 
   CreateDownloader();
-
-  CreateLogDownloadRepository();
 
   CreateDownloadManager();
 end;
@@ -235,18 +231,6 @@ begin
   Result := lFileName;
 end;
 
-procedure TMainForm.SetupSQLConnection(ASQLConnection: TSQLConnection);
-begin
-  ASQLConnection.Close;
-  ASQLConnection.Params.Clear();
-  ASQLConnection.Params.Add(cDriverUnit);
-  ASQLConnection.Params.Add(cDriverPackageLoader);
-  ASQLConnection.Params.Add(cMetaDataPackageLoader);
-  ASQLConnection.Params.Add(cFailIfMissing);
-  ASQLConnection.Params.Add(Format(cDatabase, [ChangeFileExt(Application.ExeName, cDatabaseFileExtension)]));
-  ASQLConnection.Open;
-end;
-
 procedure TMainForm.ShowHistoryForm;
 begin
   with THistoryForm.Create(Self) do
@@ -278,22 +262,10 @@ begin
 end;
 
 procedure TMainForm.CreateDownloadManager;
-var
-  lSequenceRepository: TSequenceRepository;
-  lIdGenerator: TIdGenerator;
 begin
-  lSequenceRepository := TSequenceRepository.Create(SequenceSQLDataSet, SequenceClientDataSet);
-
-  lIdGenerator := TIdGenerator.Create(lSequenceRepository, SequenceClientDataSet);
-
-  fDownloadManager := TDownloadManager.Create(fDownloader, fLogDownloadRepository, lIdGenerator);
+  fDownloadManager := TDownloadManager.Create(fDownloader, fLogDownloadRepository);
 
   fDownloadManager.Subject.AddObserver(Self);
-end;
-
-procedure TMainForm.CreateLogDownloadRepository;
-begin
-  fLogDownloadRepository := TLogDownloadRepository.Create(LogDownloadSqlDataSet, LogDownloadClientDataSet);
 end;
 
 procedure TMainForm.CheckMessages();

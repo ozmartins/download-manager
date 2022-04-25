@@ -11,13 +11,13 @@ type
     fStartDate: TDateTime;
     fFinishDate: TDateTime;
   public
-    constructor Create(AId: Int64; AUrl, ACompleteFileName: String; AStartDate: TDateTime; AFinishDate: TDateTime);
+    constructor Create(AUrl, ACompleteFileName: String; AStartDate: TDateTime; AFinishDate: TDateTime);
 
-    property Id : Int64 read fId;
-    property Url : String read fUrl;
-    property CompleteFileName : String read fCompleteFileName;
-    property StartDate : TDateTime read fStartDate;
-    property FinishDate : TDateTime read fFinishDate;
+    property Id : Int64 read fId write fId;
+    property Url : String read fUrl write fUrl;
+    property CompleteFileName : String read fCompleteFileName write fCompleteFileName;
+    property StartDate : TDateTime read fStartDate write fStartDate;
+    property FinishDate : TDateTime read fFinishDate write fFinishDate;
   end;
 
 implementation
@@ -29,9 +29,8 @@ implementation
 /// <param name="AStartDate">The download's starting date and time.</param>
 /// <param name="AFinishDate">The download's finishing date and time.</param>
 /// <returns>Returns an instance of TLogDownload class.</returns>
-constructor TLogDownload.Create(AId: Int64; AUrl, ACompleteFileName: String; AStartDate, AFinishDate: TDateTime);
+constructor TLogDownload.Create(AUrl, ACompleteFileName: String; AStartDate, AFinishDate: TDateTime);
 begin
-  fId := AId;
   fUrl := AUrl;
   fCompleteFileName := ACompleteFileName;
   fStartDate := AStartDate;

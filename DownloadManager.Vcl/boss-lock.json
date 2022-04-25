@@ -1,5 +1,14 @@
 {
 	"hash": "d41d8cd98f00b204e9800998ecf8427e",
 	"updated": "2022-04-21T13:39:04.2301433-03:00",
-	"installedModules": {}
+	"installedModules": {
+		"https://github.com/ozmartins/delphi-orm": {
+			"name": "delphi-orm",
+			"version": "master",
+			"hash": "54af14f09e5404a5b1134e05083c429e",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		}
+	}
 }

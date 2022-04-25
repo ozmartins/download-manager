@@ -39,6 +39,7 @@
 *.dres
 *.rsm
 *.tds
+*.log
 *.dcu
 *.lib
 *.a
@@ -68,6 +69,9 @@ __recovery/
 
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
+DownloadManager.Vcl/Win32/Debug/Download/
 
 # DUnitx files
 ./DownloadManager.Test/Win32/Debug/dunitx-results.xml
+
+
