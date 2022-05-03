@@ -13,13 +13,14 @@ type
     GridPanel: TPanel;
     ButtonsPanel: TPanel;
     CloseButton: TButton;
-    HistorySQLDataSet: TSQLDataSet;
-    HistoryDataSetProvider: TDataSetProvider;
     HistoryClientDataSet: TClientDataSet;
     HistorySQLDataSetDataSource: TDataSource;
-    SqLiteConnection: TSQLConnection;
     StatusBar1: TStatusBar;
     HistoryDBGrid: TDBGrid;
+    HistoryClientDataSetCompleteFileName: TStringField;
+    HistoryClientDataSetUrl: TStringField;
+    HistoryClientDataSetStartDate: TDateTimeField;
+    HistoryClientDataSetFinishDate: TDateTimeField;
 
     procedure CloseButtonClick(Sender: TObject);
     procedure DateGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -29,6 +30,7 @@ type
     procedure HistoryDBGridDblClick(Sender: TObject);
   private
     procedure SelectFileInExplorer(ACompleteFileName: string);
+    procedure LoadDonwnloadLog();
   end;
 
 var
@@ -37,7 +39,8 @@ var
 implementation
 
 uses
-  RepositoryConsts, ShellAPI, DesktopConsts;
+  RepositoryConsts, ShellAPI, DesktopConsts, Repository, LogDownload,
+  System.Generics.Collections;
 
 {$R *.dfm}
 
@@ -61,8 +64,6 @@ end;
 procedure THistoryForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   HistoryClientDataSet.Close;
-  HistorySQLDataSet.Close;
-  SqLiteConnection.Close;
 end;
 
 procedure THistoryForm.FormResize(Sender: TObject);
@@ -78,10 +79,12 @@ end;
 procedure THistoryForm.FormShow(Sender: TObject);
 begin
   HistoryClientDataSet.Close;
-  HistoryClientDataSet.Open;
+  HistoryClientDataSet.CreateDataSet;
 
-  HistoryClientDataSet.FieldByName('startdate').OnGetText := DateGetText;
-  HistoryClientDataSet.FieldByName('finishdate').OnGetText := DateGetText;
+  HistoryClientDataSetStartDate.OnGetText := DateGetText;
+  HistoryClientDataSetFinishDate.OnGetText := DateGetText;
+
+  LoadDonwnloadLog();
 end;
 
 procedure THistoryForm.HistoryDBGridDblClick(Sender: TObject);
@@ -90,9 +93,37 @@ var
 begin
   if not HistoryClientDataSet.IsEmpty then
   begin
-    lCompleteFileName := HistoryClientDataSet.FieldByName('CompleteFileName').AsString;
+    lCompleteFileName := HistoryClientDataSetCompleteFileName.AsString;
     if not lCompleteFileName.IsEmpty then
       SelectFileInExplorer(lCompleteFileName);
+  end;
+end;
+
+procedure THistoryForm.LoadDonwnloadLog;
+var
+  lRepository: TRepository<TLogDownload>;
+  lDownloadLogList: TList<TLogDownload>;
+  lLogDownload: TLogDownload;
+begin
+  lRepository := TRepository<TLogDownload>.Create();
+  try
+    lDownloadLogList := lRepository.SelectAll();
+    try
+      HistoryClientDataSet.EmptyDataSet;
+      for lLogDownload in lDownloadLogList do
+      begin
+        HistoryClientDataSet.Append;
+        HistoryClientDataSetStartDate.Value := lLogDownload.StartDate;
+        HistoryClientDataSetFinishDate.Value := lLogDownload.FinishDate;
+        HistoryClientDataSetCompleteFileName.Value := lLogDownload.CompleteFileName;
+        HistoryClientDataSetUrl.Value := lLogDownload.Url;
+        HistoryClientDataSet.Post;
+      end;
+    finally
+      lDownloadLogList.Free
+    end;
+  finally
+    lRepository.Free;
   end;
 end;
 

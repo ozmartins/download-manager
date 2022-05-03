@@ -23,7 +23,6 @@ object HistoryForm: THistoryForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 917
     object HistoryDBGrid: TDBGrid
       Left = 0
       Top = 0
@@ -44,7 +43,7 @@ object HistoryForm: THistoryForm
         item
           Alignment = taCenter
           Expanded = False
-          FieldName = 'DataInicio'
+          FieldName = 'StartDate'
           Title.Alignment = taCenter
           Title.Caption = 'Data in'#237'cio'
           Width = 150
@@ -53,7 +52,7 @@ object HistoryForm: THistoryForm
         item
           Alignment = taCenter
           Expanded = False
-          FieldName = 'DataFim'
+          FieldName = 'FinishDate'
           Title.Alignment = taCenter
           Title.Caption = 'Data fim'
           Width = 150
@@ -68,7 +67,7 @@ object HistoryForm: THistoryForm
         end
         item
           Expanded = False
-          FieldName = 'NomeCompletoArquivo'
+          FieldName = 'CompleteFileName'
           Title.Caption = 'Arquivo'
           Width = 245
           Visible = True
@@ -83,7 +82,6 @@ object HistoryForm: THistoryForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 917
     DesignSize = (
       887
       37)
@@ -96,7 +94,6 @@ object HistoryForm: THistoryForm
       Caption = 'Fechar'
       TabOrder = 0
       OnClick = CloseButtonClick
-      ExplicitLeft = 832
     end
   end
   object StatusBar1: TStatusBar
@@ -105,22 +102,6 @@ object HistoryForm: THistoryForm
     Width = 887
     Height = 19
     Panels = <>
-    ExplicitWidth = 917
-  end
-  object HistorySQLDataSet: TSQLDataSet
-    CommandText = 
-      'select codigo, url, nomecompletoarquivo, datainicio as datetime,' +
-      ' datafim as datetime from logdownload order by datainicio'
-    MaxBlobSize = 1
-    Params = <>
-    SQLConnection = SqLiteConnection
-    Left = 455
-    Top = 184
-  end
-  object HistoryDataSetProvider: TDataSetProvider
-    DataSet = HistorySQLDataSet
-    Left = 455
-    Top = 232
   end
   object HistoryClientDataSet: TClientDataSet
     Aggregates = <>
@@ -128,28 +109,24 @@ object HistoryForm: THistoryForm
     ProviderName = 'HistoryDataSetProvider'
     Left = 455
     Top = 280
+    object HistoryClientDataSetCompleteFileName: TStringField
+      FieldName = 'CompleteFileName'
+      Size = 600
+    end
+    object HistoryClientDataSetUrl: TStringField
+      FieldName = 'Url'
+      Size = 600
+    end
+    object HistoryClientDataSetStartDate: TDateTimeField
+      FieldName = 'StartDate'
+    end
+    object HistoryClientDataSetFinishDate: TDateTimeField
+      FieldName = 'FinishDate'
+    end
   end
   object HistorySQLDataSetDataSource: TDataSource
     DataSet = HistoryClientDataSet
     Left = 455
     Top = 328
-  end
-  object SqLiteConnection: TSQLConnection
-    DriverName = 'Sqlite'
-    LoginPrompt = False
-    Params.Strings = (
-      'DriverUnit=Data.DbxSqlite'
-      
-        'DriverPackageLoader=TDBXSqliteDriverLoader,DBXSqliteDriver280.bp' +
-        'l'
-      
-        'MetaDataPackageLoader=TDBXSqliteMetaDataCommandFactory,DbxSqlite' +
-        'Driver280.bpl'
-      'FailIfMissing=True'
-      
-        'Database=D:\softplan\prova-delphi\v3\download-manager\DownloadMa' +
-        'nager.Vcl\Win32\Debug\DownloadManager.Vcl.db')
-    Left = 455
-    Top = 144
   end
 end
