@@ -50,14 +50,7 @@ implementation
 uses
   Subject, System.SysUtils, MockNetHTTPRequest, InfraConsts, MockHttpResponse,
   System.Net.HttpClient, MockObserver, SimpleNetHTTPRequestProxy,
-  System.Net.HttpClientComponent, DomainConsts;
-
-const
-  cStatusCode200 = 200;
-  cDownloadContentLength = 10;
-  cDummyUrl = 'www.domain.net';
-  cContentDispositionInLine = 'inline; filename="filename.txt"';
-  cContentDispositionAttachment = 'attachment; filename="filename.txt"';
+  System.Net.HttpClientComponent, DomainConsts, DomainTestConsts;
 
 { TDownloaderTest }
 

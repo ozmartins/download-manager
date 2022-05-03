@@ -3,10 +3,7 @@ unit MessageQueue;
 interface
 
 uses
-  System.Classes;
-
-const
-  cMessageParameterIsNull = 'O parâmetro AMessage não pode ser nulo.';
+  System.Classes, InfraConsts;
 
 type
   TMessageQueue = class

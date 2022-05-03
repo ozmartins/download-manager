@@ -52,13 +52,7 @@ type
 implementation
 
 uses FileManager, System.SysUtils, System.Classes, InfraConsts, GuidGenerator,
-DomainConsts;
-
-const
-  cDummyDirectory = 'j:\dummy';
-  cDummyFile = 'dummy.txt';
-  cUnitTestDirectory = 'UnitTest';
-  cNotThronwException = 'Uma exceção esperada não foi lançada.';
+DomainConsts, DomainTestConsts;
 
 procedure TFileManagerTest.BuildCompleteFileNameUsingAnEmptyDirectoryPath;
 begin

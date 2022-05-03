@@ -97,6 +97,7 @@
         <DCCReference Include="Source\Domain\DownloaderTest.pas"/>
         <DCCReference Include="Source\Infra\MockNetHTTPRequest.pas"/>
         <DCCReference Include="Source\Infra\MockHttpResponse.pas"/>
+        <DCCReference Include="Source\Domain\DomainTestConsts.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

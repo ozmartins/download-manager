@@ -18,7 +18,8 @@ uses
   FileManagerTest in 'Source\Domain\FileManagerTest.pas',
   DownloaderTest in 'Source\Domain\DownloaderTest.pas',
   MockNetHTTPRequest in 'Source\Infra\MockNetHTTPRequest.pas',
-  MockHttpResponse in 'Source\Infra\MockHttpResponse.pas';
+  MockHttpResponse in 'Source\Infra\MockHttpResponse.pas',
+  DomainTestConsts in 'Source\Domain\DomainTestConsts.pas';
 
 {$IFNDEF TESTINSIGHT}
 var

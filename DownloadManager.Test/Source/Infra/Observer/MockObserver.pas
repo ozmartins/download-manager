@@ -5,9 +5,6 @@ interface
 uses
   Observer;
 
-const
-  OBSERVER_MOCK_NOTIFY_METHOD_NAME = 'TObserverMock.Notify()';
-
 type
   TMockObserver = class(TInterfacedObject, IObserver)
   private

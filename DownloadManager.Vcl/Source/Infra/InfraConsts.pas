@@ -17,6 +17,7 @@ const
 
   {$region 'messages'}
   cGuidCantBeGenerate = 'Não foi possível gerar o GUID';
+  cMessageParameterIsNull = 'O parâmetro AMessage não pode ser nulo.';
   {$endregion}
 
 implementation
