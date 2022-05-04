@@ -36,12 +36,15 @@ A aplicação foi desenvolvida com Delphi e SQLite. Nenhum framework externo foi
 
 ## Dependências
 
-Esse projeto usa o [Boss](https://github.com/HashLoad/boss) como gerenciador de dependências. Antes de tentar compilar a aplicação, baixa o Boss do seguinte endereço https://github.com/hashload/boss/releases. Em seguida, instale-o no seu computador. Depois, acesse a pasta ./download-manager/DownloadManager.Vcl e digite o seguinte comando.
+Esse projeto usa o [Boss](https://github.com/HashLoad/boss) como gerenciador de dependências. Antes de compilar a aplicação, faça o seguinte:
+- Baixe o Boss do endereço https://github.com/hashload/boss/releases. 
+- Instale-o no seu computador. 
+- Execute o comando abaixo dentro da pasta ./download-manager/DownloadManager.Vcl
+- Execute o comando abaixo dentro da pasta ./download-manager/DownloadManager.Test
 
 ```
 boss install
 ```
-O comando acima também deve ser executado dentro da pasta do projeto de testes (./download-manager/DownloadManager.Test)
 
 ## Executando a aplicação
 
