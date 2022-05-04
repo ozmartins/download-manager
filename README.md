@@ -49,7 +49,7 @@ O comando acima também deve ser executado dentro da pasta do projeto de testes 
 
 - O executável da GUI pode ser encontrado dentro de “DownloadManager\DownloadManager.Vcl\Win32\Debug”
 
-IMPORTANTE: O banco de dados precisar estar dentro do mesmo diretório do executável. O nome do arquivo do banco deve ser igual ao nome do arquivo executável da GUI. Em implementações futuras, uma opção de configuração será criada.
+IMPORTANTE: O banco de dados precisar estar dentro do mesmo diretório do executável. O nome do arquivo do banco deve ser igual ao nome do arquivo executável da GUI.
 
 ## Documentação
 A aplicação teve seus métodos documentados dentro do próprio código fonte usando o recurso de XML Documentation do Delphi. Uma documentação externa ainda não está disponível.
