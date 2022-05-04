@@ -5,7 +5,15 @@
 		"https://github.com/ozmartins/delphi-orm": {
 			"name": "delphi-orm",
 			"version": "master",
-			"hash": "54af14f09e5404a5b1134e05083c429e",
+			"hash": "c853a2d9201ad2d2d3cbda09b651d4ff",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/pleriche/fastmm4": {
+			"name": "fastmm4",
+			"version": "master",
+			"hash": "fe65db856cd552c28bd41cece2369cbc",
 			"artifacts": {},
 			"failed": false,
 			"changed": false

@@ -8,6 +8,7 @@
 		"./DownloadManager.Vcl.dproj"
 	],
 	"dependencies": {
-		"https://github.com/ozmartins/delphi-orm": ">0.0.0"
+		"https://github.com/ozmartins/delphi-orm": ">0.0.0",
+		"https://github.com/pleriche/fastmm4": ">0.0.0"
 	}
 }
