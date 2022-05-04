@@ -23,6 +23,7 @@ Esta aplicação possui uma GUI que permite ao usuário realizar downloads a par
 ## Tópicos
 
  - [Tecnologias](#tecnologias)
+ - [Dependências](#dependências)
  - [Executando a aplicação](#executando-a-aplicação)
  - [Documentação](#documentação)
  - [Problemas conhecidos e implementações futuras](#problemas-conhecidos-e-implementações-futuras)
@@ -33,12 +34,25 @@ A aplicação foi desenvolvida com Delphi e SQLite. Nenhum framework externo foi
  - [Delphi](https://www.embarcadero.com/products/delphi)
  - [SQLite](https://sqlite.org/index.html)
 
+## Dependências
+
+Esse projeto usa o [Boss](https://github.com/HashLoad/boss) como gerenciador de dependências. Antes de compilar a aplicação, faça o seguinte:
+- Baixe o Boss do endereço https://github.com/hashload/boss/releases. 
+- Instale-o no seu computador. 
+- Execute o comando abaixo dentro da pasta ./download-manager/DownloadManager.Vcl
+- Execute o comando abaixo dentro da pasta ./download-manager/DownloadManager.Test
+
+```
+boss install
+```
+
 ## Executando a aplicação
+
 - O executável do projeto de testes pode ser encontrado dentro de “DownloadManager\DownloadManager.Test\Win32\Debug”
 
 - O executável da GUI pode ser encontrado dentro de “DownloadManager\DownloadManager.Vcl\Win32\Debug”
 
-IMPORTANTE: O banco de dados precisar estar dentro do mesmo diretório do executável. O nome do arquivo do banco deve ser igual ao nome do arquivo executável da GUI. Em implementações futuras, uma opção de configuração será criada.
+IMPORTANTE: O banco de dados precisar estar dentro do mesmo diretório do executável. O nome do arquivo do banco deve ser igual ao nome do arquivo executável da GUI.
 
 ## Documentação
 A aplicação teve seus métodos documentados dentro do próprio código fonte usando o recurso de XML Documentation do Delphi. Uma documentação externa ainda não está disponível.
