@@ -54,6 +54,7 @@ type
 
     procedure CreateDownloader();
     procedure CreateDownloadManager();
+    procedure CreateRepository();
     procedure ConfigureComponentEnablement();
     procedure CheckMessages(); overload;
     procedure CheckMessages(AMessageQueue: TMessageQueue); overload;
@@ -72,7 +73,7 @@ implementation
 
 uses
   System.Math, History, System.SysUtils, StrUtils, DesktopConsts,
-  System.UITypes, FileManager;
+  System.UITypes, FileManager, ORMConfigurationBuilder;
 
 {$R *.dfm}
 
@@ -130,7 +131,7 @@ begin
 
   fShowProgressOnButtonCaption := False;
 
-  fLogDownloadRepository := TRepository<TLogDownload>.Create();
+  CreateRepository();
 
   CreateDownloader();
 
@@ -266,6 +267,13 @@ begin
   fDownloadManager := TDownloadManager.Create(fDownloader, fLogDownloadRepository);
 
   fDownloadManager.Subject.AddObserver(Self);
+end;
+
+procedure TMainForm.CreateRepository;
+begin
+  TORMConfigurationBuilder.CreateDormConfFileName(TORMConfigurationBuilder.GetDormConfFileName(), TORMConfigurationBuilder.GetDbFileName());
+
+  fLogDownloadRepository := TRepository<TLogDownload>.Create();
 end;
 
 procedure TMainForm.CheckMessages();

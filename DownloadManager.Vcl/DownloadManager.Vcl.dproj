@@ -131,6 +131,7 @@
         <DCCReference Include="Source\Infra\Repository\RepositoryConsts.pas"/>
         <DCCReference Include="Source\Domain\DomainConsts.pas"/>
         <DCCReference Include="Source\Infra\Observer\ObserverConsts.pas"/>
+        <DCCReference Include="Source\Infra\Repository\ORMConfigurationBuilder.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

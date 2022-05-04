@@ -20,7 +20,8 @@ uses
   DesktopConsts in 'Source\Desktop\DesktopConsts.pas',
   RepositoryConsts in 'Source\Infra\Repository\RepositoryConsts.pas',
   DomainConsts in 'Source\Domain\DomainConsts.pas',
-  ObserverConsts in 'Source\Infra\Observer\ObserverConsts.pas';
+  ObserverConsts in 'Source\Infra\Observer\ObserverConsts.pas',
+  ORMConfigurationBuilder in 'Source\Infra\Repository\ORMConfigurationBuilder.pas';
 
 {$R *.res}
 

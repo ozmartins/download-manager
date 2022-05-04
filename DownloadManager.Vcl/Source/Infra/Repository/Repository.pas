@@ -23,13 +23,14 @@ type
 implementation
 
 uses
-  System.SysUtils, System.Classes, StrUtils, RepositoryConsts, dorm.Commons;
+  System.SysUtils, System.Classes, StrUtils, RepositoryConsts, dorm.Commons,
+  ORMConfigurationBuilder;
 
 /// <summary>This method creates an instance of TLogDownloadRepository class.</summary>
 /// <returns>Returns an instance of TLogDownloadRepository class.</returns>
 constructor TRepository<TEntity>.Create;
 begin
-  fDormSession := TSession.CreateConfigured(TStreamReader.Create(cDormConfFile), TdormEnvironment.deDevelopment);
+  fDormSession := TSession.CreateConfigured(TStreamReader.Create(TORMConfigurationBuilder.GetDormConfFileName()), TdormEnvironment.deRelease);
 end;
 
 /// <summary>Removes a specific log register from the database.</summary>
